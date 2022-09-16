@@ -80,7 +80,7 @@ class AuthController extends Controller
                         //'img'               => Auth::user()->avatar ? $this->asset.'profile/'.Auth::user()->avatar : $this->asset.'profile/400x400.png',
                     ],
                     'token'   => $accessToken,
-                    'message' => "Bienvenido, ".Auth::user()->name,
+                    'message' => "Bienvenido a Jimbo, ".Auth::user()->name,
                     'status'  => 200
                 ],
                 200
@@ -128,7 +128,7 @@ class AuthController extends Controller
                     //'img'               => Auth::user()->avatar ? $this->asset.'profile/'.Auth::user()->avatar : $this->asset.'profile/400x400.png',
                 ],
                 'token'    => $accessToken,
-                'message'  => 'Bienvenido, '.$user->name,
+                'message'  => 'Bienvenido a Jimbo, '.$user->name,
                 'status'   => 200
             ], 200);
 
