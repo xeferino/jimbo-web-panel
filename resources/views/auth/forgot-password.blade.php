@@ -52,6 +52,7 @@
                         notify(response.data.message, 'success', '5000', 'top', 'right');
                         $('#btn-forgot').prop("disabled", false).text("Email Password Reset Link");
                         $('#form-forgot').trigger("reset");
+                        $('.has-danger-email').remove();
                     } else {
                         $('#btn-forgot').prop("disabled", false).text("Email Password Reset Link");
                         $('.has-danger-email').text('No podemos encontrar un usuario con esa dirección de correo electrónico.').css("color", "red");

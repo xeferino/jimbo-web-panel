@@ -240,6 +240,7 @@
                             }else{
                                 notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
                             }
+                            setTimeout(function () {location.reload()}, 5000);
                         });
                     } else {
                         swal.close();

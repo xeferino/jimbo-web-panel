@@ -70,6 +70,9 @@
                         $('#btn-reset-password').prop("disabled", false).text("Reset Password");
                         $('#form-reset-password').trigger("reset");
                         setTimeout(() => {$('.jimbo-loader').hide();}, 5000);
+                        $('.has-danger-email').remove();
+                        $('.has-danger-password').remove();
+                        $('.has-danger-password_confirmation').remove();
 
                     } else {
                         $('#btn-reset-password').prop("disabled", false).text("Reset Password");
@@ -77,8 +80,8 @@
                             notify('Este token de restablecimiento de contraseña no es válido.', 'danger', '5000', 'bottom', 'right');
                         } else if (response.data.message == 'passwords.user'){
                             notify('No podemos encontrar un usuario con esa dirección de correo electrónico.', 'danger', '5000', 'bottom', 'right');
-
                         }
+                        setTimeout(function () {location.reload()}, 5000);
                         setTimeout(() => {$('.jimbo-loader').hide();}, 500);
                     }
                 }).catch(error => {
@@ -96,9 +99,11 @@
                             }
                         }else{
                             notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
+                            setTimeout(function () {location.reload()}, 5000);
                         }
                     }else{
                         notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
+                        setTimeout(function () {location.reload()}, 5000);
                     }
                     setTimeout(() => {$('.jimbo-loader').hide();}, 500);
                     $('#btn-reset-password').prop("disabled", false).text("Reset Password");

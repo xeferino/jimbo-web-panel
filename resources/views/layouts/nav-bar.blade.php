@@ -26,28 +26,57 @@
 
             </ul>
             <ul class="nav-right">
-                {{-- <li class="header-notification">
+                <li class="header-notification">
                     <a href="#!">
                         <i class="ti-bell"></i>
-                        <span class="badge bg-c-blue"></span>
+                        <span class="badge bg-c-green"></span>
                     </a>
                     <ul class="show-notification">
                         <li>
-                            <h6>Proyectos</h6>
-                            <label class="label label-primary">Nuevos</label>
+                            <h6>Notificaciones</h6>
+                            <a href="">
+                                <label class="label label-warning" style="cursor: pointer !important;">Ver Todas</label>
+                            </a>
                         </li>
                         <li>
                             <div class="media">
-                                <img class="d-flex align-self-center img-radius" src="{{ asset('assets/images/avatar-4.jpg') }}" alt="Generic placeholder image">
                                 <div class="media-body">
-                                    <h5 class="notification-user">Titulo</h5>
-                                    <p class="notification-msg">Descripcion</p>
-                                    <span class="notification-time">Fecha minutos</span>
+                                    <h5 class="notification-user text-warning">Nuevo usuario en la plataforma</h5>
+                                    <p class="notification-msg">oh! Jose Lozada, se acaba de registrar en jimbo sorteos, desde Ecuador</p>
+                                    <span class="notification-time">17 de septiembre de 2022</span>
                                 </div>
                             </div>
                         </li>
+                        <li>
+                            <div class="media">
+                                <div class="media-body">
+                                    <h5 class="notification-user text-warning">Nuevo usuario en la plataforma</h5>
+                                    <p class="notification-msg">oh! Miguel Lopez, se acaba de registrar en jimbo sorteos, desde Peru</p>
+                                    <span class="notification-time">17 de septiembre de 2022</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="media">
+                                <div class="media-body">
+                                    <h5 class="notification-user text-warning">Nuevo usuario en la plataforma</h5>
+                                    <p class="notification-msg">oh! Daniel Rios, se acaba de registrar en jimbo sorteos, desde Peru</p>
+                                    <span class="notification-time">17 de septiembre de 2022</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="media">
+                                <div class="media-body">
+                                    <h5 class="notification-user text-warning">Nuevo usuario en la plataforma</h5>
+                                    <p class="notification-msg">oh! Luisa Espinoza, se acaba de registrar en jimbo sorteos, desde Ecuador</p>
+                                    <span class="notification-time">17 de septiembre de 2022</span>
+                                </div>
+                            </div>
+                        </li>
+
                     </ul>
-                </li> --}}
+                </li>
                 <li class="user-profile header-notification">
                     <a href="#!">
                         <img src="{{ asset('assets/images/avatar.svg') }}" class="img-radius" alt="User-Profile-Image">
@@ -70,7 +99,7 @@
                         </li>
                         <li class="alert_logout">
                             <a href="#">
-                                <i class="ti-layout-sidebar-left"></i> Salir
+                                <i class="ti-unlock"></i> Salir
                             </a>
                         </li>
                     </ul>

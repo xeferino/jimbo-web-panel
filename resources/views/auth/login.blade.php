@@ -82,6 +82,8 @@
                         $('#form-login').trigger("reset");
                         $('.load-text').text('Iniciando panel de Jimbo...');
                         setTimeout(function () {location.href = response.data.url}, 3000);
+                        $('.has-danger-email').remove();
+                        $('.has-danger-password').remove();
                     }
                 }).catch(error => {
                     if (error.response) {
@@ -98,9 +100,11 @@
                             }
                         }else{
                             notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
+                            setTimeout(function () {location.reload()}, 5000);
                         }
                     }else{
                         notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
+                        setTimeout(function () {location.reload()}, 5000);
                     }
                     setTimeout(() => {$('.jimbo-loader').hide();}, 500);
                     $('#btn-login').prop("disabled", false).text("Login");
