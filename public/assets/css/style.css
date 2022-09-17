@@ -3962,7 +3962,9 @@ a.bg-danger:hover {
 }
 
 .badge-info {
-    background-color: #62d1f3;
+    /*background-color: #62d1f3;*/
+    background-color: #3f4096;
+
 }
 
 
@@ -6892,7 +6894,7 @@ table tbody .border-bottom-info td {
     content: '\e649';
     font-family: 'themify';
     padding-right: 10px;
-    font-size: 8px;
+    font-size: 10px;
 }
 
 .pcoded[theme-layout="vertical"] .pcoded-navbar .pcoded-item>li.active>a>.pcoded-mcaret {
@@ -8475,7 +8477,7 @@ body[themebg-pattern="pattern9"] {
 
 .pcoded .pcoded-navbar[active-item-theme="theme4"] .pcoded-item li .pcoded-submenu li.active>a,
 .pcoded .pcoded-navbar[active-item-theme="theme4"] .pcoded-item li .pcoded-submenu li:hover>a {
-    color: #4680ff !important;
+    color: #ff9a4e !important;
 }
 
 .pcoded .pcoded-navbar[active-item-theme="theme4"] .pcoded-item li .pcoded-submenu li.active>a {
@@ -8921,12 +8923,12 @@ body[themebg-pattern="pattern9"] {
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item>li.pcoded-hasmenu .pcoded-submenu li.pcoded-hasmenu>a:after,
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item>li.pcoded-hasmenu>a:after {
-    color: #000;
+    color: #ff9a4e !important;
 }
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item>li.pcoded-hasmenu.pcoded-trigger .pcoded-submenu li.pcoded-hasmenu.pcoded-trigger>a:after,
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item>li.pcoded-hasmenu.pcoded-trigger>a:after {
-    color: #000;
+    color: #ff9a4e !important;
 }
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item>li.active:hover>a,
@@ -8947,6 +8949,7 @@ body[themebg-pattern="pattern9"] {
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item .pcoded-hasmenu .pcoded-submenu li.active>a {
     color: #000;
+    font-size: 15px;
 }
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item .pcoded-hasmenu .pcoded-submenu li.active>a .pcoded-mtext:before {
@@ -12517,8 +12520,12 @@ body.menu-bottom #collapse-menu {
 }
 
 .badge {
-    border-radius: 10px;
-    padding: 3px 7px;
+   /*  border-radius: 10px;
+    padding: 3px 7px; */
+    border-radius: 5px;
+    padding: 5px 5px;
+    float: right;
+    margin-top: 10px;
 }
 
 .badge-top-left {
@@ -13347,6 +13354,11 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
     background-color: #ff9a4e;
     /*background-color: #FFB64D;*/
 }
+
+.text-jimbo {
+    color: #3f4096 !important;
+}
+
 
 .text-c-yellow {
     color: #FFB64D;

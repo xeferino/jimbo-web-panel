@@ -7,11 +7,11 @@
         <div class="card widget-card-1">
             <div class="card-block-small">
                 <i class="icofont icofont-pie-chart bg-c-yellow card1-icon"></i>
-                <span class="text-c-yellow f-w-600">Use space</span>
-                <h4>49/50GB</h4>
+                <span class="text-jimbo f-w-600">Use space</span>
+                <h4 class="text-jimbo">49/50GB</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
-                        <i class="text-c-yellow f-16 icofont icofont-warning m-r-10"></i>Get more space
+                        <i class="text-jimbo f-16 icofont icofont-warning m-r-10"></i>Get more space
                     </span>
                 </div>
             </div>
@@ -23,11 +23,11 @@
         <div class="card widget-card-1">
             <div class="card-block-small">
                 <i class="icofont icofont-ui-home bg-c-yellow card1-icon"></i>
-                <span class="text-c-yellow f-w-600">Revenue</span>
-                <h4>$23,589</h4>
+                <span class="text-jimbo f-w-600">Revenue</span>
+                <h4 class="text-jimbo">$23,589</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
-                        <i class="text-c-yellow f-16 icofont icofont-calendar m-r-10"></i>Last 24 hours
+                        <i class="text-jimbo f-16 icofont icofont-calendar m-r-10"></i>Last 24 hours
                     </span>
                 </div>
             </div>
@@ -39,11 +39,11 @@
         <div class="card widget-card-1">
             <div class="card-block-small">
                 <i class="icofont icofont-warning-alt bg-c-yellow card1-icon"></i>
-                <span class="text-c-yellow f-w-600">Fixed issue</span>
-                <h4>45</h4>
+                <span class="text-jimbo f-w-600">Fixed issue</span>
+                <h4 class="text-jimbo">45</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
-                        <i class="text-c-yellow f-16 icofont icofont-tag m-r-10"></i>Tracked via microsoft
+                        <i class="text-jimbo f-16 icofont icofont-tag m-r-10"></i>Tracked via microsoft
                     </span>
                 </div>
             </div>
@@ -55,11 +55,11 @@
         <div class="card widget-card-1">
             <div class="card-block-small">
                 <i class="icofont icofont-social-twitter bg-c-yellow card1-icon"></i>
-                <span class="text-c-yellow f-w-600">Followers</span>
-                <h4>+562</h4>
+                <span class="text-jimbo f-w-600">Followers</span>
+                <h4 class="text-jimbo">+562</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
-                        <i class="text-c-yellow f-16 icofont icofont-refresh m-r-10"></i>Just update
+                        <i class="text-jimbo f-16 icofont icofont-refresh m-r-10"></i>Just update
                     </span>
                 </div>
             </div>
@@ -72,11 +72,11 @@
         <div class="card widget-card-1">
             <div class="card-block-small">
                 <i class="icofont icofont-pie-chart bg-c-yellow card1-icon"></i>
-                <span class="text-c-yellow f-w-600">Use space</span>
-                <h4>49/50GB</h4>
+                <span class="text-jimbo f-w-600">Use space</span>
+                <h4 class="text-jimbo">49/50GB</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
-                        <i class="text-c-yellow f-16 icofont icofont-warning m-r-10"></i>Get more space
+                        <i class="text-jimbo f-16 icofont icofont-warning m-r-10"></i>Get more space
                     </span>
                 </div>
             </div>
@@ -88,11 +88,11 @@
         <div class="card widget-card-1">
             <div class="card-block-small">
                 <i class="icofont icofont-ui-home bg-c-yellow card1-icon"></i>
-                <span class="text-c-yellow f-w-600">Revenue</span>
-                <h4>$23,589</h4>
+                <span class="text-jimbo f-w-600">Revenue</span>
+                <h4 class="text-jimbo">$23,589</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
-                        <i class="text-c-yellow f-16 icofont icofont-calendar m-r-10"></i>Last 24 hours
+                        <i class="text-jimbo f-16 icofont icofont-calendar m-r-10"></i>Last 24 hours
                     </span>
                 </div>
             </div>
@@ -104,11 +104,11 @@
         <div class="card widget-card-1">
             <div class="card-block-small">
                 <i class="icofont icofont-warning-alt bg-c-yellow card1-icon"></i>
-                <span class="text-c-yellow f-w-600">Fixed issue</span>
-                <h4>45</h4>
+                <span class="text-jimbo f-w-600">Fixed issue</span>
+                <h4 class="text-jimbo">45</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
-                        <i class="text-c-yellow f-16 icofont icofont-tag m-r-10"></i>Tracked via microsoft
+                        <i class="text-jimbo f-16 icofont icofont-tag m-r-10"></i>Tracked via microsoft
                     </span>
                 </div>
             </div>
@@ -120,19 +120,17 @@
         <div class="card widget-card-1">
             <div class="card-block-small">
                 <i class="icofont icofont-social-twitter bg-c-yellow card1-icon"></i>
-                <span class="text-c-yellow f-w-600">Followers</span>
-                <h4>+562</h4>
+                <span class="text-jimbo f-w-600">Followers</span>
+                <h4 class="text-jimbo">+562</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
-                        <i class="text-c-yellow f-16 icofont icofont-refresh m-r-10"></i>Just update
+                        <i class="text-jimbo f-16 icofont icofont-refresh m-r-10"></i>Just update
                     </span>
                 </div>
             </div>
         </div>
     </div>
     <!-- card1 end -->
-
-
 
     <!-- Statestics Start -->
     <div class="col-md-12 col-xl-12">

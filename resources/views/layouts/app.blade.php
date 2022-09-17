@@ -207,7 +207,7 @@
                     title: '{{ Auth::user()->name." ".Auth::user()->surname }}',
                     text: "Desea salir del panel administrativo de Jimbo!",
                     type: 'info',
-                    icon : "{{ asset('assets/images/logo100x100.png') }}",
+                    icon : "{{ asset('assets/images/jimbo-logo.png') }}",
                     buttons:{
                         confirm: {
                             text : 'Salir',
