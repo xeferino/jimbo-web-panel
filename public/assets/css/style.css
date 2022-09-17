@@ -6167,14 +6167,14 @@ table tbody .border-bottom-info td {
 }
 
 .pcoded .pcoded-navbar .pcoded-item>li>a>.pcoded-micon {
-    font-size: 20px;
-    padding: 2px;
+    font-size: 24px;
+    /*padding: 2px;*/
     margin-right: 10px;
     color: #fff;
     border-radius: 4px;
-    width: 40px;
+    width: 35px;
     display: inline-block;
-    height: 30px;
+    height: 35px;
     text-align: center;
 }
 

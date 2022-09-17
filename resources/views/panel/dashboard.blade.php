@@ -7,7 +7,7 @@
         <div class="card widget-card-1">
             <div class="card-block-small">
                 <i class="icofont icofont-pie-chart bg-c-yellow card1-icon"></i>
-                <span class="text-jimbo f-w-600">Use space</span>
+                <span class="text-c-yellow  f-w-600">Use space</span>
                 <h4 class="text-jimbo">49/50GB</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
@@ -23,7 +23,7 @@
         <div class="card widget-card-1">
             <div class="card-block-small">
                 <i class="icofont icofont-ui-home bg-c-yellow card1-icon"></i>
-                <span class="text-jimbo f-w-600">Revenue</span>
+                <span class="text-c-yellow  f-w-600">Revenue</span>
                 <h4 class="text-jimbo">$23,589</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
@@ -39,7 +39,7 @@
         <div class="card widget-card-1">
             <div class="card-block-small">
                 <i class="icofont icofont-warning-alt bg-c-yellow card1-icon"></i>
-                <span class="text-jimbo f-w-600">Fixed issue</span>
+                <span class="text-c-yellow  f-w-600">Fixed issue</span>
                 <h4 class="text-jimbo">45</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
@@ -55,7 +55,7 @@
         <div class="card widget-card-1">
             <div class="card-block-small">
                 <i class="icofont icofont-social-twitter bg-c-yellow card1-icon"></i>
-                <span class="text-jimbo f-w-600">Followers</span>
+                <span class="text-c-yellow  f-w-600">Followers</span>
                 <h4 class="text-jimbo">+562</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
@@ -72,7 +72,7 @@
         <div class="card widget-card-1">
             <div class="card-block-small">
                 <i class="icofont icofont-pie-chart bg-c-yellow card1-icon"></i>
-                <span class="text-jimbo f-w-600">Use space</span>
+                <span class="text-c-yellow  f-w-600">Use space</span>
                 <h4 class="text-jimbo">49/50GB</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
@@ -88,7 +88,7 @@
         <div class="card widget-card-1">
             <div class="card-block-small">
                 <i class="icofont icofont-ui-home bg-c-yellow card1-icon"></i>
-                <span class="text-jimbo f-w-600">Revenue</span>
+                <span class="text-c-yellow  f-w-600">Revenue</span>
                 <h4 class="text-jimbo">$23,589</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
@@ -104,7 +104,7 @@
         <div class="card widget-card-1">
             <div class="card-block-small">
                 <i class="icofont icofont-warning-alt bg-c-yellow card1-icon"></i>
-                <span class="text-jimbo f-w-600">Fixed issue</span>
+                <span class="text-c-yellow  f-w-600">Fixed issue</span>
                 <h4 class="text-jimbo">45</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">
@@ -120,7 +120,7 @@
         <div class="card widget-card-1">
             <div class="card-block-small">
                 <i class="icofont icofont-social-twitter bg-c-yellow card1-icon"></i>
-                <span class="text-jimbo f-w-600">Followers</span>
+                <span class="text-c-yellow  f-w-600">Followers</span>
                 <h4 class="text-jimbo">+562</h4>
                 <div>
                     <span class="f-left m-t-10 text-muted">

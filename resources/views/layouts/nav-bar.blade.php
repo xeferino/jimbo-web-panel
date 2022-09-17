@@ -84,11 +84,11 @@
                         <i class="ti-angle-down"></i>
                     </a>
                     <ul class="show-notification profile-notification">
-                        <li>
+                       {{--  <li>
                             <a href="#!">
                                 <i class="ti-settings"></i> Configuracion
                             </a>
-                        </li>
+                        </li> --}}
                         <li>
                             <a href="#"><i class="ti-bookmark"></i>Rol</a>
                         </li>
