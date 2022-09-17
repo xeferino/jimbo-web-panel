@@ -222,11 +222,12 @@
                     },
                 }).then((confirm) => {
                     if (confirm) {
+                        $('.jimbo-loader').show();
+
                         axios.post('{{ route('logout')}}', {
                         }).then(response => {
                             if(response.data.success){
                                 //notify(response.data.message, 'success', '2000', 'top', 'right');
-                                $('.jimbo-loader').show();
                                 $('.load-text').text(''+response.data.message+'');
                                 setTimeout(function () {location.href = response.data.url}, 2000);
                             }
@@ -240,6 +241,7 @@
                             }else{
                                 notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
                             }
+                            $('.jimbo-loader').hide();
                             setTimeout(function () {location.reload()}, 5000);
                         });
                     } else {
