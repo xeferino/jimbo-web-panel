@@ -50,7 +50,7 @@ class AuthenticatedSessionController extends Controller
         }else {
             return response()->json(['error' => true,  'message' => 'Accceso no autorizado, Credenciales no existen.'], 401);
         } */
-        return response()->json(['success' => true, 'message' => 'Iniciando la sesión, redireccionando...', 'url' => RouteServiceProvider::HOME], 200);
+        return response()->json(['success' => true, 'message' => 'Iniciando la sesión, redireccionando...', 'url' => route('panel.dashboard')], 200);
 
         //return redirect()->intended(RouteServiceProvider::HOME);
     }
@@ -69,6 +69,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return response()->json(['success' => true, 'message' => 'Sesión cerrada correctamente, redireccionando...', 'url' => url('login')], 200);
+
+        //return redirect('/');
     }
 }
