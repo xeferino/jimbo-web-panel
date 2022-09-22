@@ -20,7 +20,7 @@
                     <div class="col-sm-12">
                         <img src="{{asset('assets/images/avatar.svg')}}" style= "margin: 0px 0 5px 0;" width="100px" height="100px" alt="avatar" id="avatar" class="img-radius">
                         <br>
-                        <label for="exampleFormControlFile1"><b>Imagen <i class="ti ti-info-alt" data-toggle="tooltip" data-placement="top" title="El formato de imagen debe ser (jpg, jpeg, png o svg). El peso maximo de la imagen es de 1014 KB"></i></b></label>
+                        <label for="exampleFormControlFile1"><b>Imagen <i class="ti ti-info-alt" data-toggle="tooltip" data-placement="top" title="El formato de imagen debe ser (jpg, jpeg, png o svg). El peso maximo de la imagen es de 512 KB"></i></b></label>
                         <input type="file" name="image" id="image" file="true" class="form-control-file" id="exampleFormControlFile1">
                         <div class="col-form-label has-danger-image"></div>
                     </div>

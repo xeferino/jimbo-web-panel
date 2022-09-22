@@ -15,8 +15,24 @@ $(function () {
             "infoPostFix":    "",
             "thousands":      ",",
             "lengthMenu":     "Mostrar _MENU_ Registros",
-            "loadingRecords": "Cargando...",
-            "processing":     "Procesando...",
+            "loadingRecords": `<div class="ball-scale">
+                                    <div class='contain'>
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <img src="${APP_URL+'/assets/images/jimbo-table.png'}" class="ring" width="48" alt="logo.png">
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <div class="ring"><div class="frame"></div></div>
+                                    </div>
+                                </div>`,
+            "processing": `<div class="ball-scale">
+                                <div class='contain'>
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <img src="${APP_URL+'/assets/images/jimbo-table.png'}" class="ring" width="48" alt="logo.png">
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <div class="ring"><div class="frame"></div></div>
+                                </div>
+                            </div>`,
             "search":         "Buscar:",
             "zeroRecords":    "No hay coicidencias de registros en la busqueda",
             "paginate": {

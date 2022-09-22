@@ -53,12 +53,22 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        if (! Auth::attempt(array_merge( $this->only('email', 'password'), ['active' => 1 ]), $this->boolean('remember'))) {
+
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
                 'email' => 'Accceso no autorizado, Error en las credenciales.'//trans('auth.failed'),
             ]);
+        }else {
+            if (Auth::user()->hasRole('seller')) {
+
+                Auth::logout();
+
+                throw ValidationException::withMessages([
+                    'email' => 'Accceso no autorizado, Error en las credenciales.'//trans('auth.failed'),
+                ]);
+            }
         }
 
         RateLimiter::clear($this->throttleKey());

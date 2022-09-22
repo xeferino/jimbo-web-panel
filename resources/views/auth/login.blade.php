@@ -98,13 +98,22 @@
                             }else{
                                 $('.has-danger-password').text('');
                             }
-                        }else{
-                            notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
+                        } else if(error.response.status === 401){
+                            if (error.response.data.error) {
+                                $('.has-danger-email').text('' + error.response.data.message + '').css("color", "red");
+                            }else{
+                                $('.has-danger-email').text('');
+                            }
+                            setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+                        } else if(error.response.status === 419){
+                            notify('Error, csrf-token no valido, intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
                             setTimeout(function () {location.reload()}, 5000);
+                        } else{
+                            //setTimeout(function () {location.reload()}, 5000);
                         }
                     }else{
                         notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
-                        setTimeout(function () {location.reload()}, 5000);
+                        //setTimeout(function () {location.reload()}, 5000);
                     }
                     setTimeout(() => {$('.jimbo-loader').hide();}, 500);
                     $('#btn-login').prop("disabled", false).text("Login");
