@@ -17,7 +17,7 @@
       <meta name="keywords" content=" Admin , Responsive, Landing, Bootstrap, App, Template, Mobile, iOS, Android, apple, creative app">
       <meta name="author" content="CodedThemes">
       <meta name="csrf-token" content="{{ csrf_token() }}">
-
+      <meta name="base-url" content="{{ config('app.url') }}">
       <!-- Favicon icon -->
       <link rel="icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon">
       <!-- Google font-->
@@ -103,7 +103,39 @@
                         <div class="pcoded-inner-content">
                             <div class="main-body">
                                 <div class="page-wrapper">
-                                    @yield('page-header')
+                                    <!-- header -->
+                                    <!-- Page-header start -->
+                                    @if(!Route::is('panel.dashboard') )
+                                        <div class="page-header card">
+                                            <div class="row align-items-end">
+                                                <div class="col-lg-8">
+                                                    <div class="page-header-title">
+                                                        <i class="icofont {{ $icon ?? '' }} bg-c-yellow"></i>
+                                                        <div class="d-inline">
+                                                            <h4>{{ $title_header ?? '' }}</h4>
+                                                            <span>{{$description_module ?? ''}}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="page-header-breadcrumb">
+                                                        <ul class="breadcrumb-title">
+                                                            <li class="breadcrumb-item">
+                                                                <a href="{{ route('panel.dashboard') }}">
+                                                                    <i class="icofont icofont-home"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li class="breadcrumb-item"><a href="#">{{ $title ?? ''}}</a>
+                                                            </li>
+                                                            <li class="breadcrumb-item"><a href="#">{{ $title_nav ?? ''}}</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    <!-- end header -->
                                     <div class="page-body">
                                         @yield('page-content')
                                     </div>
@@ -156,6 +188,7 @@
 <script src="{{ asset('assets/js/pcoded.min.js') }}"></script>
 <script src="{{ asset('assets/js/demo-12.js') }}"></script>
 <script src="{{ asset('assets/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+<script src="{{ asset('assets/js/jimbo/core.js') }}"></script>
 <script>
 
     $(function () {
@@ -227,19 +260,19 @@
                         axios.post('{{ route('logout')}}', {
                         }).then(response => {
                             if(response.data.success){
-                                //notify(response.data.message, 'success', '2000', 'top', 'right');
+                                //notify(response.data.message, 'success', '2000', 'bottom', 'right');
                                 $('.load-text').text(''+response.data.message+'');
                                 setTimeout(function () {location.href = response.data.url}, 2000);
                             }
                         }).catch(error => {
                             if (error.response) {
                                 if(error.response.status === 502){
-                                    notify(error.response.data.message, 'danger', '5000', 'top', 'right');
+                                    notify(error.response.data.message, 'danger', '5000', 'bottom', 'right');
                                 }else{
-                                    notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
+                                    notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
                                 }
                             }else{
-                                notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
+                                notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
                             }
                             $('.jimbo-loader').hide();
                             setTimeout(function () {location.reload()}, 5000);

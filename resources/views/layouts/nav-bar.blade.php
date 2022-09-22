@@ -79,7 +79,7 @@
                 </li>
                 <li class="user-profile header-notification">
                     <a href="#!">
-                        <img src="{{ asset('assets/images/avatar.svg') }}" class="img-radius" alt="User-Profile-Image">
+                        <img src="{{ Auth::user()->image != 'avatar.svg' ? asset('assets/images/users/'.Auth::user()->image): asset('assets/images/avatar.svg') }}" class="img-radius" alt="User-Profile-Image">
                         <span>{{ Auth::user()->name." ".Auth::user()->surname }}</span>
                         <i class="ti-angle-down"></i>
                     </a>

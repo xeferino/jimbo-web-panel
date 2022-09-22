@@ -68,6 +68,14 @@ p {
     font-size: 13px;
 }
 
+#DataTables_Table_0_filter {
+    float: right !important;
+}
+
+.img-radius{
+    border-radius: 100% !important;
+    box-shadow: 0 1px 11px 0 rgb(0 0 0 / 12%) !important;
+}
 @media only screen and (min-width: 1400px) {
     p {
         font-size: 14px;
@@ -111,7 +119,7 @@ p {
     font-weight: 600;
     color: #303548;
     font-size: 20px;
-    text-transform: capitalize;
+    /*text-transform: capitalize;*/
 }
 
 .main-body .page-wrapper .page-header-title span {
@@ -119,7 +127,7 @@ p {
     color: #919aa3;
     display: inline-block;
     margin-top: 10px;
-    text-transform: capitalize;
+    /*text-transform: capitalize;*/
 }
 
 .main-body .page-wrapper .page-header-title i {
@@ -278,7 +286,9 @@ p {
     margin: 0 8px;
     cursor: pointer;
     font-size: 14px;
-    color: #505458;
+    font-weight: bold;
+    color: #fff;
+   /* color: #505458;*/
     line-height: 20px;
 }
 
@@ -3849,7 +3859,7 @@ a.bg-danger:hover {
 }
 
 .text-success {
-    color: #93BE52 !important;
+    color: #28a745 !important;
 }
 
 .text-inverse {
@@ -3950,11 +3960,11 @@ a.bg-danger:hover {
 }
 
 .badge-danger {
-    background-color: #FC6180;
+    background-color: #dc3545;
 }
 
 .badge-success {
-    background-color: #93BE52;
+    background-color: #069126;
 }
 
 .badge-inverse {
@@ -8145,7 +8155,8 @@ table tbody .border-bottom-info td {
 }
 
 .pcoded .pcoded-navbar .pcoded-navigatio-lavel[menu-title-theme="theme1"] {
-    color: #8c8c8c !important;
+    color: #000 !important;
+    font-weight: 600 !important;
 }
 
 .pcoded .pcoded-navbar .pcoded-navigatio-lavel[menu-title-theme="theme2"] {
@@ -10178,8 +10189,8 @@ body.menu-bottom #collapse-menu {
 .btn-primary,
 .sweet-alert button.confirm,
 .wizard>.actions a {
-    background-color: #4680ff;
-    border-color: #4680ff;
+    background-color: #007bff;
+    border-color: #007bff;
     color: #fff;
     cursor: pointer;
     transition: all ease-in 0.3s;
@@ -10188,8 +10199,8 @@ body.menu-bottom #collapse-menu {
 .btn-primary:hover,
 .sweet-alert button.confirm:hover,
 .wizard>.actions a:hover {
-    background-color: #79a3ff;
-    border-color: #79a3ff;
+    background-color: #4680fff2;
+    border-color: #4680fff2;
 }
 
 .btn-primary:active,
@@ -10249,16 +10260,16 @@ body.menu-bottom #collapse-menu {
 }
 
 .btn-danger {
-    background-color: #FC6180;
-    border-color: #FC6180;
+    background-color: #dc3545;
+    border-color: #dc3545;
     color: #fff;
     cursor: pointer;
     transition: all ease-in 0.3s;
 }
 
 .btn-danger:hover {
-    background-color: #fd93a8;
-    border-color: #fd93a8;
+    background-color: #dc3545db;
+    border-color: #dc3545db;
 }
 
 .btn-danger:active {
@@ -10853,6 +10864,7 @@ body.menu-bottom #collapse-menu {
 
 .col-form-label {
     font-size: 14px;
+    font-weight: 600;
 }
 
 .select2-container {
@@ -12335,7 +12347,7 @@ body.menu-bottom #collapse-menu {
 }
 
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-    background-color: #4680ff;
+    background-color: ##f58735 !important;
 }
 
 .select2-container--default .select2-selection--multiple {
