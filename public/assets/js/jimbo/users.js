@@ -94,60 +94,60 @@ $(function () {
             }
         }).catch(error => {
             if (error.response) {
-                    if(error.response.status === 422){
-                        var err = error.response.data.errors;
-                        /* $.each(err, function( key, value) {
-                            notify(value, 'danger', '5000', 'bottom', 'right');
-                        }); */
-                        if (error.response.data.errors.name) {
-                            $('.has-danger-name').text('' + error.response.data.errors.name + '').css("color", "red");
-                        }else{
-                            $('.has-danger-name').text('');
-                        }
-                        if (error.response.data.errors.surname) {
-                            $('.has-danger-surname').text('' + error.response.data.errors.surname + '').css("color", "red");
-                        }else{
-                            $('.has-danger-surname').text('');
-                        }
-                        if (error.response.data.errors.email) {
-                            $('.has-danger-email').text('' + error.response.data.errors.email + '').css("color", "red");
-                        }else{
-                            $('.has-danger-email').text('');
-                        }
-                        if (error.response.data.errors.role) {
-                            $('.has-danger-role').text('' + error.response.data.errors.role + '').css("color", "red");
-                        }else{
-                            $('.has-danger-role').text('');
-                        }
-                        if (error.response.data.errors.active) {
-                            $('.has-danger-active').text('' + error.response.data.errors.active + '').css("color", "red");
-                        }else{
-                            $('.has-danger-active').text('');
-                        }
-                        if (error.response.data.errors.image) {
-                            $('.has-danger-image').text('' + error.response.data.errors.image + '').css("color", "red");
-                        }else{
-                            $('.has-danger-image').text('');
-                        }
-                        if (error.response.data.errors.password) {
-                            $('.has-danger-password').text('' + error.response.data.errors.password + '').css("color", "red");
-                        }else{
-                            $('.has-danger-password').text('');
-                        }
-                        if (error.response.data.errors.cpassword) {
-                            $('.has-danger-cpassword').text('' + error.response.data.errors.cpassword + '').css("color", "red");
-                        }else{
-                            $('.has-danger-cpassword').text('');
-                        }
+                if(error.response.status === 422){
+                    var err = error.response.data.errors;
+                    /* $.each(err, function( key, value) {
+                        notify(value, 'danger', '5000', 'bottom', 'right');
+                    }); */
+                    if (error.response.data.errors.name) {
+                        $('.has-danger-name').text('' + error.response.data.errors.name + '').css("color", "#dc3545e3");
                     }else{
-                        notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
+                        $('.has-danger-name').text('');
+                    }
+                    if (error.response.data.errors.surname) {
+                        $('.has-danger-surname').text('' + error.response.data.errors.surname + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-surname').text('');
+                    }
+                    if (error.response.data.errors.email) {
+                        $('.has-danger-email').text('' + error.response.data.errors.email + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-email').text('');
+                    }
+                    if (error.response.data.errors.role) {
+                        $('.has-danger-role').text('' + error.response.data.errors.role + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-role').text('');
+                    }
+                    if (error.response.data.errors.active) {
+                        $('.has-danger-active').text('' + error.response.data.errors.active + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-active').text('');
+                    }
+                    if (error.response.data.errors.image) {
+                        $('.has-danger-image').text('' + error.response.data.errors.image + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-image').text('');
+                    }
+                    if (error.response.data.errors.password) {
+                        $('.has-danger-password').text('' + error.response.data.errors.password + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-password').text('');
+                    }
+                    if (error.response.data.errors.cpassword) {
+                        $('.has-danger-cpassword').text('' + error.response.data.errors.cpassword + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-cpassword').text('');
                     }
                 }else{
                     notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
                 }
-                $('.btn-user').prop("disabled", false).text('Registrar');
-                setTimeout(() => {$('.jimbo-loader').hide();}, 500);
-            });
+            }else{
+                notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
+            }
+            $('.btn-user').prop("disabled", false).text('Registrar');
+            setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+        });
     });
     /* user-register*/
 
@@ -184,42 +184,42 @@ $(function () {
                             notify(value, 'danger', '5000', 'top', 'right');
                         }); */
                         if (error.response.data.errors.name) {
-                            $('.has-danger-name').text('' + error.response.data.errors.name + '').css("color", "red");
+                            $('.has-danger-name').text('' + error.response.data.errors.name + '').css("color", "#dc3545e3");
                         }else{
                             $('.has-danger-name').text('');
                         }
                         if (error.response.data.errors.surname) {
-                            $('.has-danger-surname').text('' + error.response.data.errors.surname + '').css("color", "red");
+                            $('.has-danger-surname').text('' + error.response.data.errors.surname + '').css("color", "#dc3545e3");
                         }else{
                             $('.has-danger-surname').text('');
                         }
                         if (error.response.data.errors.email) {
-                            $('.has-danger-email').text('' + error.response.data.errors.email + '').css("color", "red");
+                            $('.has-danger-email').text('' + error.response.data.errors.email + '').css("color", "#dc3545e3");
                         }else{
                             $('.has-danger-email').text('');
                         }
                         if (error.response.data.errors.role) {
-                            $('.has-danger-role').text('' + error.response.data.errors.role + '').css("color", "red");
+                            $('.has-danger-role').text('' + error.response.data.errors.role + '').css("color", "#dc3545e3");
                         }else{
                             $('.has-danger-role').text('');
                         }
                         if (error.response.data.errors.active) {
-                            $('.has-danger-active').text('' + error.response.data.errors.active + '').css("color", "red");
+                            $('.has-danger-active').text('' + error.response.data.errors.active + '').css("color", "#dc3545e3");
                         }else{
                             $('.has-danger-active').text('');
                         }
                         if (error.response.data.errors.image) {
-                            $('.has-danger-image').text('' + error.response.data.errors.image + '').css("color", "red");
+                            $('.has-danger-image').text('' + error.response.data.errors.image + '').css("color", "#dc3545e3");
                         }else{
                             $('.has-danger-image').text('');
                         }
                         if (error.response.data.errors.password) {
-                            $('.has-danger-password').text('' + error.response.data.errors.password + '').css("color", "red");
+                            $('.has-danger-password').text('' + error.response.data.errors.password + '').css("color", "#dc3545e3");
                         }else{
                             $('.has-danger-password').text('');
                         }
                         if (error.response.data.errors.cpassword) {
-                            $('.has-danger-cpassword').text('' + error.response.data.errors.cpassword + '').css("color", "red");
+                            $('.has-danger-cpassword').text('' + error.response.data.errors.cpassword + '').css("color", "#dc3545e3");
                         }else{
                             $('.has-danger-cpassword').text('');
                         }

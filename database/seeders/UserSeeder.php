@@ -46,7 +46,7 @@ class UserSeeder extends Seeder
         Permission::create(['name' => 'setting-menu', 'description' => 'menu de configuracion en el sistema'])->syncRoles([$super_admin]);
         Permission::create(['name' => 'user-menu', 'description' => 'menu de configuracion de usuarios en el sistema'])->syncRoles([$super_admin]);
         Permission::create(['name' => 'role-menu', 'description' => 'menu de configuracion de roles en el sistema'])->syncRoles([$super_admin]);
-        Permission::create(['name' => 'dashboard-menu', 'description' => 'menu de tablero de informacion de balances y estadisticas en el sistema'])->syncRoles([$super_admin]);
+        Permission::create(['name' => 'dashboard-menu', 'description' => 'menu de tablero de informacion de balances y estadisticas en el sistema'])->syncRoles([$super_admin, $administrator]);
         Permission::create(['name' => 'country-menu', 'description' => 'menu de configuracion de paises en el sistema'])->syncRoles([$super_admin]);
 
         User::create([

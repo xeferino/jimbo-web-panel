@@ -77,8 +77,6 @@
                 $('.jimbo-loader').show();
                 axios.post('{{ route('login')}}', $(this).serialize()).then(response => {
                     if(response.data.success){
-                        //notify(response.data.message, 'success', '3000', 'top', 'right');
-                        //$('#btn-login').text("Cargando...");
                         $('#form-login').trigger("reset");
                         $('.load-text').text('Iniciando panel de Jimbo...');
                         setTimeout(function () {location.href = response.data.url}, 3000);
@@ -89,31 +87,28 @@
                     if (error.response) {
                         if(error.response.status === 422){
                             if (error.response.data.errors.email) {
-                                $('.has-danger-email').text('' + error.response.data.errors.email + '').css("color", "red");
+                                $('.has-danger-email').text('' + error.response.data.errors.email + '').css("color", "#dc3545e3");
                             }else{
                                 $('.has-danger-email').text('');
                             }
                             if (error.response.data.errors.password) {
-                                $('.has-danger-password').text('' + error.response.data.errors.password + '').css("color", "red");
+                                $('.has-danger-password').text('' + error.response.data.errors.password + '').css("color", "#dc3545e3");
                             }else{
                                 $('.has-danger-password').text('');
                             }
                         } else if(error.response.status === 401){
                             if (error.response.data.error) {
-                                $('.has-danger-email').text('' + error.response.data.message + '').css("color", "red");
+                                $('.has-danger-email').text('' + error.response.data.message + '').css("color", "#dc3545e3");
                             }else{
                                 $('.has-danger-email').text('');
                             }
                             setTimeout(() => {$('.jimbo-loader').hide();}, 500);
                         } else if(error.response.status === 419){
                             notify('Error, csrf-token no valido, intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
-                            setTimeout(function () {location.reload()}, 5000);
                         } else{
-                            //setTimeout(function () {location.reload()}, 5000);
                         }
                     }else{
                         notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
-                        //setTimeout(function () {location.reload()}, 5000);
                     }
                     setTimeout(() => {$('.jimbo-loader').hide();}, 500);
                     $('#btn-login').prop("disabled", false).text("Login");

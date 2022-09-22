@@ -68,11 +68,9 @@
                             }
                         }else{
                             notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
-                            setTimeout(function () {location.reload()}, 5000);
                         }
                     }else{
                         notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
-                        setTimeout(function () {location.reload()}, 5000);
                     }
                     setTimeout(() => {$('.jimbo-loader').hide();}, 500);
                     $('#btn-forgot').prop("disabled", false).text("Email Password Reset Link");

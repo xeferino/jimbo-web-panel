@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Mail\ResetPassword;
+use Illuminate\Support\Facades\Mail;
 
 
 class User extends Authenticatable
@@ -48,4 +50,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    /**
+     * Send a password reset notification to the user.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $url = route('password.reset', $token) . '?email=' . $this->email;
+        Mail::to($this)->queue(new ResetPassword($url, $this->email));
+    }
 }

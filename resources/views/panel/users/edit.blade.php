@@ -19,7 +19,8 @@
                 @method('PUT')
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <img src="{{asset('assets/images/users/'.$user->image)}}" style= "margin: 0px 0 5px 0;" width="100px" height="100px" alt="avatar" id="avatar" class="img-radius">
+                        <img src="{{ $user->image != 'avatar.svg' ? asset('assets/images/users/'.$user->image): asset('assets/images/avatar.svg') }}" style= "margin: 0px 0 5px 0;" width="100px" height="100px" alt="avatar" id="avatar" class="img-radius">
+
                         <br>
                         <label for="exampleFormControlFile1"><b>Imagen <i class="ti ti-info-alt" data-toggle="tooltip" data-placement="top" title="El formato de imagen debe ser (jpg, jpeg, png o svg). El peso maximo de la imagen es de 512 KB"></i></b></label>
                         <input type="file" name="image" id="image" file="true" class="form-control-file" id="exampleFormControlFile1">

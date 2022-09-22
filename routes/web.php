@@ -29,7 +29,6 @@ Route::get('/', function () {
 
 Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('users/detail/{user}', 'UserController@detail')->name('users.detail');
     Route::resource('users', UserController::class);
     Route::resource('countries', CountryController::class);
     Route::resource('roles', RoleController::class);

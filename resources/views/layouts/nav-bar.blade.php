@@ -90,7 +90,7 @@
                             </a>
                         </li> --}}
                         <li>
-                            <a href="#"><i class="ti-bookmark"></i>Rol</a>
+                            <a href="#"><i class="ti-bookmark"></i>Role - {{ Auth::user()->getRoleNames()->join('')  }}</a>
                         </li>
                         <li>
                             <a href="">

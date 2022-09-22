@@ -64,7 +64,6 @@
                 $('.jimbo-loader').show();
                 axios.post('{{ route('password.update') }}', $(this).serialize()).then(response => {
                     if(response.data.success){
-                        //notify(response.data.message, 'warning', '3000', 'top', 'right');
                         $('.load-text').text(''+response.data.message+'');
                         setTimeout(function () {location.href = response.data.url}, 5000);
                         $('#btn-reset-password').prop("disabled", false).text("Reset Password");
@@ -81,7 +80,6 @@
                         } else if (response.data.message == 'passwords.user'){
                             notify('No podemos encontrar un usuario con esa dirección de correo electrónico.', 'danger', '5000', 'bottom', 'right');
                         }
-                        setTimeout(function () {location.reload()}, 5000);
                         setTimeout(() => {$('.jimbo-loader').hide();}, 500);
                     }
                 }).catch(error => {
@@ -99,11 +97,9 @@
                             }
                         }else{
                             notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
-                            setTimeout(function () {location.reload()}, 5000);
                         }
                     }else{
                         notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
-                        setTimeout(function () {location.reload()}, 5000);
                     }
                     setTimeout(() => {$('.jimbo-loader').hide();}, 500);
                     $('#btn-reset-password').prop("disabled", false).text("Reset Password");

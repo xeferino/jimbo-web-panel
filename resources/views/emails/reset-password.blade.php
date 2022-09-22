@@ -136,13 +136,13 @@
   <table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="23308eb9-3685-43e8-9470-799f5caf5f3f" data-mc-module-version="2019-10-22">
     <tbody>
       <tr>
-        <td style="padding:18px 0px 15px 0px; line-height:20px; text-align:inherit; background-color:#FFFFFF;" height="100%" valign="top" bgcolor="#FFFFFF" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 26px; color: #3f4096"><strong>¡Hola, {{ $data['user']['email'] }}!</strong></span></div><div></div></div></td>
+        <td style="padding:18px 0px 15px 0px; line-height:20px; text-align:inherit; background-color:#FFFFFF;" height="100%" valign="top" bgcolor="#FFFFFF" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 26px; color: #3f4096"><strong>¡Hola, {{ $email }}!</strong></span></div><div></div></div></td>
       </tr>
     </tbody>
   </table><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="c2fe3d16-e9c1-4492-a90e-70be0f0c31cb" data-mc-module-version="2019-10-22">
     <tbody>
       <tr>
-        <td style="padding:0px 0px 0px 0px; line-height:22px; text-align:inherit; background-color:#FFFFFF;" height="100%" valign="top" bgcolor="#FFFFFF" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 16px">¿Has olvidado tu contraseña?</span></div><div></div></div></td>
+        <td style="padding:0px 0px 0px 0px; line-height:22px; text-align:inherit; background-color:#FFFFFF;" height="100%" valign="top" bgcolor="#FFFFFF" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 16px">¿Has olvidado tu contraseña? Puedes restablecerla aquí.</span></div><div></div></div></td>
       </tr>
     </tbody>
   </table><table border="0" cellpadding="0" cellspacing="0" class="module" data-role="module-button" data-type="button" role="module" style="table-layout:fixed;" width="100%" data-muid="87ebdc09-aee9-4eb6-8056-16811f38509d">
@@ -153,7 +153,7 @@
               <tbody>
                 <tr>
                 <td align="center" bgcolor="#FF9a4e" class="inner-td" style="border-radius:6px; font-size:16px; text-align:center; background-color:inherit;">
-                    <span style="background-color:#FF9a4e; border:1px solid #FF9a4e; border-color:#FF9a4e; border-radius:2px; border-width:1px; color:#ffffff; display:inline-block; font-size:16px; font-weight:bold; letter-spacing:0px; line-height:normal; padding:14px 18px 14px 18px; text-align:center; text-decoration:none; border-style:solid;">{{$data['password']}}</span>
+                  <a href="{{ $url }}" style="background-color:#FF9a4e; border:1px solid #FF9a4e; border-color:#FF9a4e; border-radius:2px; border-width:1px; color:#ffffff; display:inline-block; font-size:16px; font-weight:bold; letter-spacing:0px; line-height:normal; padding:14px 18px 14px 18px; text-align:center; text-decoration:none; border-style:solid;" target="_blank">Reestablecer contraseña</a>
                 </td>
                 </tr>
               </tbody>
@@ -164,21 +164,21 @@
     </table><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="5dac3345-d6ac-4b65-9ab9-fbb9d0102b44" data-mc-module-version="2019-10-22">
     <tbody>
       <tr>
-        <td style="padding:0px 20px 40px 20px; line-height:22px; text-align:inherit; background-color:#FFFFFF;" height="100%" valign="top" bgcolor="#FFFFFF" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 16px">Se ha generado una nueva contraseña  de manera automatica con la que podras acceder de nuevo a tu app de jimbo sorteos.</span><br>
+        <td style="padding:0px 20px 40px 20px; line-height:22px; text-align:inherit; background-color:#FFFFFF;" height="100%" valign="top" bgcolor="#FFFFFF" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 16px">Si mientras tanto ya te has acordado de la contraseña o si no pediste un restablecimiento de la misma, ignora este correo y sigue disfrutando de los mejores sorteos que jimbo trae para ti!.</span><br>
 <span style="font-size: 18px"><strong>Gracias</strong></span>.</div><div></div></div></td>
       </tr>
     </tbody>
   </table><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="e7ac3c25-d8d1-4b98-b2d8-0613260c81e6" data-mc-module-version="2019-10-22">
     <tbody>
       <tr>
-        <td style="padding:18px 20px 0px 20px; line-height:18px; text-align:inherit; background-color:#ffa726c9;" height="100%" valign="top" bgcolor="#ffa726c9" role="module-content"><div><div style="font-family: inherit; text-align: center">Sigue disfrutando de los mejores sorteos que jimbo trae para ti!.</div><div></div></div></td>
+        <td style="padding:18px 20px 0px 20px; line-height:18px; text-align:inherit; background-color:#ffa726c9;" height="100%" valign="top" bgcolor="#ffa726c9" role="module-content"><div><div style="font-family: inherit; text-align: center">Si tienes problemas pinchando el botón "Restablecer contraseña" copia y pega el siguiente enlace en tu navegador web:</div><div></div></div></td>
       </tr>
     </tbody>
   </table><table class="module" role="module" data-type="code" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="b7bc5176-7b16-4737-8a05-2f8dd94462a9">
     <tbody>
       <tr>
         <td height="100%" valign="top" role="module-content"><div style="background-color: #ffa726c9; font-size: 12px; font-family: arial; text-decoration: underline; padding-top: 17px; padding-bottom: 35px; padding-left: 20px; padding-right: 20px; text-align: center;">
-        <span style="word-break: break-all; color:#3f4096;">Este correo es generado automaticamente por nuestra plataforma, por favor no responder.</span>
+    <a href="{{ $url }}" style="word-break: break-all; color:#3f4096;">{{ $url }}</a>
 </div></td>
       </tr>
     </tbody>

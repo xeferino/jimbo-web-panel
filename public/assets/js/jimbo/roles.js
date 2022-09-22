@@ -83,13 +83,13 @@ $(function () {
                             notify(value, 'danger', '5000', 'top', 'right');
                         }); */
                         if (error.response.data.errors.name) {
-                            $('.has-danger-name').text('' + error.response.data.errors.name + '').css("color", "red");
+                            $('.has-danger-name').text('' + error.response.data.errors.name + '').css("color", "#dc3545e3");
                         }else{
                             $('.has-danger-name').text('');
                         }
 
                         if (error.response.data.errors.description) {
-                            $('.has-danger-description').text('' + error.response.data.errors.description + '').css("color", "red");
+                            $('.has-danger-description').text('' + error.response.data.errors.description + '').css("color", "#dc3545e3");
                         }else{
                             $('.has-danger-description').text('');
                         }
@@ -135,13 +135,13 @@ $(function () {
                             notify(value, 'danger', '5000', 'top', 'right');
                         }); */
                         if (error.response.data.errors.name) {
-                            $('.has-danger-name').text('' + error.response.data.errors.name + '').css("color", "red");
+                            $('.has-danger-name').text('' + error.response.data.errors.name + '').css("color", "#dc3545e3");
                         }else{
                             $('.has-danger-name').text('');
                         }
 
                         if (error.response.data.errors.description) {
-                            $('.has-danger-description').text('' + error.response.data.errors.description + '').css("color", "red");
+                            $('.has-danger-description').text('' + error.response.data.errors.description + '').css("color", "#dc3545e3");
                         }else{
                             $('.has-danger-description').text('');
                         }
