@@ -22,7 +22,8 @@ class UserSeeder extends Seeder
         //roles
         $super_admin    = Role::create(['name' => 'super-admin', 'description' => 'Super Administrador, acceso completo a la aplicacion']);
         $administrator  = Role::create(['name' => 'administrator', 'description' => 'Administrador del panel de jimbo sorteos']);
-        $seller    = Role::create(['name' => 'seller', 'description' => 'Vendedor, administra ventas en el app.']);
+        $seller         = Role::create(['name' => 'seller', 'description' => 'Vendedor, administra ventas en el app.']);
+        $competitor     = Role::create(['name' => 'competitor', 'description' => 'Concursante de sorteos, administra sus datos en el app.']);
 
         //permissions roles
         Permission::create(['name' => 'create-role', 'description' => 'Crear rol en el sistema'])->syncRoles([$super_admin]);

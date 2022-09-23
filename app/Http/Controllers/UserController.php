@@ -41,17 +41,17 @@ class UserController extends Controller
                            $btn = '';
                         if(auth()->user()->can('edit-user')){
 
-                            $btn .= '<a href="'.route('panel.users.edit',['user' => $user->id]).'" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$user->id.'" id="edit_'.$user->id.'" class="btn btn-warning btn-xs mr-1 editUser">
+                            $btn .= '<a href="'.route('panel.users.edit',['user' => $user->id]).'" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$user->id.'" id="edit_'.$user->id.'" class="btn btn-warning btn-sm mr-1 editUser">
                                             <i class="ti-pencil"></i>
                                     </a>';
                         }
                         if(auth()->user()->can('detail-user')){
-                            $btn .= '<a href="'.route('panel.users.detail',['user' => $user->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$user->id.'" id="det_'.$user->id.'" class="btn btn-info btn-xs  mr-1 detailUser">
+                            $btn .= '<a href="'.route('panel.users.detail',['user' => $user->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$user->id.'" id="det_'.$user->id.'" class="btn btn-info btn-sm  mr-1 detailUser">
                                         <i class="ti-search"></i>
                                     </a>';
                         }
                         if(auth()->user()->can('delete-user')){
-                            $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="right" title="Eliminar"  data-url="'.route('panel.users.destroy',['user' => $user->id]).'" class="btn btn-danger btn-xs deleteUser">
+                            $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="right" title="Eliminar"  data-url="'.route('panel.users.destroy',['user' => $user->id]).'" class="btn btn-danger btn-sm deleteUser">
                                             <i class="ti-trash"></i>
                                     </a>';
                         }
