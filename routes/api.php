@@ -18,9 +18,11 @@ use App\Http\Controllers\Api\AuthController;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/forgot', [AuthController::class, 'forgot']);
-Route::post('/logout/{user}', [AuthController::class, 'logout']);
+//Route::get('/profile/{id}', [AuthController::class, 'profile'])->middleware('auth:sanctum');
 
 Route::prefix('user')->middleware('auth:sanctum')->group(function () {
-    Route::get('/profile/{user}', [AuthController::class, 'profile']);
+    Route::get('/profile/{id}', [AuthController::class, 'profile']);
+    Route::post('/profile/{id}', [AuthController::class, 'settingProfile']);
+    Route::post('/logout/{user}', [AuthController::class, 'logout']);
 });
 

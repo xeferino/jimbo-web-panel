@@ -12,6 +12,7 @@ use App\Http\Requests\FormRequestSignupUser;
 use App\Http\Requests\FormRequestProfileUserSetting;
 use App\Http\Requests\FormRequestForgotUser;
 use App\Mail\RecoveryPassword;
+use App\Mail\RegisterUser;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
@@ -29,7 +30,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->asset = asset('/').'storage/';
+        $this->asset = config('app.url').'/assets/images/';
         $this->data = [];
     }
 
@@ -62,29 +63,35 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            if (!Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                return response()->json([ 'message' => 'Credenciales de acceso invalidos', 'status' => 400 ], 400);
+            $user = User::where('email', $request->email)->first();
+            if ($user) {
+                if ($user->hasRole('seller') or $user->hasRole('competitor')) {
+                    if (! Auth::attempt(array_merge( $request->only('email', 'password'), ['active' => 1 ]))) {
+                        return response()->json([ 'message' => 'Credenciales de acceso invalidos', 'status' => 400 ], 400);
+                    }
+
+                    $accessToken = Auth::user()->createToken('AuthToken')->plainTextToken;
+
+                    return response()->json(
+                        [
+                            'profile'    => [
+                                'id'           => Auth::user()->id,
+                                'name'         => Auth::user()->name,
+                                'email'        => Auth::user()->email,
+                                'dni'          => Auth::user()->dni,
+                                'phone'        => Auth::user()->phone,
+                                'image'        => Auth::user()->image != 'avatar.svg' ? $this->asset.'users/'.Auth::user()->image : $this->asset.'avatar.svg',
+                                'country'      => null
+                            ],
+                            'token'   => $accessToken,
+                            'message' => "Bienvenido a Jimbo, ".Auth::user()->name,
+                            'status'  => 200
+                        ],
+                        200
+                    );               
+                }
             }
-
-            $accessToken = Auth::user()->createToken('AuthToken')->plainTextToken;
-
-            return response()->json(
-                [
-                    'profile'    => [
-                        'id'                => Auth::user()->id,
-                        'name'              => Auth::user()->name,
-                        'email'             => Auth::user()->email,
-                        //'date_of_birth'     => Auth::user()->date_of_birth,
-                        //'phone'             => Auth::user()->phone,
-                        //'gender'            => Auth::user()->gender,
-                        //'img'               => Auth::user()->avatar ? $this->asset.'profile/'.Auth::user()->avatar : $this->asset.'profile/400x400.png',
-                    ],
-                    'token'   => $accessToken,
-                    'message' => "Bienvenido a Jimbo, ".Auth::user()->name,
-                    'status'  => 200
-                ],
-                200
-            );
+            return response()->json([ 'message' => 'Credenciales de acceso invalidos', 'status' => 400 ], 400);
         } catch (Exception $e) {
             return response()->json([
                 'status'   => 500,
@@ -102,30 +109,33 @@ class AuthController extends Controller
     public function signup(FormRequestSignupUser $request)
     {
         try {
-            $user = new User;
+            $user = new User();
             $user->name             = $request->name;
             $user->email            = $request->email;
-            //$user->date_of_birth    = $request->date_of_birth;
-            //$user->phone            = $request->phone;
-            //$user->gender           = $request->gender;
-            //$user->avatar           = ($request->avatar ? $request->avatar : '400x400.png');
+            $user->dni              = $request->dni;
+            $user->phone            = $request->phone;
+            $user->country_id       = null;
             $user->password         = Hash::make($request->password);
             $user->save();
+            $user->assignRole('competitor');
 
-            Auth::attempt(['email' => $request->email, 'password' => $request->password]);
+            $data = [
+                'user'  => $user,
+            ];
 
-            $accessToken = Auth::user()->createToken('AuthToken')->plainTextToken;
+            Mail::to($user->email)->send(new RegisterUser($data));
+
+            $accessToken = $user->createToken('AuthToken')->plainTextToken;
 
             return response()->json([
                 'profile'    => [
-                    'id'                => Auth::user()->id,
-                    'name'              => Auth::user()->name,
-                    'email'             => Auth::user()->email,
-                    //'date_of_birth'     => Auth::user()->date_of_birth,
-                    //'email'             => Auth::user()->email,
-                    //'phone'             => Auth::user()->phone,
-                    //'gender'            => Auth::user()->gender,
-                    //'img'               => Auth::user()->avatar ? $this->asset.'profile/'.Auth::user()->avatar : $this->asset.'profile/400x400.png',
+                    'id'           => $user->id,
+                    'name'         => $user->name,
+                    'email'        => $user->email,
+                    'dni'          => $user->dni,
+                    'phone'        => $user->phone,
+                    'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
+                    'country'      => null
                 ],
                 'token'    => $accessToken,
                 'message'  => 'Bienvenido a Jimbo, '.$user->name,
@@ -153,14 +163,13 @@ class AuthController extends Controller
             if ($user) {
                 return response()->json([
                     'profile'    => [
-                        'id'                => Auth::user()->id,
-                        'name'              => Auth::user()->name,
-                        'email'             => Auth::user()->email,
-                        //'date_of_birth'     => Auth::user()->date_of_birth,
-                        //'phone'             => Auth::user()->phone,
-                        //'gender'            => Auth::user()->gender,
-                        //'img'               => Auth::user()->avatar ? $this->asset.'profile/'.Auth::user()->avatar : $this->asset.'profile/400x400.png',
-                        //'colors'            => Auth::user()->Colors
+                        'id'           => $user->id,
+                        'name'         => $user->name,
+                        'email'        => $user->email,
+                        'dni'          => $user->dni,
+                        'phone'        => $user->phone,
+                        'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
+                        'country'      => null
                     ],
                     'status'   => 200
                 ], 200);
@@ -182,49 +191,43 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function settingProfile(FormRequestProfileUserSetting $request)
+    public function settingProfile(FormRequestProfileUserSetting $request, User $User, $id)
     {
         try {
-            $user = User::find(Auth::user()->id);
+            $user                   = User::find($id);
             $user->name             = $request->name;
             $user->email            = $request->email;
-            $user->date_of_birth    = $request->date_of_birth;
+            $user->dni              = $request->dni;
             $user->phone            = $request->phone;
-            $user->gender           = $request->gender;
-            if ($request->has('password_new') && isset($request->password_new)){
-                $user->password = Hash::make($request->password_new);
+            $user->country_id       = null;
+            if($request->password){
+                $user->password     = Hash::make($request->password);
             }
 
-            if ($request->has('img') && isset($request->img)) {
-                if ($user->avatar != "400x400.png") {
-                    if (Storage::disk('public')->exists('profile/'.$user->avatar))
-                    {
-                        Storage::disk('public')->delete('profile/'.$user->avatar);
+            if($request->file('image')){
+                if ($user->image != "avatar.svg") {
+                    if (File::exists(public_path('assets/images/users/' . $user->image))) {
+                        File::delete(public_path('assets/images/users/' . $user->image));
                     }
                 }
-                $image_64 = $request->img;
-                $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];
-                $replace = substr($image_64, 0, strpos($image_64, ',')+1);
-                $image = str_replace($replace, '', $image_64);
-                $image = str_replace(' ', '+', $image);
-                //$imageName = Str::random(10).'.'.$extension;
-                $imageName = Str::random(10).'.png';
-                Storage::disk('public')->put('profile/'.$imageName, base64_decode($image));
-                $user->avatar = $imageName;
+    
+                $file           = $request->file('image');
+                $extension      = $file->getClientOriginalExtension();
+                $fileName       = time() . '.' . $extension;
+                $user->image      = $fileName;
+                $file->move(public_path('assets/images/users/'), $fileName);
             }
 
             if ($user->save()) {
                 return response()->json([
                     'profile'    => [
-                        'id'                => $user->id,
-                        'name'              => $user->name,
-                        'email'             => $user->email,
-                        'date_of_birth'     => $user->date_of_birth,
-                        'email'             => $user->email,
-                        'phone'             => $user->phone,
-                        'gender'            => $user->gender,
-                        'img'               => $user->avatar ? $this->asset.'profile/'.$user->avatar : $this->asset.'profile/400x400.png',
-                        'colors'            => $user->Colors
+                        'id'           => $user->id,
+                        'name'         => $user->name,
+                        'email'        => $user->email,
+                        'dni'          => $user->dni,
+                        'phone'        => $user->phone,
+                        'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
+                        'country'      => null
                     ],
                     'status' => 200,
                     'message' => $user->name.'!, Perfil actualizado',

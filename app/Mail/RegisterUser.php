@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class RecoveryPassword extends Mailable
+class RegisterUser extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -29,8 +29,8 @@ class RecoveryPassword extends Mailable
      */
     public function build()
     {
-        return $this->from(config('sender-email.events.notif_user_reset_password_email_from'), config('app.name'))
-            ->subject('¿No consigues acceder con tu cuenta de Jimbo Sorteos?')
-            ->view('emails.recoverPassword', ['data' => $this->data]);
+        return $this->from(config('sender-email.events.notif_user_registration_email_from'), config('app.name'))
+            ->subject('Felicidades, ahora eres parte de la familia de Jimbo Sorteos!')
+            ->view('emails.newUser', ['data' => $this->data]);
     }
 }

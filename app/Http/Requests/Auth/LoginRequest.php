@@ -61,7 +61,7 @@ class LoginRequest extends FormRequest
                 'email' => 'Accceso no autorizado, Error en las credenciales.'//trans('auth.failed'),
             ]);
         }else {
-            if (Auth::user()->hasRole('seller')) {
+            if (Auth::user()->hasRole('seller') or Auth::user()->hasRole('competitor')) {
 
                 Auth::logout();
 
