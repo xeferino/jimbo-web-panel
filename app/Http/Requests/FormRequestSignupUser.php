@@ -29,6 +29,7 @@ class FormRequestSignupUser extends FormRequest
             'email'         => 'required|email|unique:users,email',
             'dni'           => 'required|integer',
             'phone'         => 'required|integer',
+            'country_id'    => 'required',
             'password'      => 'required|min:8|max:16',
             'cpassword'     => 'required|required_with:password|same:password',
         ];
@@ -37,6 +38,7 @@ class FormRequestSignupUser extends FormRequest
     public function messages()
     {
         return [
+            'country_id.required'           =>  'El Pais es requerido.',
             'dni.required'                  =>  'El DNI es requerido.',
             'dni.integer'                   =>  'El DNI debe ser entero.',
             'name.required'                 =>  'El nombre es requerido.',

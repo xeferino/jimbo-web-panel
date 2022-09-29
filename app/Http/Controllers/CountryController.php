@@ -37,13 +37,13 @@ class CountryController extends Controller
                     ->addColumn('action', function($country){
                            $btn = '';
                         if(auth()->user()->can('edit-country')){
-                            $btn .= '<a href="'.route('panel.countries.edit',['country' => $country->id]).'" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$country->id.'" id="edit_'.$country->id.'" class="btn btn-warning btn-xs mr-1 editCountry">
+                            $btn .= '<a href="'.route('panel.countries.edit',['country' => $country->id]).'" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$country->id.'" id="edit_'.$country->id.'" class="btn btn-warning btn-sm mr-1 editCountry">
                                             <i class="ti-pencil"></i>
                                         </a>';
                         }
 
                         if(auth()->user()->can('delete-country')){
-                            $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="right" title="Eliminar"  data-url="'.route('panel.countries.destroy',['country' => $country->id]).'" class="btn btn-danger btn-xs deleteCountry">
+                            $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="right" title="Eliminar"  data-url="'.route('panel.countries.destroy',['country' => $country->id]).'" class="btn btn-danger btn-sm deleteCountry">
                                         <i class="ti-trash"></i>
                                     </a>';
                         }
@@ -167,7 +167,7 @@ class CountryController extends Controller
         $update = $country->save();
 
         if($update)
-            return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Rol actualizado exitosamente.'], 200);
+            return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Pais actualizado exitosamente.'], 200);
     }
 
     /**

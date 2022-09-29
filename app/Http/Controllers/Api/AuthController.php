@@ -81,7 +81,7 @@ class AuthController extends Controller
                                 'dni'          => $user->dni,
                                 'phone'        => $user->phone,
                                 'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
-                                'country'      => null
+                                'country'      => $user->country
                             ],
                             'token'   => $accessToken,
                             'message' => "Bienvenido a Jimbo, ".$user->name,
@@ -114,7 +114,7 @@ class AuthController extends Controller
             $user->email            = $request->email;
             $user->dni              = $request->dni;
             $user->phone            = $request->phone;
-            $user->country_id       = null;
+            $user->country_id       = $request->country_id;
             $user->password         = Hash::make($request->password);
             $user->image            = 'avatar.svg';
             $user->save();
@@ -136,7 +136,7 @@ class AuthController extends Controller
                     'dni'          => $user->dni,
                     'phone'        => $user->phone,
                     'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
-                    'country'      => null
+                    'country'      => $user->country
                 ],
                 'token'    => $accessToken,
                 'message'  => 'Bienvenido a Jimbo, '.$user->name,
@@ -170,7 +170,7 @@ class AuthController extends Controller
                         'dni'          => $user->dni,
                         'phone'        => $user->phone,
                         'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
-                        'country'      => null
+                        'country'      => $user->country
                     ],
                     'status'   => 200
                 ], 200);
@@ -200,7 +200,7 @@ class AuthController extends Controller
             $user->email            = $request->email;
             $user->dni              = $request->dni;
             $user->phone            = $request->phone;
-            $user->country_id       = null;
+            $user->country_id       = $request->country_id;
             if($request->password){
                 $user->password     = Hash::make($request->password);
             }
@@ -228,7 +228,7 @@ class AuthController extends Controller
                         'dni'          => $user->dni,
                         'phone'        => $user->phone,
                         'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
-                        'country'      => null
+                        'country'      => $user->country
                     ],
                     'status' => 200,
                     'message' => $user->name.'!, Perfil actualizado',

@@ -175,10 +175,10 @@ $(function () {
                         }else{
                             $('.has-danger-active').text('');
                         }
-                        if (error.response.data.errors.image) {
-                            $('.has-danger-image').text('' + error.response.data.errors.image + '').css("color", "#dc3545e3");
+                        if (error.response.data.errors.img) {
+                            $('.has-danger-img').text('' + error.response.data.errors.img + '').css("color", "#dc3545e3");
                         }else{
-                            $('.has-danger-image').text('');
+                            $('.has-danger-img').text('');
                         }
                         if (error.response.data.errors.code) {
                             $('.has-danger-code').text('' + error.response.data.errors.code + '').css("color", "#dc3545e3");
