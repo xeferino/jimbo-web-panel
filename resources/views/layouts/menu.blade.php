@@ -119,7 +119,7 @@
                     </li>
                 @endcan
 
-                {{-- @can('country-menu')
+                @can('country-menu')
                     <li class="{{(\Request::segment(2)=='contries')?'active':''}}">
                         <a href="{{route('panel.countries.index')}}">
                             <span class="pcoded-micon"><i class="icofont icofont-flag"></i><b>PS</b></span>
@@ -127,7 +127,8 @@
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                @endcan --}}
+                @endcan
+                
                 {{-- <li class="">
                     <a href="">
                         <span class="pcoded-micon"><i class="icofont icofont-image"></i><b>SIM</b></span>

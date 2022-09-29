@@ -51,6 +51,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function Country()
+    {
+        return $this->belongsTo('App\Models\Country');
+    }
+
 
     /**
      * Send a password reset notification to the user.

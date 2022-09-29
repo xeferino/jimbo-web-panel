@@ -101,7 +101,7 @@ class UserController extends Controller
             'description_module' => 'Registrar nuevos usuarios en el sistema.',
             'title_nav'          => 'Registrar',
             'icon'               => 'icofont-users',
-            'roles' => Role::where('name', '<>', 'seller')->get(),
+            'roles' => Role::whereNotIn('name', ['seller', 'competitor'])->get(),
         ]);
     }
 
@@ -111,7 +111,7 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(FormUserCreateRequest $request)
+    public function store(FormUserCreateRequest $request, User $user)
     {
         $user                   = new User();
         $user->name             = $request->name;
@@ -176,7 +176,7 @@ class UserController extends Controller
             'title_nav'          => 'Editar',
             'icon'               => 'icofont-users',
             'user' => User::find($id), 'userRole' => $userRole,
-            'roles' => Role::where('name', '<>', 'seller')->get(),
+            'roles' => Role::whereNotIn('name', ['seller', 'competitor'])->get(),
         ]);
     }
 

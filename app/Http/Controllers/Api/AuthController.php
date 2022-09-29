@@ -59,39 +59,39 @@ class AuthController extends Controller
                 return response()->json([
                     'message'    => 'Por favor completa los datos de acceso',
                     'errors'     => $error,
-                    'status'     => 401
-                ], 401);
+                    'status'     => 422
+                ], 422);
             }
 
             $user = User::where('email', $request->email)->first();
             if ($user) {
                 if ($user->hasRole('seller') or $user->hasRole('competitor')) {
                     if (! Auth::attempt(array_merge( $request->only('email', 'password'), ['active' => 1 ]))) {
-                        return response()->json([ 'message' => 'Credenciales de acceso invalidos', 'status' => 400 ], 400);
+                        return response()->json([ 'message' => 'Credenciales de acceso invalidos', 'status' => 401 ], 401);
                     }
 
-                    $accessToken = Auth::user()->createToken('AuthToken')->plainTextToken;
+                    $accessToken = $user->createToken('AuthToken')->plainTextToken;
 
                     return response()->json(
                         [
                             'profile'    => [
-                                'id'           => Auth::user()->id,
-                                'name'         => Auth::user()->name,
-                                'email'        => Auth::user()->email,
-                                'dni'          => Auth::user()->dni,
-                                'phone'        => Auth::user()->phone,
-                                'image'        => Auth::user()->image != 'avatar.svg' ? $this->asset.'users/'.Auth::user()->image : $this->asset.'avatar.svg',
+                                'id'           => $user->id,
+                                'name'         => $user->name,
+                                'email'        => $user->email,
+                                'dni'          => $user->dni,
+                                'phone'        => $user->phone,
+                                'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
                                 'country'      => null
                             ],
                             'token'   => $accessToken,
-                            'message' => "Bienvenido a Jimbo, ".Auth::user()->name,
+                            'message' => "Bienvenido a Jimbo, ".$user->name,
                             'status'  => 200
                         ],
                         200
-                    );               
+                    );
                 }
             }
-            return response()->json([ 'message' => 'Credenciales de acceso invalidos', 'status' => 400 ], 400);
+            return response()->json([ 'message' => 'Credenciales de acceso invalidos', 'status' => 401 ], 401);
         } catch (Exception $e) {
             return response()->json([
                 'status'   => 500,
@@ -116,6 +116,7 @@ class AuthController extends Controller
             $user->phone            = $request->phone;
             $user->country_id       = null;
             $user->password         = Hash::make($request->password);
+            $user->image            = 'avatar.svg';
             $user->save();
             $user->assignRole('competitor');
 
@@ -180,9 +181,9 @@ class AuthController extends Controller
             ], 404);
         } catch (Exception $e) {
             return response()->json([
-                'status'   => 400,
+                'status'   => 500,
                 'message' =>  $e->getMessage()
-            ], 400);
+            ], 500);
         }
     }
 
@@ -210,7 +211,7 @@ class AuthController extends Controller
                         File::delete(public_path('assets/images/users/' . $user->image));
                     }
                 }
-    
+
                 $file           = $request->file('image');
                 $extension      = $file->getClientOriginalExtension();
                 $fileName       = time() . '.' . $extension;
@@ -235,9 +236,9 @@ class AuthController extends Controller
             }
         } catch (Exception $e) {
             return response()->json([
-                'status'   => 400,
+                'status'   => 500,
                 'message' =>  $e->getMessage()
-            ], 400);
+            ], 500);
         }
     }
 
@@ -275,9 +276,9 @@ class AuthController extends Controller
 
         } catch (Exception $e) {
             return response()->json([
-                'status'   => 400,
+                'status'   => 500,
                 'message' =>  $e->getMessage()
-            ], 400);
+            ], 500);
         }
     }
 
@@ -300,9 +301,9 @@ class AuthController extends Controller
 
         } catch (Exception $e) {
             return response()->json([
-                'status'   => 400,
+                'status'   => 500,
                 'message' =>  $e->getMessage()
-            ], 400);
+            ], 500);
         }
     }
 }

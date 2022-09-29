@@ -12,4 +12,10 @@ class Country extends Model
 
     protected $guarded = ['id'];
 
+
+    public function Users()
+    {
+        return $this->hasMany('App\Models\User');
+    }
+    
 }

@@ -6,10 +6,9 @@ use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Country;
-use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Models\Permission;
 use App\Http\Requests\FormCountryEditRequest;
 use App\Http\Requests\FormCountryCreateRequest;
+use Illuminate\Support\Facades\File;
 
 
 class CountryController extends Controller
@@ -32,41 +31,45 @@ class CountryController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $country = DB::table('countries')->select('id', 'name', 'description')->get();
+            $country = DB::table('countries')->select('id', 'name', 'code', 'img', 'active')->whereNull('deleted_at')->get();
             return Datatables::of($country)
                     ->addIndexColumn()
                     ->addColumn('action', function($country){
                            $btn = '';
-                        if(auth()->user()->can('edit-role')){
-                            if($country->name != 'super-admin' && $country->name != 'seller'){
-                                $btn .= '<a href="'.route('panel.countries.edit',['role' => $country->id]).'" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$country->id.'" id="edit_'.$country->id.'" class="btn btn-warning btn-xs mr-1 editCountry">
+                        if(auth()->user()->can('edit-country')){
+                            $btn .= '<a href="'.route('panel.countries.edit',['country' => $country->id]).'" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$country->id.'" id="edit_'.$country->id.'" class="btn btn-warning btn-xs mr-1 editCountry">
                                             <i class="ti-pencil"></i>
                                         </a>';
-                            }
                         }
-                        /* if(auth()->user()->can('detail-role')){
-                            $btn .= '<a href="'.route('panel.countries.detail',['role' => $country->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$country->id.'" id="det_'.$country->id.'" class="btn btn-info btn-xs  mr-1 detailCountry">
-                                        <i class="ti-search"></i>
+
+                        if(auth()->user()->can('delete-country')){
+                            $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="right" title="Eliminar"  data-url="'.route('panel.countries.destroy',['country' => $country->id]).'" class="btn btn-danger btn-xs deleteCountry">
+                                        <i class="ti-trash"></i>
                                     </a>';
-                        } */
-                        if(auth()->user()->can('delete-role')){
-                            if($country->name != 'super-admin' && $country->name != 'seller'){
-                                $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="right" title="Eliminar"  data-url="'.route('panel.countries.destroy',['role' => $country->id]).'" class="btn btn-danger btn-xs deleteCountry">
-                                                <i class="ti-trash"></i>
-                                        </a>';
-                            }
+                        }
+                        return $btn;
+                    })->addColumn('active', function($country){
+                        $btn = '';
+                        if($country->active==1){
+                            $btn .= '<span class="badge badge-success" title="Activo"><i class="ti-check"></i></span>';
+                        }else{
+                            $btn .= '<span class="badge badge-danger" title="Inactivo"><i class="ti-close"></i></span>';
                         }
                         return $btn;
                     })
-                    ->rawColumns(['action'])
+                    ->addColumn('img', function($country){
+                        $img = $country->img != 'flag.png' ? asset('assets/images/flags/'.$country->img): asset('assets/images/flags/flag.png');
+                        return '<img src="'.$img.'" class="img-50" alt="country">';
+                    })
+                    ->rawColumns(['action', 'img', 'active'])
                     ->make(true);
         }
         return view('panel.countries.index', [
-            'title'              => 'Countrys',
-            'title_header'       => 'Listado de countries',
-            'description_module' => 'Informacion de los countries que se encuentran en el sistema.',
+            'title'              => 'Paises',
+            'title_header'       => 'Listado de paises',
+            'description_module' => 'Informacion de los paises que se encuentran en el sistema.',
             'title_nav'          => 'Listado',
-            'icon'               => 'icofont-settings'
+            'icon'               => 'icofont-flag'
         ]);
     }
 
@@ -78,12 +81,11 @@ class CountryController extends Controller
     public function create()
     {
         return view('panel.countries.create', [
-            'title'              => 'Countrys',
-            'title_header'       => 'Registrar role',
-            'description_module' => 'Registro de countries en el sistema.',
+            'title'              => 'Paises',
+            'title_header'       => 'Registrar Pais',
+            'description_module' => 'Registro de paises en el sistema.',
             'title_nav'          => 'Registrar',
-            'icon'               => 'icofont-settings',
-            'permissions'        => Permission::all()
+            'icon'               => 'icofont-flag',
         ]);
     }
 
@@ -93,40 +95,26 @@ class CountryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(FormCountryCreateRequest $request)
+    public function store(FormCountryCreateRequest $request, Country $country)
     {
-        $store = Country::create([
-            'name'        => $request->name,
-            'description' => $request->description
-        ])->syncPermissions($request->syncPermissions);
+        $country                   = new Country();
+        $country->name             = $request->name;
+        $country->code             = $request->code;
+        $country->active           = $request->active;
 
-        if($store)
-            return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Rol registrado exitosamente.'], 200);
-    }
+        if($request->file('img')){
+            $file           = $request->file('img');
+            $extension      = $file->getClientOriginalExtension();
+            $fileName       = time().uniqid() . '.' . $extension;
+            $country->img   = $fileName;
+            $file->move(public_path('assets/images/flags/'), $fileName);
+        }else{
+            $country->img = 'flag.png';
+        }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $id = Auth::user()->id;
-        $countryCountry = DB::table('model_has_countries')->select('role_id')->where('model_id',  $id)->pluck('role_id')->toArray();
-        return view('panel.countries.show', ['title' => 'Usuarios - Perfil', 'role' => Country::find($id), 'userCountry' => $countryCountry, 'countries' => Country::all(), 'permissions' => Country::findOrFail($id)->getAllPermissions()]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function detail($id)
-    {
-        $countryCountry = DB::table('model_has_countries')->select('role_id')->where('model_id',  $id)->pluck('role_id')->toArray();
-        return view('panel.countries.detail', ['title' => 'Usuarios - Detalle', 'role' => Country::find($id), 'userCountry' => $countryCountry, 'countries' => Country::all(), 'permissions' => Country::findOrFail($id)->getAllPermissions()]);
+        $saved = $country->save();
+        if($saved)
+            return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Pais registrado exitosamente.'], 200);
     }
 
     /**
@@ -137,17 +125,13 @@ class CountryController extends Controller
      */
     public function edit($id)
     {
-        $syncPermissions = DB::table('role_has_permissions')->select('permission_id')->where('role_id',  $id)->pluck('permission_id')->toArray();
-
         return view('panel.countries.edit', [
-            'title'              => 'Countrys',
-            'title_header'       => 'Editar Country',
-            'description_module' => 'Actualice la informacion del role en el formulario de Edicion.',
+            'title'              => 'Paises',
+            'title_header'       => 'Editar Pais',
+            'description_module' => 'Actualice la informacion del pais en el formulario de Edicion.',
             'title_nav'          => 'Editar',
-            'icon'               => 'icofont-settings',
-            'permissions'        => Permission::all(),
-            'role'               => Country::findOrFail($id),
-            'syncPermissions'    => $syncPermissions
+            'icon'               => 'icofont-flag',
+            'country'            => Country::findOrFail($id)
         ]);
     }
 
@@ -162,11 +146,26 @@ class CountryController extends Controller
     {
         $country = Country::findOrFail($Country->id);
 
-        $update = $country->update([
-            'name'         => $request->name,
-            'description'  => $request->description
-        ]);
-        $country->syncPermissions($request->syncPermissions, true);
+        $country->name    = $request->name;
+        $country->code    = $request->code;
+        $country->active  = $request->active==1 ? 1 : 0;
+
+        if($request->file('img')){
+            if ($country->img != "flag.png") {
+                if (File::exists(public_path('assets/images/flags/' . $country->img))) {
+                    File::delete(public_path('assets/images/flags/' . $country->img));
+                }
+            }
+
+            $file           = $request->file('img');
+            $extension      = $file->getClientOriginalExtension();
+            $fileName       = time() . '.' . $extension;
+            $country->img      = $fileName;
+            $file->move(public_path('assets/images/flags/'), $fileName);
+        }
+
+        $update = $country->save();
+
         if($update)
             return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Rol actualizado exitosamente.'], 200);
     }
@@ -181,11 +180,16 @@ class CountryController extends Controller
     {
         if(\Request::wantsJson()){
             $country = Country::findOrFail($id);
+            /* if ($country->image != "avatar.svg") {
+                if (File::exists(public_path('assets/images/flags/' . $country->img))) {
+                    File::delete(public_path('assets/images/flags/' . $country->img));
+                }
+            } */
             $delete = $country->delete();
             if ($delete) {
-                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Country eliminado exitosamente.'], 200);
+                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Pais eliminado exitosamente.'], 200);
             } else {
-                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: El role no se elimino correctamente. Intente mas tarde.'], 200);
+                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: El pais no se elimino correctamente. Intente mas tarde.'], 200);
             }
         }
         abort(404);
