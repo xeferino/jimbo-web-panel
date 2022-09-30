@@ -35,7 +35,7 @@
                 </li>
             @endcan
 
-            <li class="">
+           {{--  <li class="">
                 <a href="">
                     <span class="pcoded-micon"><i class="icofont icofont-bars"></i><b>VT</b></span>
                     <span class="pcoded-mtext" data-i18n="nav.form-components.main">Ventas</span>
@@ -49,16 +49,29 @@
                     <span class="pcoded-mtext" data-i18n="nav.form-components.main">Egresos</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
-            </li>
-            <li class="">
-                <a href="">
-                    <span class="pcoded-micon"><i class="icofont icofont-gift"></i><b>ST</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Sorteos</span>
-                    <span class="pcoded-mcaret"></span>
-                </a>
-            </li>
+            </li> --}}
 
-            <li class="">
+            @can('raffle-menu')
+                <li class="{{(\Request::segment(2)=='raffles')?'active':''}}">
+                    <a href="{{route('panel.raffles.index')}}">
+                        <span class="pcoded-micon"><i class="icofont icofont-gift"></i><b>ST</b></span>
+                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">Sorteos</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+            @endcan
+
+            @can('promotion-menu')
+                <li class="{{(\Request::segment(2)=='promotions')?'active':''}}">
+                    <a href="{{route('panel.promotions.index')}}">
+                        <span class="pcoded-micon"><i class="icofont icofont-megaphone"></i><b>PM</b></span>
+                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">Promociones de Sorteos</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+            @endcan
+
+            {{-- <li class="">
                 <a href="">
                     <span class="pcoded-micon"><i class="icofont icofont-bill-alt"></i><b>SL</b></span>
                     <span class="pcoded-mtext" data-i18n="nav.form-components.main">Solicitudes de Retiros</span>
@@ -96,7 +109,7 @@
                     <span class="pcoded-micon"><i class="icofont icofont-chart-bar-graph"></i><b>RP</b></span>Reportes</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
-            </li>
+            </li> --}}
             @can('setting-menu')
                 <div class="pcoded-navigatio-lavel" data-i18n="nav.category.navigation">Configuraciones</div>
                 @can('user-menu')
@@ -128,7 +141,18 @@
                         </a>
                     </li>
                 @endcan
-                
+
+                @can('slider-menu')
+                    <li class="{{(\Request::segment(2)=='sliders')?'active':''}}">
+                        <a href="{{route('panel.sliders.index')}}">
+                            <span class="pcoded-micon"><i class="icofont icofont-image"></i><b>IM</b></span>
+                            <span class="pcoded-mtext" data-i18n="nav.form-components.main">Slider de imagenes</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+                @endcan
+
+
                 {{-- <li class="">
                     <a href="">
                         <span class="pcoded-micon"><i class="icofont icofont-image"></i><b>SIM</b></span>

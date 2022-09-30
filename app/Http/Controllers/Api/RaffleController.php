@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
-use App\Models\Country;
+use App\Models\Raffle;
 
 
-class CountryController extends Controller
+class RaffleController extends Controller
 {
 
     private $asset;
@@ -22,7 +22,7 @@ class CountryController extends Controller
      */
     public function __construct()
     {
-        $this->asset = config('app.url').'/assets/images/flags/';
+        $this->asset = config('app.url').'/assets/images/raffles/';
         $this->data = [];
     }
 
@@ -35,8 +35,19 @@ class CountryController extends Controller
     {
         try {
 
-            $countries = Country::select('id', 'name', 'code', DB::raw("CONCAT('".$this->asset."',img) AS icon"))->where('active', 1)->whereNull('deleted_at')->get();
-            return response()->json(['countries' => $countries], 200);
+            $raffles = Raffle::select(
+                'id',
+                'title',
+                DB::raw("CONCAT(cash_to_draw,'$') AS cash_to_draw"),
+                'date_start',
+                'date_end',
+                DB::raw("TIMESTAMPDIFF(DAY, now(), date_end) AS remaining_days"),
+                DB::raw("CONCAT('".$this->asset."',image) AS logo"))
+                ->where('active', 1)
+                ->where('public', 0)
+                ->whereNull('deleted_at')->get();
+
+            return response()->json(['raffles' => $raffles], 200);
 
         } catch (Exception $e) {
 

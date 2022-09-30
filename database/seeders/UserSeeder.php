@@ -43,12 +43,34 @@ class UserSeeder extends Seeder
         Permission::create(['name' => 'show-country', 'description' => 'listado y detalle de pais en el sistema'])->syncRoles([$super_admin, $administrator]);
         Permission::create(['name' => 'delete-country', 'description' => 'Eliminar de pais en el sistema'])->syncRoles([$super_admin, $administrator]);
 
+        //permissions promotions
+        Permission::create(['name' => 'create-promotion', 'description' => 'Crear promociones de sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
+        Permission::create(['name' => 'edit-promotion', 'description' => 'Editar promociones de sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
+        Permission::create(['name' => 'show-promotion', 'description' => 'listado y detalle de promociones de sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
+        Permission::create(['name' => 'delete-promotion', 'description' => 'Eliminar de promociones de sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
+
+
+        //permissions raffles
+        Permission::create(['name' => 'create-raffle', 'description' => 'Crear sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
+        Permission::create(['name' => 'edit-raffle', 'description' => 'Editar sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
+        Permission::create(['name' => 'show-raffle', 'description' => 'listado y detalle de sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
+        Permission::create(['name' => 'delete-raffle', 'description' => 'Eliminar de sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
+
+        //permissions sliders
+        Permission::create(['name' => 'create-slider', 'description' => 'Crear sliders de sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
+        Permission::create(['name' => 'edit-slider', 'description' => 'Editar sliders de sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
+        Permission::create(['name' => 'show-slider', 'description' => 'listado y detalle de sliders de sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
+        Permission::create(['name' => 'delete-slider', 'description' => 'Eliminar de sliders de sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
+
         //permissions menu
         Permission::create(['name' => 'setting-menu', 'description' => 'menu de configuracion en el sistema'])->syncRoles([$super_admin]);
         Permission::create(['name' => 'user-menu', 'description' => 'menu de configuracion de usuarios en el sistema'])->syncRoles([$super_admin]);
         Permission::create(['name' => 'role-menu', 'description' => 'menu de configuracion de roles en el sistema'])->syncRoles([$super_admin]);
         Permission::create(['name' => 'dashboard-menu', 'description' => 'menu de tablero de informacion de balances y estadisticas en el sistema'])->syncRoles([$super_admin, $administrator]);
         Permission::create(['name' => 'country-menu', 'description' => 'menu de configuracion de paises en el sistema'])->syncRoles([$super_admin]);
+        Permission::create(['name' => 'raffle-menu', 'description' => 'menu de configuracion de sorteos en el sistema'])->syncRoles([$super_admin]);
+        Permission::create(['name' => 'promotion-menu', 'description' => 'menu de configuracion de promociones de sorteos en el sistema'])->syncRoles([$super_admin]);
+        Permission::create(['name' => 'slider-menu', 'description' => 'menu de configuracion de sliders en el app'])->syncRoles([$super_admin]);
 
         User::create([
             'name' => 'Super Admin',

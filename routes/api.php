@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CountryController;
+use App\Http\Controllers\Api\SliderController;
+use App\Http\Controllers\Api\RaffleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +22,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/forgot', [AuthController::class, 'forgot']);
 Route::get('/countries', [CountryController::class, 'index']);
+Route::get('/sliders', [SliderController::class, 'index']);
 //Route::get('/profile/{id}', [AuthController::class, 'profile'])->middleware('auth:sanctum');
 
 Route::prefix('user')->middleware('auth:sanctum')->group(function () {
@@ -27,4 +30,7 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
     Route::post('/profile/{id}', [AuthController::class, 'settingProfile']);
     Route::post('/logout/{user}', [AuthController::class, 'logout']);
 });
+
+Route::get('/raffles', [RaffleController::class, 'index'])->middleware('auth:sanctum');
+
 

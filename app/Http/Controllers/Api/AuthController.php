@@ -67,7 +67,7 @@ class AuthController extends Controller
             if ($user) {
                 if ($user->hasRole('seller') or $user->hasRole('competitor')) {
                     if (! Auth::attempt(array_merge( $request->only('email', 'password'), ['active' => 1 ]))) {
-                        return response()->json([ 'message' => 'Credenciales de acceso invalidos', 'status' => 401 ], 401);
+                        return response()->json([ 'message' => 'Credenciales de acceso invalidos', 'status' => 422 ], 422);
                     }
 
                     $accessToken = $user->createToken('AuthToken')->plainTextToken;
@@ -81,7 +81,12 @@ class AuthController extends Controller
                                 'dni'          => $user->dni,
                                 'phone'        => $user->phone,
                                 'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
-                                'country'      => $user->country
+                                'country'      => [
+                                    'id'    => $user->country->id,
+                                    'name'  => $user->country->name,
+                                    'code'  => $user->country->code,
+                                    'icon'  => $user->country->img != 'flag.png' ? $this->asset.'flags/'.$user->country->img : $this->asset.'flags/flag.png'
+                                ]
                             ],
                             'token'   => $accessToken,
                             'message' => "Bienvenido a Jimbo, ".$user->name,
@@ -91,7 +96,7 @@ class AuthController extends Controller
                     );
                 }
             }
-            return response()->json([ 'message' => 'Credenciales de acceso invalidos', 'status' => 401 ], 401);
+            return response()->json([ 'message' => 'Credenciales de acceso invalidos', 'status' => 422 ], 422);
         } catch (Exception $e) {
             return response()->json([
                 'status'   => 500,
@@ -136,7 +141,12 @@ class AuthController extends Controller
                     'dni'          => $user->dni,
                     'phone'        => $user->phone,
                     'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
-                    'country'      => $user->country
+                    'country'      => [
+                        'id'    => $user->country->id,
+                        'name'  => $user->country->name,
+                        'code'  => $user->country->code,
+                        'icon'  => $user->country->img != 'flag.png' ? $this->asset.'flags/'.$user->country->img : $this->asset.'flags/flag.png'
+                    ]
                 ],
                 'token'    => $accessToken,
                 'message'  => 'Bienvenido a Jimbo, '.$user->name,
@@ -170,7 +180,12 @@ class AuthController extends Controller
                         'dni'          => $user->dni,
                         'phone'        => $user->phone,
                         'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
-                        'country'      => $user->country
+                        'country'      => [
+                            'id'    => $user->country->id,
+                            'name'  => $user->country->name,
+                            'code'  => $user->country->code,
+                            'icon'  => $user->country->img != 'flag.png' ? $this->asset.'flags/'.$user->country->img : $this->asset.'flags/flag.png'
+                        ]
                     ],
                     'status'   => 200
                 ], 200);
@@ -228,7 +243,12 @@ class AuthController extends Controller
                         'dni'          => $user->dni,
                         'phone'        => $user->phone,
                         'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
-                        'country'      => $user->country
+                        'country'      => [
+                            'id'    => $user->country->id,
+                            'name'  => $user->country->name,
+                            'code'  => $user->country->code,
+                            'icon'  => $user->country->img != 'flag.png' ? $this->asset.'flags/'.$user->country->img : $this->asset.'flags/flag.png'
+                        ]
                     ],
                     'status' => 200,
                     'message' => $user->name.'!, Perfil actualizado',

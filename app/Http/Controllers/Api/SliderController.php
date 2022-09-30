@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
-use App\Models\Country;
+use App\Models\Slider;
 
 
-class CountryController extends Controller
+class SliderController extends Controller
 {
 
     private $asset;
@@ -22,7 +22,7 @@ class CountryController extends Controller
      */
     public function __construct()
     {
-        $this->asset = config('app.url').'/assets/images/flags/';
+        $this->asset = config('app.url').'/assets/images/sliders/';
         $this->data = [];
     }
 
@@ -35,15 +35,15 @@ class CountryController extends Controller
     {
         try {
 
-            $countries = Country::select('id', 'name', 'code', DB::raw("CONCAT('".$this->asset."',img) AS icon"))->where('active', 1)->whereNull('deleted_at')->get();
-            return response()->json(['countries' => $countries], 200);
+            $sliders = Slider::select('id', 'name', DB::raw("CONCAT('".$this->asset."',image) AS slider"))->where('active', 1)->whereNull('deleted_at')->get();
+            return response()->json(['sliders' => $sliders], 200);
 
         } catch (Exception $e) {
 
             return response()->json([
-                'status'   => 500,
+                'status'   => 400,
                 'message' =>  $e->getMessage()
-            ], 500);
+            ], 400);
         }
     }
 }

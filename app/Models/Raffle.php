@@ -6,16 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Country extends Model
+class Raffle extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
 
-
-    public function Users()
+    public function Tickets()
     {
-        return $this->hasMany('App\Models\User');
+        return $this->hasMany('App\Models\Ticket');
     }
 
 }

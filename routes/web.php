@@ -4,7 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\RaffleController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SliderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,5 +34,8 @@ Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
     Route::resource('countries', CountryController::class);
+    Route::resource('raffles', RaffleController::class);
+    Route::resource('promotions', PromotionController::class);
     Route::resource('roles', RoleController::class);
+    Route::resource('sliders', SliderController::class);
 });
