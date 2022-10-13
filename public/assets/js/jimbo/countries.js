@@ -52,6 +52,8 @@ $(function () {
             {data: 'name', name: 'name'},
             {data: 'code', name: 'code'},
             {data: 'img', name: 'img'},
+            {data: 'currency', name: 'currency'},
+            {data: 'exchange_rate', name: 'exchange_rate'},
             {data: 'active', name: 'active'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
@@ -107,6 +109,18 @@ $(function () {
                         $('.has-danger-code').text('' + error.response.data.errors.code + '').css("color", "#dc3545e3");
                     }else{
                         $('.has-danger-code').text('');
+                    }
+
+                    if (error.response.data.errors.currency) {
+                        $('.has-danger-currency').text('' + error.response.data.errors.currency + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-currency').text('');
+                    }
+
+                    if (error.response.data.errors.exchange_rate) {
+                        $('.has-danger-exchange_rate').text('' + error.response.data.errors.exchange_rate + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-exchange_rate').text('');
                     }
 
                     if (error.response.data.errors.active) {
@@ -175,6 +189,19 @@ $(function () {
                         }else{
                             $('.has-danger-active').text('');
                         }
+
+                        if (error.response.data.errors.currency) {
+                            $('.has-danger-currency').text('' + error.response.data.errors.currency + '').css("color", "#dc3545e3");
+                        }else{
+                            $('.has-danger-currency').text('');
+                        }
+
+                        if (error.response.data.errors.exchange_rate) {
+                            $('.has-danger-exchange_rate').text('' + error.response.data.errors.exchange_rate + '').css("color", "#dc3545e3");
+                        }else{
+                            $('.has-danger-exchange_rate').text('');
+                        }
+
                         if (error.response.data.errors.img) {
                             $('.has-danger-img').text('' + error.response.data.errors.img + '').css("color", "#dc3545e3");
                         }else{

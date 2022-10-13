@@ -44,7 +44,7 @@ class RaffleController extends Controller
                 DB::raw("TIMESTAMPDIFF(DAY, now(), date_end) AS remaining_days"),
                 DB::raw("CONCAT('".$this->asset."',image) AS logo"))
                 ->where('active', 1)
-                ->where('public', 0)
+                ->where('public', 1)
                 ->whereNull('deleted_at')->get();
 
             return response()->json(['raffles' => $raffles], 200);

@@ -23,6 +23,10 @@ return new class extends Migration
             $table->string('password');
             $table->boolean('active')->default(1);
             $table->string('image')->nullable()->default('avatar.svg');
+            $table->unsignedDouble('balance_usd')->default(0)->nullable();
+            $table->unsignedDecimal('balance_jib', 8, 2)->default(0)->nullable();
+            $table->string('code')->nullable();
+            $table->string('token')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

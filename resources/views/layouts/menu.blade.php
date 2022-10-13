@@ -71,6 +71,26 @@
                 </li>
             @endcan
 
+            @can('seller-menu')
+                <li class="{{(\Request::segment(2)=='sellers')?'active':''}}">
+                    <a href="{{route('panel.sellers.index')}}">
+                        <span class="pcoded-micon"><i class="icofont icofont-users"></i><b>VD</b></span>
+                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">Vendedores</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+            @endcan
+
+            @can('competitor-menu')
+                <li class="{{(\Request::segment(2)=='competitors')?'active':''}}">
+                    <a href="{{route('panel.competitors.index')}}">
+                        <span class="pcoded-micon"><i class="icofont icofont-users"></i><b>VD</b></span>
+                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">Participantes</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+            @endcan
+
             {{-- <li class="">
                 <a href="">
                     <span class="pcoded-micon"><i class="icofont icofont-bill-alt"></i><b>SL</b></span>
@@ -79,13 +99,6 @@
                 </a>
             </li>
 
-            <li class="">
-                <a href="">
-                    <span class="pcoded-micon"><i class="icofont icofont-user"></i><b>VD</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Vendedores</span>
-                    <span class="pcoded-mcaret"></span>
-                </a>
-            </li>
 
             <li class="">
                 <a href="">

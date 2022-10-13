@@ -22,6 +22,8 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $guarded = ['id'];
+
     protected $fillable = [
         'name',
         'dni',
@@ -29,7 +31,10 @@ class User extends Authenticatable
         'email',
         'password',
         'active',
-        'image'
+        'image',
+        'code',
+        'balance_usd',
+        'balance_jib',
     ];
 
     /**
@@ -54,6 +59,16 @@ class User extends Authenticatable
     public function Country()
     {
         return $this->belongsTo('App\Models\Country');
+    }
+
+    public function Actions()
+    {
+        return $this->hasMany('App\Models\Action');
+    }
+
+    public function Notifications()
+    {
+        return $this->hasMany('App\Models\Notification');
     }
 
 

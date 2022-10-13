@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SellerController;
+use App\Http\Controllers\CompetitorController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\RaffleController;
@@ -33,6 +35,8 @@ Route::get('/', function () {
 Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
+    Route::resource('sellers', SellerController::class);
+    Route::resource('competitors', CompetitorController::class);
     Route::resource('countries', CountryController::class);
     Route::resource('raffles', RaffleController::class);
     Route::resource('promotions', PromotionController::class);

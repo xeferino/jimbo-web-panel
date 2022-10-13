@@ -38,11 +38,11 @@ class RoleController extends Controller
                     ->addColumn('action', function($role){
                            $btn = '';
                         if(auth()->user()->can('edit-role')){
-                            if($role->name != 'super-admin' && $role->name != 'seller' && $role->name != 'competitor' ){
+                            //if($role->name != 'super-admin' && $role->name != 'seller' && $role->name != 'competitor' ){
                                 $btn .= '<a href="'.route('panel.roles.edit',['role' => $role->id]).'" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$role->id.'" id="edit_'.$role->id.'" class="btn btn-warning btn-sm mr-1 editRole">
                                             <i class="ti-pencil"></i>
                                         </a>';
-                            }
+                            //}
                         }
                         /* if(auth()->user()->can('detail-role')){
                             $btn .= '<a href="'.route('panel.roles.detail',['role' => $role->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$role->id.'" id="det_'.$role->id.'" class="btn btn-info btn-sm  mr-1 detailRole">
@@ -50,11 +50,11 @@ class RoleController extends Controller
                                     </a>';
                         } */
                         if(auth()->user()->can('delete-role')){
-                            if($role->name != 'super-admin' && $role->name != 'seller' && $role->name != 'competitor' ){
+                            //if($role->name != 'super-admin' && $role->name != 'seller' && $role->name != 'competitor' ){
                                 $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="right" title="Eliminar"  data-url="'.route('panel.roles.destroy',['role' => $role->id]).'" class="btn btn-danger btn-sm deleteRole">
                                             <i class="ti-trash"></i>
                                         </a>';
-                            }
+                            //}
                         }
                         return $btn;
                     })

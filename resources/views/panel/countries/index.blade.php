@@ -20,6 +20,8 @@
                             <th>Nombre</th>
                             <th>Code</th>
                             <th>Imagen</th>
+                            <th>Moneda</th>
+                            <th>tasa de Cambio</th>
                             <th>Status</th>
                             <th>Acciones</th>
                         </tr>

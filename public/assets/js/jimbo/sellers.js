@@ -1,17 +1,17 @@
 'use strict';
 const APP_URL = $('meta[name="base-url"]').attr('content');
-const JIMBO = { url : '/panel/raffles' };
-
+const JIMBO = { url : '/panel/sellers' };
+//alert(JIMBO.url)
 $(function () {
     /*DataTables*/
-    var table = $('.table-raffle').DataTable({
+    var table = $('.table-seller').DataTable({
         processing: true,
         serverSide: true,
         "language": {
             "decimal":        "",
-            "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ sorteos",
-            "infoEmpty":      "Mostrando 0 para 0 de 0 sorteos",
-            "infoFiltered":   "(Filtrado para un total de _MAX_ sorteos)",
+            "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ vendedores",
+            "infoEmpty":      "Mostrando 0 para 0 de 0 vendedores",
+            "infoFiltered":   "(Filtrado para un total de _MAX_ vendedores)",
             "infoPostFix":    "",
             "thousands":      ",",
             "lengthMenu":     "Mostrar _MENU_ Registros",
@@ -49,24 +49,33 @@ $(function () {
         ajax: APP_URL+JIMBO.url,
         columns: [
             {data: 'id', name: 'id'},
-            {data: 'title', name: 'title'},
-            {data: 'cash_to_draw', name: 'cash_to_draw'},
-            {data: 'cash_to_collect', name: 'cash_to_collect'},
-            {data: 'date_start', name: 'date_start'},
-            {data: 'date_end', name: 'date_end'},
-            {data: 'public', name: 'public'},
+            {data: 'image', name: 'image'},
+            {data: 'fullname', name: 'fullname'},
+            {data: 'role', name: 'role'},
+            {data: 'email', name: 'email'},
             {data: 'active', name: 'active'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
     /*DataTables*/
 
-    /*raffle-register*/
-    $("#form-raffle-create").submit(function( event ) {
+    $("#image").on('change', function () {
+        if(validarExtension(this)) {
+            $('#avatar').show();
+            if(validarPeso(this)) {
+                verImagen(this);
+	        }
+	    }else{
+            $('#avatar').hide();
+        }
+    });
+
+    /*seller-register*/
+    $("#form-seller-create").submit(function( event ) {
         event.preventDefault();
         $('.jimbo-loader').show();
         $('.load-text').text('Enviando...');
-        $('.btn-raffle').prop("disabled", true).text('Enviando...');
+        $('.btn-seller').prop("disabled", true).text('Enviando...');
 
         var formData = new FormData(event.currentTarget);
 
@@ -77,8 +86,8 @@ $(function () {
         }).then(response => {
             if(response.data.success){
                 notify(response.data.message, 'success', '3000', 'top', 'right');
-                $('#form-raffle-create').trigger("reset");
-                $('.btn-raffle').prop("disabled", false).text('Registrar');
+                $('#form-seller-create').trigger("reset");
+                $('.btn-seller').prop("disabled", false).text('Registrar');
                 $('div.col-form-label').text('');
                 setTimeout(() => {$('.jimbo-loader').hide();}, 500);
                 setTimeout(() => {location.href = APP_URL+JIMBO.url;}, 3000);
@@ -90,168 +99,86 @@ $(function () {
                     /* $.each(err, function( key, value) {
                         notify(value, 'danger', '5000', 'bottom', 'right');
                     }); */
-                    if (error.response.data.errors.title) {
-                        $('.has-danger-title').text('' + error.response.data.errors.title + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.name) {
+                        $('.has-danger-name').text('' + error.response.data.errors.name + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-title').text('');
+                        $('.has-danger-name').text('');
                     }
-
-                    if (error.response.data.errors.brand) {
-                        $('.has-danger-brand').text('' + error.response.data.errors.brand + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.surname) {
+                        $('.has-danger-surname').text('' + error.response.data.errors.surname + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-brand').text('');
+                        $('.has-danger-surname').text('');
                     }
-
-                    if (error.response.data.errors.promoter) {
-                        $('.has-danger-promoter').text('' + error.response.data.errors.promoter + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.email) {
+                        $('.has-danger-email').text('' + error.response.data.errors.email + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-promoter').text('');
+                        $('.has-danger-email').text('');
                     }
-
-                    if (error.response.data.errors.provider) {
-                        $('.has-danger-provider').text('' + error.response.data.errors.provider + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.dni) {
+                        $('.has-danger-dni').text('' + error.response.data.errors.dni + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-provider').text('');
+                        $('.has-danger-dni').text('');
                     }
-
-                    if (error.response.data.errors.place) {
-                        $('.has-danger-place').text('' + error.response.data.errors.place + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.phone) {
+                        $('.has-danger-phone').text('' + error.response.data.errors.phone + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-place').text('');
+                        $('.has-danger-phone').text('');
                     }
-
-                    if (error.response.data.errors.date_start) {
-                        $('.has-danger-date_start').text('' + error.response.data.errors.date_start + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.balance_jib) {
+                        $('.has-danger-balance_jib').text('' + error.response.data.errors.balance_jib + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-date_start').text('');
+                        $('.has-danger-balance_jib').text('');
                     }
-
-                    if (error.response.data.errors.date_end) {
-                        $('.has-danger-date_end').text('' + error.response.data.errors.date_end + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.country_id) {
+                        $('.has-danger-country_id').text('' + error.response.data.errors.country_id + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-date_end').text('');
+                        $('.has-danger-country_id').text('');
                     }
-
-                    if (error.response.data.errors.date_release) {
-                        $('.has-danger-date_release').text('' + error.response.data.errors.date_release + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.role) {
+                        $('.has-danger-role').text('' + error.response.data.errors.role + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-date_release').text('');
+                        $('.has-danger-role').text('');
                     }
-
-                    if (error.response.data.errors.cash_to_collect) {
-                        $('.has-danger-cash_to_collect').text('' + error.response.data.errors.cash_to_collect + '').css("color", "#dc3545e3");
-                    }else{
-                        $('.has-danger-cash_to_collect').text('');
-                    }
-
-                    if (error.response.data.errors.cash_to_draw) {
-                        $('.has-danger-cash_to_draw').text('' + error.response.data.errors.cash_to_draw + '').css("color", "#dc3545e3");
-                    }else{
-                        $('.has-danger-cash_to_draw').text('');
-                    }
-
-                    if (error.response.data.errors.description) {
-                        $('.has-danger-description').text('' + error.response.data.errors.description + '').css("color", "#dc3545e3");
-                    }else{
-                        $('.has-danger-description').text('');
-                    }
-
                     if (error.response.data.errors.active) {
                         $('.has-danger-active').text('' + error.response.data.errors.active + '').css("color", "#dc3545e3");
                     }else{
                         $('.has-danger-active').text('');
                     }
-
-                    if (error.response.data.errors.public) {
-                        $('.has-danger-public').text('' + error.response.data.errors.public + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.image) {
+                        $('.has-danger-image').text('' + error.response.data.errors.image + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-public').text('');
+                        $('.has-danger-image').text('');
                     }
-
-                    if (error.response.data.errors.prize_1) {
-                        $('.has-danger-prize_1').text('' + error.response.data.errors.prize_1 + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.password) {
+                        $('.has-danger-password').text('' + error.response.data.errors.password + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-prize_1').text('');
+                        $('.has-danger-password').text('');
                     }
-
-                    if (error.response.data.errors.prize_2) {
-                        $('.has-danger-prize_2').text('' + error.response.data.errors.prize_2 + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.cpassword) {
+                        $('.has-danger-cpassword').text('' + error.response.data.errors.cpassword + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-prize_2').text('');
+                        $('.has-danger-cpassword').text('');
                     }
-
-                    if (error.response.data.errors.prize_3) {
-                        $('.has-danger-prize_3').text('' + error.response.data.errors.prize_3 + '').css("color", "#dc3545e3");
-                    }else{
-                        $('.has-danger-prize_3').text('');
-                    }
-
-                    if (error.response.data.errors.prize_4) {
-                        $('.has-danger-prize_4').text('' + error.response.data.errors.prize_4 + '').css("color", "#dc3545e3");
-                    }else{
-                        $('.has-danger-prize_4').text('');
-                    }
-
-                    if (error.response.data.errors.prize_5) {
-                        $('.has-danger-prize_5').text('' + error.response.data.errors.prize_5 + '').css("color", "#dc3545e3");
-                    }else{
-                        $('.has-danger-prize_5').text('');
-                    }
-
-                    if (error.response.data.errors.prize_6) {
-                        $('.has-danger-prize_6').text('' + error.response.data.errors.prize_6 + '').css("color", "#dc3545e3");
-                    }else{
-                        $('.has-danger-prize_6').text('');
-                    }
-
-                    if (error.response.data.errors.prize_7) {
-                        $('.has-danger-prize_7').text('' + error.response.data.errors.prize_7 + '').css("color", "#dc3545e3");
-                    }else{
-                        $('.has-danger-prize_7').text('');
-                    }
-
-                    if (error.response.data.errors.prize_8) {
-                        $('.has-danger-prize_8').text('' + error.response.data.errors.prize_8 + '').css("color", "#dc3545e3");
-                    }else{
-                        $('.has-danger-prize_8').text('');
-                    }
-
-                    if (error.response.data.errors.prize_9) {
-                        $('.has-danger-prize_9').text('' + error.response.data.errors.prize_9 + '').css("color", "#dc3545e3");
-                    }else{
-                        $('.has-danger-prize_9').text('');
-                    }
-
-                    if (error.response.data.errors.prize_10) {
-                        $('.has-danger-prize_10').text('' + error.response.data.errors.prize_10 + '').css("color", "#dc3545e3");
-                    }else{
-                        $('.has-danger-prize_10').text('');
-                    }
-
-
-
-
-
                 }else{
                     notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
                 }
             }else{
                 notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
             }
-            $('.btn-raffle').prop("disabled", false).text('Registrar');
+            $('.btn-seller').prop("disabled", false).text('Registrar');
             setTimeout(() => {$('.jimbo-loader').hide();}, 500);
         });
     });
-    /* raffle-register*/
+    /* seller-register*/
 
-     /*raffle-edit*/
-     $("#form-raffle-edit").submit(function( event ) {
+    /*seller-edit*/
+    $("#form-seller-edit").submit(function( event ) {
         event.preventDefault();
         $('.jimbo-loader').show();
         $('.load-text').text('Enviando...');
         $('.jimbo-loader').show();
         $('.load-text').text('Enviando...');
-        $('.btn-raffle').prop("disabled", true).text('Enviando...');
+        $('.btn-seller').prop("disabled", true).text('Enviando...');
 
         var formData = new FormData(event.currentTarget);
         formData.append('_method', 'PUT');
@@ -264,8 +191,8 @@ $(function () {
             if(response.data.success){
                 notify(response.data.message, 'success', '3000', 'top', 'right');
                 setTimeout(() => {$('.jimbo-loader').hide();}, 500);
-                $('#form-raffle-edit').trigger("reset");
-                $('.btn-raffle').prop("disabled", false).text('Actualizar');
+                $('#form-seller-edit').trigger("reset");
+                $('.btn-seller').prop("disabled", false).text('Actualizar');
                 $('div.col-form-label').text('');
                 setTimeout(() => {location.href = APP_URL+JIMBO.url;}, 3000);
             }
@@ -281,42 +208,78 @@ $(function () {
                         }else{
                             $('.has-danger-name').text('');
                         }
-
+                        if (error.response.data.errors.surname) {
+                            $('.has-danger-surname').text('' + error.response.data.errors.surname + '').css("color", "#dc3545e3");
+                        }else{
+                            $('.has-danger-surname').text('');
+                        }
+                        if (error.response.data.errors.email) {
+                            $('.has-danger-email').text('' + error.response.data.errors.email + '').css("color", "#dc3545e3");
+                        }else{
+                            $('.has-danger-email').text('');
+                        }
+                        if (error.response.data.errors.dni) {
+                            $('.has-danger-dni').text('' + error.response.data.errors.dni + '').css("color", "#dc3545e3");
+                        }else{
+                            $('.has-danger-dni').text('');
+                        }
+                        if (error.response.data.errors.phone) {
+                            $('.has-danger-phone').text('' + error.response.data.errors.phone + '').css("color", "#dc3545e3");
+                        }else{
+                            $('.has-danger-phone').text('');
+                        }
+                        if (error.response.data.errors.balance_jib) {
+                            $('.has-danger-balance_jib').text('' + error.response.data.errors.balance_jib + '').css("color", "#dc3545e3");
+                        }else{
+                            $('.has-danger-balance_jib').text('');
+                        }
+                        if (error.response.data.errors.country_id) {
+                            $('.has-danger-country_id').text('' + error.response.data.errors.country_id + '').css("color", "#dc3545e3");
+                        }else{
+                            $('.has-danger-country_id').text('');
+                        }
+                        if (error.response.data.errors.role) {
+                            $('.has-danger-role').text('' + error.response.data.errors.role + '').css("color", "#dc3545e3");
+                        }else{
+                            $('.has-danger-role').text('');
+                        }
                         if (error.response.data.errors.active) {
                             $('.has-danger-active').text('' + error.response.data.errors.active + '').css("color", "#dc3545e3");
                         }else{
                             $('.has-danger-active').text('');
                         }
-
-                        if (error.response.data.errors.price) {
-                            $('.has-danger-price').text('' + error.response.data.errors.price + '').css("color", "#dc3545e3");
+                        if (error.response.data.errors.image) {
+                            $('.has-danger-image').text('' + error.response.data.errors.image + '').css("color", "#dc3545e3");
                         }else{
-                            $('.has-danger-price').text('');
+                            $('.has-danger-image').text('');
                         }
-
-                        if (error.response.data.errors.code) {
-                            $('.has-danger-code').text('' + error.response.data.errors.code + '').css("color", "#dc3545e3");
+                        if (error.response.data.errors.password) {
+                            $('.has-danger-password').text('' + error.response.data.errors.password + '').css("color", "#dc3545e3");
                         }else{
-                            $('.has-danger-code').text('');
+                            $('.has-danger-password').text('');
                         }
-
+                        if (error.response.data.errors.cpassword) {
+                            $('.has-danger-cpassword').text('' + error.response.data.errors.cpassword + '').css("color", "#dc3545e3");
+                        }else{
+                            $('.has-danger-cpassword').text('');
+                        }
                     }else{
                         notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
                     }
                 }else{
                     notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
                 }
-                $('.btn-raffle').prop("disabled", false).text('Actualizar');
+                $('.btn-seller').prop("disabled", false).text('Actualizar');
                 setTimeout(() => {$('.jimbo-loader').hide();}, 500);
         });
     });
-    /*raffle-edit*/
+    /*seller-edit*/
 
-    /*alert-Raffle-delete*/
-    $('body').on('click', '.deleteRaffle', function () {
+    /*alert-seller-delete*/
+    $('body').on('click', '.deleteSeller', function () {
         var url = $(this).data("url");
         swal({
-                title: '¿Desea eliminar el Sorteo?',
+                title: '¿Desea eliminar el vendedor?',
                 text: "Recuerde que esta acción no tiene revera.",
                 type: 'error',
                 icon : APP_URL+"/assets/images/jimbo-logo.png",
@@ -362,5 +325,5 @@ $(function () {
                 }
             });
     });
-    /*alert-Raffle-delete*/
+    /*alert-seller-delete*/
 });

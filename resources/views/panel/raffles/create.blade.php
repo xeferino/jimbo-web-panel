@@ -72,6 +72,12 @@
                     </div>
 
                     <div class="col-sm-6">
+                        <label class="col-form-label">Fecha de sorteo</label>
+                        <input type="date" name="date_release" id="date_release" class="form-control" >
+                        <div class="col-form-label has-danger-date_release"></div>
+                    </div>
+
+                    <div class="col-sm-6">
                         <label class="col-form-label">Premio en Efectivo</label>
                         <input type="text" name="cash_to_draw" id="cash_to_draw" class="form-control">
                         <div class="col-form-label has-danger-cash_to_draw"></div>

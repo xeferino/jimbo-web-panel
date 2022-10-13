@@ -34,7 +34,9 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $user = DB::table('users')->select('id',  'image', 'name AS fullname', 'email', 'active')->whereNull('deleted_at')->get();
+            $user = User::select('id',  'image', 'name AS fullname', 'email', 'active')->whereHas("roles", function ($q) {
+                        $q->whereNotIn('name', ['seller','competitor']);
+                    })->whereNull('deleted_at')->get();
             return Datatables::of($user)
                     ->addIndexColumn()
                     ->addColumn('action', function($user){
@@ -101,7 +103,7 @@ class UserController extends Controller
             'description_module' => 'Registrar nuevos usuarios en el sistema.',
             'title_nav'          => 'Registrar',
             'icon'               => 'icofont-users',
-            'roles' => Role::whereNotIn('name', ['seller', 'competitor'])->get(),
+            'roles'              => Role::whereNotIn('name', ['seller', 'competitor'])->get(),
         ]);
     }
 
@@ -175,8 +177,9 @@ class UserController extends Controller
             'description_module' => 'Actualice la informacion del usuario en el formulario de Edicion.',
             'title_nav'          => 'Editar',
             'icon'               => 'icofont-users',
-            'user' => User::find($id), 'userRole' => $userRole,
-            'roles' => Role::whereNotIn('name', ['seller', 'competitor'])->get(),
+            'user'               => User::find($id),
+            'userRole'           => $userRole,
+            'roles'              => Role::whereNotIn('name', ['seller', 'competitor'])->get(),
         ]);
     }
 

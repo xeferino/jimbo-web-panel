@@ -124,6 +124,7 @@ class RaffleController extends Controller
         $raffle->prize_10         = $request->prize_10;
         $raffle->date_start       = $request->date_start;
         $raffle->date_end         = $request->date_end;
+        $raffle->date_release     = $request->date_release;
         $raffle->draft_at         = $request->public == 0 ? now() : null;
 
         if($request->file('image')){

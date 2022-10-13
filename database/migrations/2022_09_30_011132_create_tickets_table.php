@@ -20,6 +20,8 @@ return new class extends Migration
             $table->foreign('promotion_id')->references('id')->on('promotions')->onDelete('cascade');
             $table->foreignId('raffle_id');
             $table->foreign('raffle_id')->references('id')->on('raffles')->onDelete('cascade');
+            $table->integer('quantity')->nullable();
+            $table->integer('total')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->index(['raffle_id', 'promotion_id']);

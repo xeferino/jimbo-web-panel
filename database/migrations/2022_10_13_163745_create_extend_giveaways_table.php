@@ -13,16 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('countries', function (Blueprint $table) {
+        Schema::create('extend_giveaways', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('code');
-            $table->string('img')->nullable();
-            $table->boolean('active')->default(1);
-            $table->string('currency')->nullable();
-            $table->double('exchange_rate')->nullable();
+            $table->date('date');
+            $table->boolean('active')->default(0);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -33,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('countries');
+        Schema::dropIfExists('extend_giveaways');
     }
 };

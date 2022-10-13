@@ -11,6 +11,7 @@ use Exception;
 use App\Http\Requests\FormRequestSignupUser;
 use App\Http\Requests\FormRequestProfileUserSetting;
 use App\Http\Requests\FormRequestForgotUser;
+use App\Http\Requests\FormRequestRecoveryPasswordUser;
 use App\Mail\RecoveryPassword;
 use App\Mail\RegisterUser;
 use Illuminate\Support\Facades\Mail;
@@ -71,6 +72,8 @@ class AuthController extends Controller
                     }
 
                     $accessToken = $user->createToken('AuthToken')->plainTextToken;
+                    $user->balance_jib = config('jibs.bonus.to_access') + $user->balance_jib;
+                    $user->save();
 
                     return response()->json(
                         [
@@ -80,6 +83,8 @@ class AuthController extends Controller
                                 'email'        => $user->email,
                                 'dni'          => $user->dni,
                                 'phone'        => $user->phone,
+                                'usd'          => $user->balance_usd,
+                                'jib'          => $user->balance_jib,
                                 'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
                                 'country'      => [
                                     'id'    => $user->country->id,
@@ -122,6 +127,8 @@ class AuthController extends Controller
             $user->country_id       = $request->country_id;
             $user->password         = Hash::make($request->password);
             $user->image            = 'avatar.svg';
+            $user->balance_jib      = config('jibs.bonus.register');
+
             $user->save();
             $user->assignRole('competitor');
 
@@ -140,6 +147,8 @@ class AuthController extends Controller
                     'email'        => $user->email,
                     'dni'          => $user->dni,
                     'phone'        => $user->phone,
+                    'usd'          => $user->balance_usd,
+                    'jib'          => $user->balance_jib,
                     'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
                     'country'      => [
                         'id'    => $user->country->id,
@@ -179,6 +188,8 @@ class AuthController extends Controller
                         'email'        => $user->email,
                         'dni'          => $user->dni,
                         'phone'        => $user->phone,
+                        'usd'          => $user->balance_usd,
+                        'jib'          => $user->balance_jib,
                         'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
                         'country'      => [
                             'id'    => $user->country->id,
@@ -242,6 +253,8 @@ class AuthController extends Controller
                         'email'        => $user->email,
                         'dni'          => $user->dni,
                         'phone'        => $user->phone,
+                        'usd'          => $user->balance_usd,
+                        'jib'          => $user->balance_jib,
                         'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
                         'country'      => [
                             'id'    => $user->country->id,
@@ -281,12 +294,46 @@ class AuthController extends Controller
                     'password'  => date('Y').$user->id.date('m').date('d')
                 ];
 
-                Mail::to($user->email)->send(new RecoveryPassword($data));
-                $user->password = Hash::make($data['password']);
+                $user->code = $data['password'];
                 $user->save();
+
+                Mail::to($user->email)->send(new RecoveryPassword($data));
                 return response()->json([
                     'status'   => 200,
                     'message' =>  'You have been send successfully email recovery password.'
+                ], 200);
+            }
+            return response()->json([
+                'status'   => 404,
+                'message' =>  'El email igresado no existe!.'
+            ], 404);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status'   => 500,
+                'message' =>  $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Recover password.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function RecoveryPassword(FormRequestRecoveryPasswordUser $request)
+    {
+        try {
+            $data = [];
+            $user = User::where('email', $request->email)->where('code', $request->code)->first();
+
+            if ($user) {
+                $user->password = Hash::make($request->password);
+                $user->save();
+                return response()->json([
+                    'status'   => 200,
+                    'message' =>  'Su contraseña ha sido recuperada exitosamente!'
                 ], 200);
             }
             return response()->json([

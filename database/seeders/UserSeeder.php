@@ -37,6 +37,19 @@ class UserSeeder extends Seeder
         Permission::create(['name' => 'show-user', 'description' => 'listado y detalle de usuario en el sistema'])->syncRoles([$super_admin, $administrator]);
         Permission::create(['name' => 'delete-user', 'description' => 'Eliminar de usuario en el sistema'])->syncRoles([$super_admin, $administrator]);
 
+        //permissions sellers
+        Permission::create(['name' => 'create-seller', 'description' => 'Crear vendedor en el sistema'])->syncRoles([$super_admin, $administrator]);
+        Permission::create(['name' => 'edit-seller', 'description' => 'Editar vendedor en el sistema'])->syncRoles([$super_admin, $administrator]);
+        Permission::create(['name' => 'show-seller', 'description' => 'listado y detalle de vendedor en el sistema'])->syncRoles([$super_admin, $administrator]);
+        Permission::create(['name' => 'delete-seller', 'description' => 'Eliminar de vendedor en el sistema'])->syncRoles([$super_admin, $administrator]);
+
+         //permissions competitors
+         Permission::create(['name' => 'create-competitor', 'description' => 'Crear competidor en el sistema'])->syncRoles([$super_admin, $administrator]);
+         Permission::create(['name' => 'edit-competitor', 'description' => 'Editar competidor en el sistema'])->syncRoles([$super_admin, $administrator]);
+         Permission::create(['name' => 'show-competitor', 'description' => 'listado y detalle de competidor en el sistema'])->syncRoles([$super_admin, $administrator]);
+         Permission::create(['name' => 'delete-competitor', 'description' => 'Eliminar de competidor en el sistema'])->syncRoles([$super_admin, $administrator]);
+
+
         //permissions countries
         Permission::create(['name' => 'create-country', 'description' => 'Crear pais en el sistema'])->syncRoles([$super_admin, $administrator]);
         Permission::create(['name' => 'edit-country', 'description' => 'Editar pais en el sistema'])->syncRoles([$super_admin, $administrator]);
@@ -65,6 +78,8 @@ class UserSeeder extends Seeder
         //permissions menu
         Permission::create(['name' => 'setting-menu', 'description' => 'menu de configuracion en el sistema'])->syncRoles([$super_admin]);
         Permission::create(['name' => 'user-menu', 'description' => 'menu de configuracion de usuarios en el sistema'])->syncRoles([$super_admin]);
+        Permission::create(['name' => 'seller-menu', 'description' => 'menu de configuracion de vendedores en el sistema'])->syncRoles([$super_admin]);
+        Permission::create(['name' => 'competitor-menu', 'description' => 'menu de configuracion de participantes en el sistema'])->syncRoles([$super_admin]);
         Permission::create(['name' => 'role-menu', 'description' => 'menu de configuracion de roles en el sistema'])->syncRoles([$super_admin]);
         Permission::create(['name' => 'dashboard-menu', 'description' => 'menu de tablero de informacion de balances y estadisticas en el sistema'])->syncRoles([$super_admin, $administrator]);
         Permission::create(['name' => 'country-menu', 'description' => 'menu de configuracion de paises en el sistema'])->syncRoles([$super_admin]);

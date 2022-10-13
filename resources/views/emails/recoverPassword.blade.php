@@ -164,7 +164,7 @@
     </table><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="5dac3345-d6ac-4b65-9ab9-fbb9d0102b44" data-mc-module-version="2019-10-22">
     <tbody>
       <tr>
-        <td style="padding:0px 20px 40px 20px; line-height:22px; text-align:inherit; background-color:#FFFFFF;" height="100%" valign="top" bgcolor="#FFFFFF" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 16px">Se ha generado una nueva contraseña  de manera automatica con la que podras acceder de nuevo a tu app de jimbo sorteos.</span><br>
+        <td style="padding:0px 20px 40px 20px; line-height:22px; text-align:inherit; background-color:#FFFFFF;" height="100%" valign="top" bgcolor="#FFFFFF" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 16px">Se ha generado un codigo de manera automatica, con la que podras actualizar tu contrase&ntilde;a.</span><br>
 <span style="font-size: 18px"><strong>Gracias</strong></span>.</div><div></div></div></td>
       </tr>
     </tbody>

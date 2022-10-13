@@ -10313,16 +10313,16 @@ body.menu-bottom #collapse-menu {
 }
 
 .btn-success {
-    background-color: #93BE52;
-    border-color: #93BE52;
+    background-color: #069126;
+    border-color: #069126;
     color: #fff;
     cursor: pointer;
     transition: all ease-in 0.3s;
 }
 
 .btn-success:hover {
-    background-color: #aacc77;
-    border-color: #aacc77;
+    background-color: #069126e8;
+    border-color: #069126e8;
 }
 
 .btn-success:active {
@@ -10335,7 +10335,7 @@ body.menu-bottom #collapse-menu {
 .btn-success:focus {
     box-shadow: none;
     color: #fff;
-    background-color: #aacc77;
+    background-color: #069126e8;
 }
 
 .btn-success.disabled {

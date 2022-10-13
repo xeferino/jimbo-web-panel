@@ -31,7 +31,7 @@ class CountryController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $country = DB::table('countries')->select('id', 'name', 'code', 'img', 'active')->whereNull('deleted_at')->get();
+            $country = DB::table('countries')->select('id', 'name', 'code', 'img', 'active', 'currency', 'exchange_rate')->whereNull('deleted_at')->get();
             return Datatables::of($country)
                     ->addIndexColumn()
                     ->addColumn('action', function($country){
@@ -101,6 +101,8 @@ class CountryController extends Controller
         $country->name             = $request->name;
         $country->code             = $request->code;
         $country->active           = $request->active;
+        $country->currency         = $request->currency;
+        $country->exchange_rate    = $request->exchange_rate;
 
         if($request->file('img')){
             $file           = $request->file('img');
@@ -146,9 +148,11 @@ class CountryController extends Controller
     {
         $country = Country::findOrFail($Country->id);
 
-        $country->name    = $request->name;
-        $country->code    = $request->code;
-        $country->active  = $request->active==1 ? 1 : 0;
+        $country->name          = $request->name;
+        $country->code          = $request->code;
+        $country->active        = $request->active==1 ? 1 : 0;
+        $country->currency      = $request->currency;
+        $country->exchange_rate = $request->exchange_rate;
 
         if($request->file('img')){
             if ($country->img != "flag.png") {

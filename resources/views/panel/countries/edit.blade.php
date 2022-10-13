@@ -35,6 +35,19 @@
                         <input type="text" name="code" id="code" value="{{ $country->code }}" class="form-control">
                         <div class="col-form-label has-danger-code"></div>
                     </div>
+
+                    <div class="col-sm-6">
+                        <label class="col-form-label">Moneda</label>
+                        <input type="text" name="currency" id="currency" value="{{ $country->currency }}" class="form-control">
+                        <div class="col-form-label has-danger-currency"></div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label class="col-form-label">Tasa de Cambio</label>
+                        <input type="text" name="exchange_rate" id="exchange_rate" value="{{ $country->exchange_rate }}" class="form-control">
+                        <div class="col-form-label has-danger-exchange_rate"></div>
+                    </div>
+
                     <div class="col-sm-6">
                         <label class="col-form-label">Estatus</label>
                         <select name="active" id="active" class="form-control">

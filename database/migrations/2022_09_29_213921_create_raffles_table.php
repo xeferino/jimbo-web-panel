@@ -26,6 +26,8 @@ return new class extends Migration
             $table->string('image');
             $table->date('date_start');
             $table->date('date_end');
+            $table->date('date_release');
+            $table->date('date_extend');
             $table->boolean('active')->default(1);
             $table->boolean('public')->default(0);
             $table->double('prize_1')->nullable();

@@ -13,16 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('countries', function (Blueprint $table) {
+        Schema::create('balance_histories', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('code');
-            $table->string('img')->nullable();
-            $table->boolean('active')->default(1);
-            $table->string('currency')->nullable();
-            $table->double('exchange_rate')->nullable();
+            $table->string('reference')->nullable();
+            $table->string('description')->nullable();
+            $table->enum('type',['debit', 'credit'])->nullable();
+            $table->unsignedDecimal('balance',8,2)->nullable();
+            $table->date('date')->nullable();
+            $table->time('hour')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('countries');
+        Schema::dropIfExists('balance_histories');
     }
 };
