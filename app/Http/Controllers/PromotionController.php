@@ -19,7 +19,7 @@ class PromotionController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $promotion = DB::table('promotions')->select('id', 'name', 'code', DB::raw("CONCAT(price,'.00$') AS price"), 'active')->whereNull('deleted_at')->get();
+            $promotion = DB::table('promotions')->select('id', 'name', 'code', DB::raw("CONCAT(price,'.00$') AS price"), 'quantity', 'active')->whereNull('deleted_at')->get();
                 return Datatables::of($promotion)
                     ->addIndexColumn()
                     ->addColumn('action', function($promotion){
@@ -86,6 +86,7 @@ class PromotionController extends Controller
         $promotion->price            = $request->price;
         $promotion->code             = $request->code;
         $promotion->active           = $request->active;
+        $promotion->quantity         = $request->quantity;
         $saved = $promotion->save();
 
         if($saved)
@@ -132,6 +133,7 @@ class PromotionController extends Controller
         $promotion                   = Promotion::find($id);
         $promotion->name             = $request->name;
         $promotion->price            = $request->price;
+        $promotion->quantity         = $request->quantity;
         $promotion->code             = $request->code;
         $promotion->active  = $request->active==1 ? 1 : 0;
         $saved = $promotion->save();

@@ -52,6 +52,7 @@ $(function () {
             {data: 'name', name: 'name'},
             {data: 'code', name: 'code'},
             {data: 'price', name: 'price'},
+            {data: 'quantity', name: 'quantity'},
             {data: 'active', name: 'active'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
@@ -103,6 +104,12 @@ $(function () {
                         $('.has-danger-price').text('' + error.response.data.errors.price + '').css("color", "#dc3545e3");
                     }else{
                         $('.has-danger-price').text('');
+                    }
+
+                    if (error.response.data.errors.quantity) {
+                        $('.has-danger-quantity').text('' + error.response.data.errors.quantity + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-quantity').text('');
                     }
 
                     if (error.response.data.errors.code) {
@@ -171,6 +178,12 @@ $(function () {
                             $('.has-danger-price').text('' + error.response.data.errors.price + '').css("color", "#dc3545e3");
                         }else{
                             $('.has-danger-price').text('');
+                        }
+
+                        if (error.response.data.errors.quantity) {
+                            $('.has-danger-quantity').text('' + error.response.data.errors.quantity + '').css("color", "#dc3545e3");
+                        }else{
+                            $('.has-danger-quantity').text('');
                         }
 
                         if (error.response.data.errors.code) {

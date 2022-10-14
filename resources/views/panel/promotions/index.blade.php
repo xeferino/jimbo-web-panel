@@ -20,6 +20,7 @@
                             <th>Nombre</th>
                             <th>Codigo</th>
                             <th>Precio</th>
+                            <th>Cantidad</th>
                             <th>Estatus</th>
                             <th>Acciones</th>
                         </tr>

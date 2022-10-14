@@ -35,6 +35,12 @@
                     </div>
 
                     <div class="col-sm-6">
+                        <label class="col-form-label">Cantidad</label>
+                        <input type="text" name="quantity" id="quantity" class="form-control">
+                        <div class="col-form-label has-danger-quantity"></div>
+                    </div>
+
+                    <div class="col-sm-6">
                         <label class="col-form-label">Estatus</label>
                         <select name="active" id="active" class="form-control">
                             <option value="">.::Seleccione::.</option>

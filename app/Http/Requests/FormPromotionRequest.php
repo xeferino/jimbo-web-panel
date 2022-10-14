@@ -27,6 +27,7 @@ class FormPromotionRequest extends FormRequest
             'name'      => 'required|min:3',
             'code'      => 'required|min:3',
             'price'     => 'required|integer',
+            'quantity'  => 'required|integer',
             'active'    => 'required',
         ];
     }
@@ -39,7 +40,9 @@ class FormPromotionRequest extends FormRequest
             'code.required'     => 'El codigo es requerido.',
             'code.min'          => 'El codigo es requiere minimo :min caracteres.',
             'price.required'    => 'El codigo es requerido.',
-            'price.integer'     => 'El codigo debe ser entero.',
+            'price.integer'     => 'La cantidad debe ser entero.',
+            'quantity.required' => 'La cantidad es requerida.',
+            'quantity.integer'  => 'El codigo debe ser entero.',
             'active.required'   => 'El estatus es requerido.',
         ];
     }
