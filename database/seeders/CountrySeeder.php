@@ -11,14 +11,14 @@ class CountrySeeder extends Seeder
     private $items = [
         [
             'name'      => 'Peru',
-            'code'      => '+511',
+            'code'      => '+51',
             'currency'  => 'SOL',
             'img'       => 'flag.png'
         ],
         [
             'name'      => 'Ecuador',
             'currency'  => 'USD',
-            'code'      => '+566',
+            'code'      => '+56',
             'img'       => 'flag.png'
         ]
     ];

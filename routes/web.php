@@ -42,4 +42,11 @@ Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     Route::resource('promotions', PromotionController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('sliders', SliderController::class);
+
+    Route::prefix('ajax')->name('ajax.')->middleware('auth')->group(function () {
+        Route::post('raffles/promotions', [RaffleController::class, 'promotions'])->name('raffle.promotions');
+        Route::post('raffles/promotions/add', [RaffleController::class, 'promotionAdd'])->name('raffle.promotions.store');
+        Route::post('raffles/promotions/delete', [RaffleController::class, 'promotionDelete'])->name('raffle.promotions.delete');
+    });
 });
+

@@ -165,14 +165,6 @@
                     </li>
                 @endcan
 
-
-                {{-- <li class="">
-                    <a href="">
-                        <span class="pcoded-micon"><i class="icofont icofont-image"></i><b>SIM</b></span>
-                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">Slider Imagenes</span>
-                        <span class="pcoded-mcaret"></span>
-                    </a>
-                </li> --}}
                 {{-- <li class="pcoded-hasmenu">
                     <a href="javascript:void(0)">
                         <span class="pcoded-micon"><i class="icofont icofont-options"></i><b>CF</b></span>

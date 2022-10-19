@@ -16,6 +16,9 @@
             <h4 class="sub-title">Informacion requerida</h4>
             <form method="POST" action="{{ route('panel.raffles.store') }}" name="form-raffle-create" id="form-raffle-create">
                 @csrf
+                <input type="hidden" name="promotions_raffle" id="promotions_raffle">
+                <input type="hidden" name="total" id="total">
+
                 <div class="form-group row">
                     <div class="col-sm-12">
                         <img src="{{asset('assets/images/raffles/raffle.jpg')}}" style= "margin: 0px 0 5px 0;" alt="Sorteo" id="raffle">
@@ -61,33 +64,57 @@
 
                     <div class="col-sm-6">
                         <label class="col-form-label">Fecha de apertura</label>
-                        <input type="date" name="date_start" id="date_start" class="form-control">
+                        <div class="input-group">
+                            <input type="text" name="date_start" id="date_start" class="form-control datepicker">
+                            <span class="input-group-addon" id="date_start"><i class="icofont icofont-calendar"></i></span>
+                        </div>
                         <div class="col-form-label has-danger-date_start"></div>
                     </div>
 
                     <div class="col-sm-6">
                         <label class="col-form-label">Fecha de cierre</label>
-                        <input type="date" name="date_end" id="date_end" class="form-control" >
+                        <div class="input-group">
+                            <input type="text" name="date_end" id="date_end" class="form-control datepicker">
+                            <span class="input-group-addon" id="date_end"><i class="icofont icofont-calendar"></i></span>
+                        </div>
                         <div class="col-form-label has-danger-date_end"></div>
                     </div>
 
                     <div class="col-sm-6">
                         <label class="col-form-label">Fecha de sorteo</label>
-                        <input type="date" name="date_release" id="date_release" class="form-control" >
+                        <div class="input-group">
+                            <input type="text" name="date_release" id="date_release" class="form-control datepicker">
+                            <span class="input-group-addon" id="date_release"><i class="icofont icofont-calendar"></i></span>
+                        </div>
                         <div class="col-form-label has-danger-date_release"></div>
                     </div>
 
                     <div class="col-sm-6">
                         <label class="col-form-label">Premio en Efectivo</label>
-                        <input type="text" name="cash_to_draw" id="cash_to_draw" class="form-control">
+                        <div class="input-group">
+                            <input type="number" min="1" name="cash_to_draw" id="cash_to_draw" class="form-control">
+                            <span class="input-group-addon" id="cash_to_draw"><i class="icofont icofont-bill-alt"></i></span>
+                        </div>
                         <div class="col-form-label has-danger-cash_to_draw"></div>
                     </div>
 
                     <div class="col-sm-6">
                         <label class="col-form-label">Dinero a recolectar</label>
-                        <input type="text" name="cash_to_collect" id="cash_to_collect" class="form-control">
+                        <div class="input-group">
+                            <input type="number" min="1" name="cash_to_collect" id="cash_to_collect" class="form-control">
+                            <span class="input-group-addon" id="cash_to_collect"><i class="icofont icofont-bill-alt"></i></span>
+                        </div>
                         <div class="col-form-label has-danger-cash_to_collect"></div>
                     </div>
+
+                    {{-- <div class="col-sm-6">
+                        <label class="col-form-label">Porcentaje de la pasarela</label>
+                        <div class="input-group">
+                            <input type="number" min="1" name="percent" id="percent" class="form-control">
+                            <span class="input-group-addon" id="percent">%</span>
+                        </div>
+                        <div class="col-form-label has-danger-percent"></div>
+                    </div> --}}
 
                     <div class="col-sm-6">
                         <label class="col-form-label">Visibilidad</label>
@@ -176,12 +203,12 @@
                         <div class="alert alert-warning" role="alert"><b>Promociones de boletos del sorteo</b></div>
                     </div>
 
-                    <div class="col-sm-6">
+                    <div class="col-sm-8">
                         <label class="col-form-label">Promociones</label>
                         <select name="promotions" id="promotions" class="form-control">
                             <option value="">.::Seleccione::.</option>
                             @foreach ($promotions as $key => $item)
-                            <option value="{{$item->id}}">{{$item->name}}</option>
+                            <option value="{{$item->id.'-'.$item->quantity.'-'.$item->price.'-'.$item->code}}">{{$item->name}}</option>
                             @endforeach
                         </select>
                         <div class="col-form-label has-danger-promotions"></div>
@@ -193,14 +220,17 @@
                         <div class="col-form-label has-danger-quantity"></div>
                     </div>
 
-                    <div class="col-sm-2 mt-2">
+                    <div class="col-sm-2 mt-3">
                         <br>
-                        <a href="javascript:void(0)" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Agregar promocion de boletos"><i class="ti-plus"></i></a>
+                        <a href="javascript:void(0)" class="btn btn-warning btn-sm add-promotion" data-toggle="tooltip" data-placement="top" title="Agregar promocion de boletos"><i class="ti-plus"></i> Agregar Promocion</a>
                     </div>
 
+                    <div class="col-sm-12">
+                        {{-- <div class="col-form-label has-danger-promotions_raffle text-center"></div> --}}
+                        <div class="col-form-label has-danger-total  text-center"></div>
+                        <div class="add-input-content"></div>
+                    </div>
                 </div>
-
-
                 <div class="col-md-12 text-right">
                     <a href="{{route('panel.raffles.index')}}" type="submit" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="cancelar"><i class="ti-back-left"></i></a>
                     {{-- <button type="reset" class="btn btn-inverse" data-toggle="tooltip" data-placement="top" title="Limpiar"><i class="ti-reload"></i></button> --}}

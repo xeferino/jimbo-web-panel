@@ -226,7 +226,7 @@ class AuthController extends Controller
             $user->email            = $request->email;
             $user->dni              = $request->dni;
             $user->phone            = $request->phone;
-            $user->country_id       = $request->country_id;
+
             if($request->password){
                 $user->password     = Hash::make($request->password);
             }

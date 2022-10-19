@@ -11485,11 +11485,11 @@ body.menu-bottom #collapse-menu {
 ==========================  **/
 
 .input-group {
-    margin-bottom: 1.25em;
+    margin-bottom: 0.20em;
 }
 
 .input-group-addon {
-    background-color: #4680ff;
+    background-color: #ff9800;
     color: #fff;
 }
 
@@ -15943,11 +15943,12 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 }
 
 .fb-card .card-header {
-    background-color: #4c70b9;
+    background-color: #ff5722;
 }
 
 .fb-card .card-header i {
-    background-color: #3B5997;
+    background-color: #fff;
+    color:#000;
 }
 
 .twitter-card .card-header {

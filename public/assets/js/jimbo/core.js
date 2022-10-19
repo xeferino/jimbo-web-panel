@@ -1,3 +1,10 @@
+$(function () {
+    $('.datepicker').datepicker({
+        language: 'es',
+    });
+});
+
+
 var extensionesValidas = ".png, .svg, .jpeg, .jpg";
 var pesoPermitido = 512;
 

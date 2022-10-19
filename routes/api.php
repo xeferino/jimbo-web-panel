@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\SliderController;
 use App\Http\Controllers\Api\RaffleController;
+use App\Http\Controllers\Api\JibController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,5 +35,6 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/raffles', [RaffleController::class, 'index']);
+    Route::get('/raffles/{raffle}', [RaffleController::class, 'show']);
     Route::get('/jibs', [JibController::class, 'index']);
 });
