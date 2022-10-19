@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\SliderController;
 use App\Http\Controllers\Api\RaffleController;
 use App\Http\Controllers\Api\JibController;
+use App\Http\Controllers\Api\BalanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,4 +38,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/raffles', [RaffleController::class, 'index']);
     Route::get('/raffles/{raffle}', [RaffleController::class, 'show']);
     Route::get('/jibs', [JibController::class, 'index']);
+    Route::get('/balance/{user}', [BalanceController::class, 'balance']);
 });

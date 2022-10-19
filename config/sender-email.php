@@ -1,15 +1,17 @@
 <?php
 
 $emails = [
-    'email_registration'   => 'registro@jimbosorteos.com',
-    'email_reset_password' => 'password@jimbosorteos.com',
+    'email_registration'    => 'registro@jimbosorteos.com',
+    'email_reset_password'  => 'password@jimbosorteos.com',
+    'email_verified_at'     => 'email@jimbosorteos.com',
 ];
 
 if (env('MAIL_MAILER_OPTION') == 'testing')
 {
     $emails = [
-        'email_registration' => 'info@jimbosorteos.com',
-        'email_reset_password' => 'info@jimbosorteos.com',
+        'email_registration'    => 'info@jimbosorteos.com',
+        'email_reset_password'  => 'info@jimbosorteos.com',
+        'email_verified_at'     => 'info@jimbosorteos.com',
     ];
 }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\BalanceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,7 +13,9 @@ use App\Http\Requests\FormRequestSignupUser;
 use App\Http\Requests\FormRequestProfileUserSetting;
 use App\Http\Requests\FormRequestForgotUser;
 use App\Http\Requests\FormRequestRecoveryPasswordUser;
+use App\Http\Requests\FormRequestVerifiedEmailUser;
 use App\Mail\RecoveryPassword;
+use App\Mail\VerifiedEmail;
 use App\Mail\RegisterUser;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
@@ -72,9 +75,10 @@ class AuthController extends Controller
                     }
 
                     $accessToken = $user->createToken('AuthToken')->plainTextToken;
-                    $user->balance_jib = config('jibs.bonus.to_access') + $user->balance_jib;
+                    $balance = config('jibs.bonus.to_access') + $user->balance_jib ?? 0;
                     $user->save();
-
+                    BalanceController::store('Bono de ingreso a la aplicacion', 'credit', $balance, $user->id);
+                    $user = User::find($user->id);
                     return response()->json(
                         [
                             'profile'    => [
@@ -127,19 +131,20 @@ class AuthController extends Controller
             $user->country_id       = $request->country_id;
             $user->password         = Hash::make($request->password);
             $user->image            = 'avatar.svg';
-            $user->balance_jib      = config('jibs.bonus.register');
-
             $user->save();
             $user->assignRole('competitor');
+            BalanceController::store('Bono de registro en la aplicacion', 'credit', config('jibs.bonus.register'), $user->id);
 
             $data = [
                 'user'  => $user,
+                'code'  => date('Y').$user->id.date('m').date('d')
             ];
 
             Mail::to($user->email)->send(new RegisterUser($data));
+            Mail::to($user->email)->send(new VerifiedEmail($data));
 
             $accessToken = $user->createToken('AuthToken')->plainTextToken;
-
+            $user = User::find($user->id);
             return response()->json([
                 'profile'    => [
                     'id'           => $user->id,
@@ -149,6 +154,7 @@ class AuthController extends Controller
                     'phone'        => $user->phone,
                     'usd'          => $user->balance_usd,
                     'jib'          => $user->balance_jib,
+                    'email_verified_at' => $user->email_verified_at,
                     'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
                     'country'      => [
                         'id'    => $user->country->id,
@@ -190,6 +196,7 @@ class AuthController extends Controller
                         'phone'        => $user->phone,
                         'usd'          => $user->balance_usd,
                         'jib'          => $user->balance_jib,
+                        'email_verified_at' => $user->email_verified_at,
                         'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
                         'country'      => [
                             'id'    => $user->country->id,
@@ -255,6 +262,7 @@ class AuthController extends Controller
                         'phone'        => $user->phone,
                         'usd'          => $user->balance_usd,
                         'jib'          => $user->balance_jib,
+                        'email_verified_at' => $user->email_verified_at,
                         'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
                         'country'      => [
                             'id'    => $user->country->id,
@@ -335,6 +343,75 @@ class AuthController extends Controller
                     'status'   => 200,
                     'message' =>  'Su contraseña ha sido recuperada exitosamente!'
                 ], 200);
+            }
+            return response()->json([
+                'status'   => 404,
+                'message' =>  'El email igresado no existe!.'
+            ], 404);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status'   => 500,
+                'message' =>  $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * send code email_verified_at.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function sendCodeVerifiedEmail(FormRequestVerifiedEmailUser $request)
+    {
+        try {
+            $data = [];
+            $user = User::where('email', $request->email)->first();
+
+            if ($user) {
+                $data = [
+                    'user'  => $user,
+                    'code'  => date('Y').$user->id.date('m').date('d')
+                ];
+
+                $user->code = $data['code'];
+                $user->save();
+
+                Mail::to($user->email)->send(new VerifiedEmail($data));
+                return response()->json([
+                    'status'   => 200,
+                    'message' =>  'Su codigo de verificacion ha sido enviado exitosamente!'
+                ], 200);
+            }
+            return response()->json([
+                'status'   => 404,
+                'message' =>  'El email igresado no existe!.'
+            ], 404);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status'   => 500,
+                'message' =>  $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Recover email_verified_at.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function verifiedEmail(FormRequestVerifiedEmailUser $request)
+    {
+        try {
+            $data = [];
+            $user = User::where('email', $request->email)->where('code', $request->code)->first();
+
+            if ($user) {
+                $user->email_verified_at = now();
+                $user->save();
             }
             return response()->json([
                 'status'   => 404,

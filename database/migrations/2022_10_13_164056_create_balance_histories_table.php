@@ -17,10 +17,12 @@ return new class extends Migration
             $table->id();
             $table->string('reference')->nullable();
             $table->string('description')->nullable();
-            $table->enum('type',['debit', 'credit'])->nullable();
+            $table->enum('type',['debit', 'credit', 'jib'])->nullable();
             $table->unsignedDecimal('balance',8,2)->nullable();
             $table->date('date')->nullable();
             $table->time('hour')->nullable();
+            $table->foreignId('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -33,5 +35,9 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('balance_histories');
+        Schema::table('balance_histories', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropColumn('user_id');
+        });
     }
 };
