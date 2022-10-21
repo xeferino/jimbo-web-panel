@@ -75,14 +75,14 @@
                     <hr>
 
                     <strong class="text-uppercase">Visibilidad</strong>
-                    @if ($raffle->public === 1)
+                    @if ($raffle->public == 1)
                         <span class="badge badge-success" title="Activo">Publico</span>
                     @else
                         <span class="badge badge-danger" title="Inactivo">Borrador</span>
                     @endif
                     <hr>
                     <strong class="text-uppercase">Estatus</strong>
-                    @if ($raffle->active === 1)
+                    @if ($raffle->active == 1)
                         <span class="badge badge-success" title="Activo"><i class="ti-check"></i> Activo</span>
                     @else
                         <span class="badge badge-danger" title="Inactivo"><i class="ti-close"></i> Inactivo</span>

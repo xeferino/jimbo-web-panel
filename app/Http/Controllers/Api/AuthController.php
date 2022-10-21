@@ -77,7 +77,7 @@ class AuthController extends Controller
                     $accessToken = $user->createToken('AuthToken')->plainTextToken;
                     $balance = config('jibs.bonus.to_access') + $user->balance_jib ?? 0;
                     $user->save();
-                    BalanceController::store('Bono de ingreso a la aplicacion', 'credit', $balance, $user->id);
+                    BalanceController::store('Bono de ingreso a la aplicacion', 'credit', $balance, 'jib', $user->id);
                     $user = User::find($user->id);
                     return response()->json(
                         [
@@ -133,7 +133,7 @@ class AuthController extends Controller
             $user->image            = 'avatar.svg';
             $user->save();
             $user->assignRole('competitor');
-            BalanceController::store('Bono de registro en la aplicacion', 'credit', config('jibs.bonus.register'), $user->id);
+            BalanceController::store('Bono de registro en la aplicacion', 'credit', config('jibs.bonus.register'), 'jib', $user->id);
 
             $data = [
                 'user'  => $user,

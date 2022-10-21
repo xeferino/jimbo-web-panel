@@ -26,7 +26,7 @@ class FormRequestRecoveryPasswordUser extends FormRequest
     {
         return [
             'email'         => 'required|email|exists:users,email',
-            'code'          => 'required|integer',
+            'code'          => 'required|integer|exists:users,code',
             'password'      => 'required|min:8|max:16',
             'cpassword'     => 'required|min:8|max:16|required_with:password|same:password',
         ];
@@ -40,6 +40,7 @@ class FormRequestRecoveryPasswordUser extends FormRequest
             'email.exists'          =>  'El email ingresado no existe, verifique!',
             'code.required'         =>  'El codido es requerido.',
             'code.integer'          =>  'El codido debe ser entero.',
+            'code.exists'           =>  'El codigo ingresado es invalido, verifique!',
             'cpassword.required'    =>  'Confirmar contraseña es requerida.',
             'password.required'     =>  'La contraseña es requerida.',
             'password.min'          =>  'La contraseña debe debe contener un minimo de 8 caracteres.',

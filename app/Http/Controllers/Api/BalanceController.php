@@ -21,14 +21,15 @@ class BalanceController extends Controller
     public function balance(Request $request)
     {
         try {
-            $balance = BalanceHistory::select(
-                'id',
-                'reference',
-                'description',
-                'type',
-                'balance',
-                'date',
-                'hour',
+            $balance = DB::table('balance_histories')->select(
+                'balance_histories.id',
+                'balance_histories.reference',
+                'balance_histories.description',
+                'balance_histories.type',
+                'balance_histories.currency',
+                'balance_histories.balance',
+                'balance_histories.date',
+                'balance_histories.hour',
                 )
                 ->join('users', 'users.id', '=', 'balance_histories.user_id')
                 ->where('users.id', $request->user_id)
@@ -51,7 +52,7 @@ class BalanceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public static function store($description, $type, $amount, $user_id)
+    public static function store($description, $type, $amount, $currency, $user_id)
     {
         try {
 
@@ -60,9 +61,12 @@ class BalanceController extends Controller
                 'description'   => $description,
                 'type'          => $type,
                 'balance'       => $amount,
+                'currency'      => $currency,
                 'date'          => date('Y-m-d'),
                 'hour'          => date('H:i:s'),
                 'user_id'       => $user_id,
+                'created_at'    => now(),
+                'updated_at'    => now()
             ];
 
             $balanceHitory = BalanceHistory::insert($data);

@@ -121,8 +121,8 @@
                     <div class="col-sm-6">
                         <label class="col-form-label">Visibilidad</label>
                         <select name="public" id="public" class="form-control">
-                            <option value="1" @if ($raffle->public === 1) selected @endif>Publico</option>
-                            <option value="0" @if ($raffle->public === 0) selected @endif>Borrador</option>
+                            <option value="1" @if ($raffle->public == 1) selected @endif>Publico</option>
+                            <option value="0" @if ($raffle->public == 0) selected @endif>Borrador</option>
                         </select>
                         <div class="col-form-label has-danger-public"></div>
                     </div>
@@ -130,8 +130,8 @@
                     <div class="col-sm-6">
                         <label class="col-form-label">Estatus</label>
                         <select name="active" id="active" class="form-control">
-                            <option value="1" @if ($raffle->active === 1) selected @endif>Activo</option>
-                            <option value="0" @if ($raffle->active === 0) selected @endif>Inactivo</option>
+                            <option value="1" @if ($raffle->active == 1) selected @endif>Activo</option>
+                            <option value="0" @if ($raffle->active == 0) selected @endif>Inactivo</option>
                         </select>
                         <div class="col-form-label has-danger-active"></div>
                     </div>

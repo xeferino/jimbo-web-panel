@@ -24,6 +24,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/forgot', [AuthController::class, 'forgot']);
 Route::post('/recovery-password', [AuthController::class, 'recoveryPassword']);
+Route::post('/resend-code-verified-email', [AuthController::class, 'sendCodeVerifiedEmail']);
+Route::post('/verified-email', [AuthController::class, 'verifiedEmail']);
 Route::get('/countries', [CountryController::class, 'index']);
 Route::get('/sliders', [SliderController::class, 'index']);
 //Route::get('/profile/{id}', [AuthController::class, 'profile'])->middleware('auth:sanctum');

@@ -73,6 +73,22 @@ class RaffleController extends Controller
                     ->make(true);
         }
 
+        return $balance = DB::table('balance_histories')->select(
+            'balance_histories.id',
+            'balance_histories.reference',
+            'balance_histories.description',
+            'balance_histories.type',
+            'balance_histories.currency',
+            'balance_histories.balance',
+            'balance_histories.date',
+            'balance_histories.hour',
+            )
+            ->join('users', 'users.id', '=', 'balance_histories.user_id')
+            ->where('users.id', 12)
+            ->get();
+
+
+
         return view('panel.raffles.index', [
             'title'              => 'Sorteos',
             'title_header'       => 'Listado de sorteos',

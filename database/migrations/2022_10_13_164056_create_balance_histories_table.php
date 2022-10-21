@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('reference')->nullable();
             $table->string('description')->nullable();
-            $table->enum('type',['debit', 'credit', 'jib'])->nullable();
+            $table->enum('type',['debit', 'credit'])->nullable();
+            $table->string('currency')->nullable();
             $table->unsignedDecimal('balance',8,2)->nullable();
             $table->date('date')->nullable();
             $table->time('hour')->nullable();
