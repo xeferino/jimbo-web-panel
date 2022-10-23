@@ -71,6 +71,16 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Notification');
     }
 
+    public function Cards()
+    {
+        return $this->hasMany('App\Models\CardUser', 'user_id', 'id');
+    }
+
+    public function Accounts()
+    {
+        return $this->hasMany('App\Models\AccountUser', 'user_id', 'id');
+    }
+
 
     /**
      * Send a password reset notification to the user.

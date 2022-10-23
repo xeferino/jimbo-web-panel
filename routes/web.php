@@ -10,6 +10,8 @@ use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\RaffleController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SliderController;
+use App\Http\Controllers\PaymentController;
+
 
 /*
 |--------------------------------------------------------------------------

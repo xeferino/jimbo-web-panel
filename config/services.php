@@ -31,4 +31,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'culqi' => [
+        'base_url'  => env('CULQI_URL'),
+        'key'       => env('CULQI_KEY'),
+        'secret'    => env('CULQI_SECRET')
+    ]
+
 ];
