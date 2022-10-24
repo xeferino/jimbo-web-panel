@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\FormFavoriteRequest;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use App\Models\Raffle;
+use App\Models\FavoriteDraw;
 
 
 class RaffleController extends Controller
@@ -34,19 +36,38 @@ class RaffleController extends Controller
     public function index(Request $request)
     {
         try {
-
             $raffles = Raffle::select(
-                'id',
-                'title',
-                DB::raw("CONCAT(cash_to_draw,'$') AS cash_to_draw"),
-                'date_start',
-                'date_end',
-                'date_release',
-                DB::raw("TIMESTAMPDIFF(DAY, now(), date_end) AS remaining_days"),
-                DB::raw("CONCAT('".$this->asset."',image) AS logo"))
-                ->where('active', 1)
-                ->where('public', 1)
-                ->whereNull('deleted_at')->get();
+                'raffles.id',
+                'raffles.title',
+                DB::raw("CONCAT(raffles.cash_to_draw,'$') AS cash_to_draw"),
+                'raffles.date_start',
+                'raffles.date_end',
+                'raffles.date_release',
+                DB::raw("TIMESTAMPDIFF(DAY, now(), raffles.date_end) AS remaining_days"),
+                DB::raw("CONCAT('".$this->asset."',raffles.image) AS logo"))
+                ->where('raffles.active', 1)
+                ->where('raffles.public', 1)
+                ->whereNull('raffles.deleted_at')
+                ->orderBy('raffles.id', 'DESC')
+                ->get();
+
+            if($request->user) {
+                $raffles = Raffle::select(
+                    'raffles.id',
+                    'raffles.title',
+                    DB::raw("CONCAT(raffles.cash_to_draw,'$') AS cash_to_draw"),
+                    'raffles.date_start',
+                    'raffles.date_end',
+                    'raffles.date_release',
+                    DB::raw("TIMESTAMPDIFF(DAY, now(), raffles.date_end) AS remaining_days"),
+                    DB::raw("CONCAT('".$this->asset."',raffles.image) AS logo"))
+                    ->leftjoin('favorite_draws', 'raffles.id', '=', 'favorite_draws.raffle_id')
+                    ->leftjoin('users', 'users.id', '=', 'favorite_draws.user_id')
+                    ->where('users.id', $request->user)
+                    ->whereNull('favorite_draws.deleted_at')
+                    ->orderBy('raffles.id', 'DESC')
+                    ->get();
+            }
 
             return response()->json(['raffles' => $raffles], 200);
 
@@ -131,6 +152,51 @@ class RaffleController extends Controller
                 'status'   => 500,
                 'message' =>  $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function store(FormFavoriteRequest $request)
+    {
+        try {
+            $favorite = FavoriteDraw::where('user_id', $request->user_id)
+            ->where('raffle_id', $request->raffle_id)
+            ->whereNull('deleted_at')
+            ->first();
+
+            if($favorite) {
+                $delete = $favorite->delete();
+                    if ($delete)
+                        return response()->json([
+                            'status'    => 200,
+                            'success'   => true,
+                            'message'   =>  'Sorteo eliminado de favoritos',
+                        ], 200);
+            }
+
+            $favorite = FavoriteDraw::insert([
+                'user_id'   => $request->user_id,
+                'raffle_id' => $request->raffle_id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            if($favorite)
+                return response()->json([
+                    'status'    => 200,
+                    'success'   => true,
+                    'message'   =>  'Sorteo agregado como favorito',
+                ], 200);
+        }catch (Exception $e) {
+            return response()->json([
+                'status'   => 500,
+                'message' =>  $e->getMessage()
+            ]);
         }
     }
 }
