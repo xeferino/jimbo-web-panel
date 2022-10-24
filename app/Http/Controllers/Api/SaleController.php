@@ -47,7 +47,7 @@ class SaleController extends Controller
                                 'fullname'  => $user->name,
                                 'phone'     => $user->phone,
                                 'dni'       => $user->dni,
-                                'address'   => $user->address
+                                'address'   => $user->address ?? 'null'
                             ]
                         ];
 
@@ -62,30 +62,36 @@ class SaleController extends Controller
                         ];
 
                         $payment = PaymentController::payment($card, $charge);
-                        $status  = 'refused';
-                        $payment = json_decode($payment, true);
+                        $pay =  $payment->object ?? '';
 
-                        if ($payment['object'] == 'charge') {
+                        $saleUpdate = Sale::find($sale->id);
+                        $status  = 'refused';
+
+                        if ($pay == 'charge') {
                             $status = 'approved';
                             $ticket->total = $ticket->total-$ticket->promotion->quantity;
                             $ticket->save();
+                            $saleUpdate->status = $status;
+                            $saleUpdate->save();
                             TicketUser::insert($tickets);
                         }
-                        $saleUpdate = Sale::find($sale->id);
-                        $saleUpdate->status = $status;
-                        $saleUpdate->save();
+
+                        $payment = json_decode($payment, true);
+                        $type = $payment['type'] ?? '';
+                        $merchant_message = $payment['merchant_message'] ?? '';
 
                         $data = [
                             'sale_id'        => $saleUpdate->id,
                             "description"    => 'Compra de boleto: '.$ticket->promotion->name. ', para el producto: '.$ticket->Raffle->title,
                             'payment_method' => 'Card',
                             'total_paid'     => $ticket->promotion->price,
-                            'response'       => ($status == 'approved') ? 'charge: successful payment' : 'Error: '.$payment['type'],
-                            'code_response'  => ($status == 'approved') ? null : $payment['merchant_message'],
-                            'status'         => $status
+                            'response'       => ($status == 'approved') ? 'charge: successful payment' : 'Error: '.$type,
+                            'code_response'  => ($status == 'approved') ? null : $merchant_message,
+                            'status'         => $status,
+                            'created_at'     => now(),
+                            'updated_at'     => now()
                         ];
                         $PaymentHistory = PaymentController::paymentHistoryStore($data);
-
                     }
                     DB::commit();
                     if($status == 'approved') {

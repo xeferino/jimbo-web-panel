@@ -29,6 +29,7 @@ class User extends Authenticatable
         'dni',
         'phone',
         'email',
+        'address',
         'password',
         'active',
         'image',
