@@ -22,6 +22,8 @@ return new class extends Migration
             $table->foreign('raffle_id')->references('id')->on('raffles')->onDelete('set null');
             $table->foreignId('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreignId('sale_id')->nullable();
+            $table->foreign('sale_id')->references('id')->on('sales')->onDelete('set null');
             $table->timestamps();
         });
     }

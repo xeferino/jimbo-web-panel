@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\JibController;
 use App\Http\Controllers\Api\BalanceController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\SaleController;
+use App\Http\Controllers\Api\ShoppingController;
 use App\Http\Controllers\Api\CardController;
 use App\Http\Controllers\Api\AccountController;
 
@@ -45,24 +46,33 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/raffles/{raffle}', [RaffleController::class, 'show']);
     Route::get('/jibs', [JibController::class, 'index']);
     Route::get('/balance/{user}', [BalanceController::class, 'balance']);
+
+    Route::name('cards')->group(function () {
+        Route::get('cards/user/{user}', [CardController::class, 'index'])->name('index');
+        Route::get('cards/{card}', [CardController::class, 'show'])->name('show');
+        Route::post('cards', [CardController::class, 'store'])->name('store');
+        Route::put('cards/{card}', [CardController::class, 'update'])->name('update');
+        Route::delete('cards/{card}', [CardController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::name('accounts')->group(function () {
+        Route::get('accounts/user/{user}', [AccountController::class, 'index'])->name('index');
+        Route::get('accounts/{account}', [AccountController::class, 'show'])->name('show');
+        Route::post('accounts', [AccountController::class, 'store'])->name('store');
+        Route::put('accounts/{account}', [AccountController::class, 'update'])->name('update');
+        Route::delete('accounts/{account}', [AccountController::class, 'destroy'])->name('destroy');
+    });
 });
 
 
 Route::get('payment', [PaymentController::class, 'payment'])->name('payment');
-Route::post('sales', [SaleController::class, 'ticket'])->name('ticket');
+Route::get('payment/{user}', [PaymentController::class, 'paymentHistory'])->name('payment.user');
 
-Route::name('cards')->group(function () {
-    Route::get('cards/user/{user}', [CardController::class, 'index'])->name('index');
-    Route::get('cards/{card}', [CardController::class, 'show'])->name('show');
-    Route::post('cards', [CardController::class, 'store'])->name('store');
-    Route::put('cards/{card}', [CardController::class, 'update'])->name('update');
-    Route::delete('cards/{card}', [CardController::class, 'destroy'])->name('destroy');
-});
 
-Route::name('accounts')->group(function () {
-    Route::get('accounts/user/{user}', [AccountController::class, 'index'])->name('index');
-    Route::get('accounts/{account}', [AccountController::class, 'show'])->name('show');
-    Route::post('accounts', [AccountController::class, 'store'])->name('store');
-    Route::put('accounts/{account}', [AccountController::class, 'update'])->name('update');
-    Route::delete('accounts/{account}', [AccountController::class, 'destroy'])->name('destroy');
-});
+Route::post('sales', [SaleController::class, 'saleTicketCard'])->name('ticket.pay.card');
+
+Route::get('shoppings/{user}', [ShoppingController::class, 'index'])->name('shopping.tickets');
+Route::get('shoppings/tickets/{shopping}', [ShoppingController::class, 'show'])->name('shopping.detail.ticket');
+
+
+

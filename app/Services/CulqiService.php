@@ -10,15 +10,15 @@ class CulqiService
     protected $secret;
     protected $baseUri;
     protected $culqi;
-    protected $data;
+    protected $card;
 
-    public function __construct($data)
+    public function __construct($card)
     {
         $this->baseUri = config('services.culqi.base_url');
         $this->key = config('services.culqi.key');
         $this->secret = config('services.culqi.secret');
         $this->culqi = new \Culqi\Culqi(array('api_key' => config('services.culqi.secret')));
-        $this->data = $data;
+        $this->card = $card;
     }
 
     /**
@@ -29,9 +29,9 @@ class CulqiService
     public function generateToken()
     {
         try {
-            $culqi = new Client();
-            $response = $culqi->request('POST', $this->baseUri.'/tokens', [
-                'body' => json_encode($this->data),
+            $client = new Client();
+            $response = $client->request('POST', $this->baseUri.'/tokens', [
+                'body' => json_encode($this->card),
                 'headers' => [
                     'Content-Type'  => 'application/json',
                     'Authorization' => 'Bearer ' . $this->key

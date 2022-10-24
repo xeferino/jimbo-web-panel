@@ -23,7 +23,6 @@ return new class extends Migration
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('set null');
             $table->double('amount')->nullable();
             $table->string('number')->nullable();
-            $table->json('tickets')->nullable();
             $table->integer('quantity')->nullable();
             $table->foreignId('ticket_id')->nullable();
             $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('set null');
@@ -33,7 +32,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->foreignId('raffle_id')->nullable();
             $table->foreign('raffle_id')->references('id')->on('raffles')->onDelete('set null');
-            $table->boolean('status')->default(0);
+            $table->enum('status',['approved', 'refused', 'pending']);
             $table->timestamps();
         });
     }

@@ -164,7 +164,7 @@ class RaffleController extends Controller
             $promotions = [];
             foreach (json_decode($request->promotions_raffle) as $promotion) {
                 $data = array(
-                    'serial'         => (string)$promotion->serial,
+                    'serial'         => (int)$promotion->id.uniqid().$raffle->id,
                     'raffle_id'      => (int)$raffle->id,
                     'promotion_id'   => (int)$promotion->id,
                     'quantity'       => (int)$promotion->ticket,

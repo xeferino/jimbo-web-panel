@@ -152,6 +152,7 @@ class AuthController extends Controller
                     'email'        => $user->email,
                     'dni'          => $user->dni,
                     'phone'        => $user->phone,
+                    'address'      => $user->address,
                     'usd'          => $user->balance_usd,
                     'jib'          => $user->balance_jib,
                     'email_verified_at' => $user->email_verified_at,
@@ -194,6 +195,7 @@ class AuthController extends Controller
                         'email'        => $user->email,
                         'dni'          => $user->dni,
                         'phone'        => $user->phone,
+                        'address'      => $user->address,
                         'usd'          => $user->balance_usd,
                         'jib'          => $user->balance_jib,
                         'email_verified_at' => $user->email_verified_at,
@@ -233,6 +235,7 @@ class AuthController extends Controller
             $user->email            = $request->email;
             $user->dni              = $request->dni;
             $user->phone            = $request->phone;
+            $user->address          = $request->address;
 
             if($request->password){
                 $user->password     = Hash::make($request->password);
@@ -260,6 +263,7 @@ class AuthController extends Controller
                         'email'        => $user->email,
                         'dni'          => $user->dni,
                         'phone'        => $user->phone,
+                        'address'      => $user->address,
                         'usd'          => $user->balance_usd,
                         'jib'          => $user->balance_jib,
                         'email_verified_at' => $user->email_verified_at,

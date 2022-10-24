@@ -3,23 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\PaymentHistory;
 use Illuminate\Http\Request;
 use Exception;
-use App\Services\CulqiService;
+use App\Services\CulqiService as Culqi;
 
 
 class PaymentController extends Controller
 {
-    public function payment(Request $request)
+    public static function payment($card, $charge)
     {
         try{
-            //card token
+            /* //card token
             $card = [
                 //'card_number' => '4000020000000000',
-                //'card_number' => '4111111111111111 ',
-                'card_number' => '4000040000000008',
-                'cvv' => '295',
-                'expiration_month' => '03',
+                'card_number' => '4111111111111111',
+                'cvv' => '123',
+                'expiration_month' => '09',
                 'expiration_year' => '25',
                 'email' => 'josegregoriolozadae@gmail.com',
                 'metadata' => [
@@ -45,12 +45,38 @@ class PaymentController extends Controller
                     "last_name" => "Muro",
                     "phone_number" => "9889678986",
                 ],
-            ];
+            ]; */
 
-            $culqi = new CulqiService($card);
-            return response()->json(['payment'   => $culqi->charge($charge)]);
+            $culqi = new Culqi($card);
+            return $culqi->charge($charge);
         } catch (Exception $e) {
             return response()->json(['message' =>  $e->getMessage()]);
         }
+    }
+
+    public static function paymentHistoryStore($data)
+    {
+        $payment = PaymentHistory::insert($data);
+        return $payment;
+    }
+
+    public function paymentHistory(Request $request)
+    {
+        $payments = PaymentHistory::where('user_id', $request->user)->get();
+
+        return response()->json([
+            'status'  => 200,
+            'payment_histories' => $payments
+        ], 200);
+    }
+
+    public function paymentDetail(Request $request)
+    {
+        $payments = PaymentHistory::where('user_id', $request->user)->get();
+
+        return response()->json([
+            'status'  => 200,
+            'payment_histories' => $payments
+        ], 200);
     }
 }

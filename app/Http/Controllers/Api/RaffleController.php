@@ -68,10 +68,9 @@ class RaffleController extends Controller
     public function show($id)
     {
         try {
-            $raffle = Raffle::findOrFail(13);
+            $raffle = Raffle::findOrFail($id);
             $data = [];
             $tickets = [];
-            $promotions = [];
 
             foreach ($raffle->tickets as $key => $value) {
                 array_push($tickets, [
@@ -81,17 +80,15 @@ class RaffleController extends Controller
                     'raffle_id'     => $value->raffle_id,
                     'quantity'      => $value->quantity,
                     'total'         => $value->total,
-                ]);
-            }
-
-            foreach ($raffle->tickets as $key => $value) {
-                array_push($promotions, [
-                    'id'        => $value->promotion->id,
-                    'name'      => $value->promotion->name,
-                    'code'      => $value->promotion->code,
-                    'price'     => $value->promotion->price,
-                    'quantity'  => $value->promotion->quantity,
-                    'active'    => $value->promotion->active,
+                    'promotions'    => [
+                        'id'        => $value->promotion->id,
+                        'name'      => $value->promotion->name,
+                        'code'      => $value->promotion->code,
+                        'price'     => $value->promotion->price,
+                        'quantity'  => $value->promotion->quantity,
+                        'active'    => $value->promotion->active,
+                        'available' => ($value->quantity>0) ? true : false
+                    ]
                 ]);
             }
 
@@ -124,7 +121,6 @@ class RaffleController extends Controller
                         'nineth'    => ($raffle->cash_to_draw*$raffle->prize_9)/100,
                         'tenth'     => ($raffle->cash_to_draw*$raffle->prize_10)/100,
                     ],
-                    'promotions' => $promotions,
                     'tickets' => $tickets,
                 ]
             ]);

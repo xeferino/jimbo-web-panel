@@ -28,7 +28,7 @@ class FormCardRequest extends FormRequest
             'number'            => isset($this->card->id) ? 'required|numeric|digits_between:6,20|unique:card_users,number,'.$this->card->id : 'required|numeric|digits_between:6,20|unique:card_users,number',
             'type'              => 'required|min:3',
             'code'              => 'required|min:3',
-            'date_expire'       => 'required|date_format:m/Y',
+            'date_expire'       => 'required|date_format:m/y',
             'user_id'           => 'required|integer',
 
         ];
@@ -46,7 +46,7 @@ class FormCardRequest extends FormRequest
             'code.required'             => 'El codigo es requerido.',
             'code.required'             => 'El codigo es debe tener min: caracteres como minimo.',
             'date_expire.required'      => 'La fecha de vencimiento de la tarjeta es requerida.',
-            'date_expire.date_format'   => 'El formato de la fecha de vencimiento de la tarjeta es invalido. ejemplo:'.date('m/Y'),
+            'date_expire.date_format'   => 'El formato de la fecha de vencimiento de la tarjeta es invalido. ejemplo:'.date('m/y'),
             'user_id.required'          => 'El usuario es requerido.',
         ];
     }

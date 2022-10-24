@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('dni')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->unique();
+            $table->text('address')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->boolean('active')->default(1);
