@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sales', function (Blueprint $table) {
+        Schema::create('winners', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('dni')->nullable();
@@ -22,18 +22,15 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->foreignId('country_id')->nullable();
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('set null');
-            $table->float('amount',10,2)->nullable();
-            $table->string('number')->nullable();
-            $table->integer('quantity')->nullable();
+            $table->float('amount', 10,2)->nullable();
             $table->foreignId('ticket_id')->nullable();
             $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('set null');
             $table->foreignId('seller_id')->nullable();
             $table->foreign('seller_id')->references('id')->on('users')->onDelete('set null');
             $table->foreignId('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('raffle_id')->nullable();
-            $table->foreign('raffle_id')->references('id')->on('raffles')->onDelete('set null');
-            $table->enum('status',['approved', 'refused', 'pending']);
+            $table->foreign('raffle_id')->references('id')->on('raffles')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -45,6 +42,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sales');
+        Schema::dropIfExists('winners');
     }
 };

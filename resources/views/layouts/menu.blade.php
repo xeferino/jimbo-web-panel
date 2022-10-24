@@ -34,22 +34,26 @@
                     </a>
                 </li>
             @endcan
+            @can('sale-menu')
+                <li class="">
+                        <a href="">
+                            <span class="pcoded-micon"><i class="icofont icofont-bars"></i><b>VT</b></span>
+                            <span class="pcoded-mtext" data-i18n="nav.form-components.main">Ventas</span>
+                            <span class="pcoded-mcaret"></span>
+                            {{-- <span class="badge badge-info">30</span> --}}
+                        </a>
+                    </li>
+            @endcan
 
-           {{--  <li class="">
-                <a href="">
-                    <span class="pcoded-micon"><i class="icofont icofont-bars"></i><b>VT</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Ventas</span>
-                    <span class="pcoded-mcaret"></span>
-                    <span class="badge badge-info">30</span>
-                </a>
-            </li>
-            <li class="">
-                <a href="">
-                    <span class="pcoded-micon"><i class="icofont icofont-money"></i><b>EG</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Egresos</span>
-                    <span class="pcoded-mcaret"></span>
-                </a>
-            </li> --}}
+            @can('egress-menu')
+                <li class="">
+                    <a href="">
+                        <span class="pcoded-micon"><i class="icofont icofont-money"></i><b>EG</b></span>
+                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">Egresos</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+            @endcan
 
             @can('raffle-menu')
                 <li class="{{(\Request::segment(2)=='raffles')?'active':''}}">
@@ -91,40 +95,49 @@
                 </li>
             @endcan
 
-            {{-- <li class="">
-                <a href="">
-                    <span class="pcoded-micon"><i class="icofont icofont-bill-alt"></i><b>SL</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Solicitudes de Retiros</span>
-                    <span class="pcoded-mcaret"></span>
-                </a>
-            </li>
+            @can('withdrawal-menu')
+                <li class="">
+                    <a href="">
+                        <span class="pcoded-micon"><i class="icofont icofont-bill-alt"></i><b>SL</b></span>
+                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">Solicitudes de Retiros</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+            @endcan
+
+            @can('notification-menu')
+                <li class="">
+                    <a href="">
+                        <span class="pcoded-micon"><i class="icofont icofont-notification"></i><b>NT</b></span>
+                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">Notificaciones</span>
+                        <span class="pcoded-mcaret"></span>
+                        {{-- <span class="badge badge-info">21</span> --}}
+                    </a>
+                </li>
+            @endcan
+
+            @can('report-menu')
+                <li class="">
+                    <a href="">
+                        <span class="pcoded-micon"><i class="icofont icofont-chart-bar-graph"></i><b>RP</b></span>Reportes</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+            @endcan
 
 
-            <li class="">
-                <a href="">
-                    <span class="pcoded-micon"><i class="icofont icofont-notification"></i><b>NT</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Notificaciones</span>
-                    <span class="pcoded-mcaret"></span>
-                    <span class="badge badge-info">21</span>
-                </a>
-            </li>
-
-            <li class="">
-                <a href="">
-                    <span class="pcoded-micon"><i class="icofont icofont-money-bag"></i><b>RB</b></span>
-                    <span class="pcoded-mtext" data-i18n="nav.form-components.main">Recompensas y Bonos</span>
-                    <span class="pcoded-mcaret"></span>
-                </a>
-            </li>
-
-            <li class="">
-                <a href="">
-                    <span class="pcoded-micon"><i class="icofont icofont-chart-bar-graph"></i><b>RP</b></span>Reportes</span>
-                    <span class="pcoded-mcaret"></span>
-                </a>
-            </li> --}}
             @can('setting-menu')
                 <div class="pcoded-navigatio-lavel" data-i18n="nav.category.navigation">Configuraciones</div>
+                @can('rewards-bonuses-menu')
+                    <li class="">
+                        <a href="">
+                            <span class="pcoded-micon"><i class="icofont icofont-money-bag"></i><b>RB</b></span>
+                            <span class="pcoded-mtext" data-i18n="nav.form-components.main">Recompensas y Bonos</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+                @endcan
+
                 @can('user-menu')
                     <li class="{{(\Request::segment(2)=='users')?'active':''}}">
                         <a href="{{route('panel.users.index')}}">

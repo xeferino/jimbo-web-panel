@@ -13,15 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('balance_histories', function (Blueprint $table) {
+        Schema::create('cash_requests', function (Blueprint $table) {
             $table->id();
-            $table->string('reference')->nullable();
-            $table->string('description')->nullable();
-            $table->enum('type',['debit', 'credit'])->nullable();
-            $table->string('currency')->nullable();
-            $table->float('balance',10,2)->nullable();
+            $table->string('currency')->nullable()->default('usd');
+            $table->float('amount',10,2)->nullable();
             $table->date('date')->nullable();
             $table->time('hour')->nullable();
+            $table->string('reference')->nullable();
+            $table->string('description')->nullable();
+            $table->enum('status',['approved', 'refuse', 'pending', 'return', 'created']);
             $table->foreignId('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
@@ -35,10 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('balance_histories');
-        Schema::table('balance_histories', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-            $table->dropColumn('user_id');
-        });
+        Schema::dropIfExists('cash_requests');
     }
 };

@@ -1,5 +1,4 @@
 <?php
-
 $jib_unit = 1000;
 $jib_usd  = 0.10;
 

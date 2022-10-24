@@ -30,6 +30,7 @@ return new class extends Migration
             $table->date('date_extend')->nullable();
             $table->boolean('active')->default(1);
             $table->boolean('public')->default(0);
+            $table->string('image')->nullable();
             $table->double('prize_1')->nullable();
             $table->double('prize_2')->nullable();
             $table->double('prize_3')->nullable();

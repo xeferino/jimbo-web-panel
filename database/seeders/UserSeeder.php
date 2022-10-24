@@ -86,6 +86,12 @@ class UserSeeder extends Seeder
         Permission::create(['name' => 'raffle-menu', 'description' => 'menu de configuracion de sorteos en el sistema'])->syncRoles([$super_admin]);
         Permission::create(['name' => 'promotion-menu', 'description' => 'menu de configuracion de promociones de sorteos en el sistema'])->syncRoles([$super_admin]);
         Permission::create(['name' => 'slider-menu', 'description' => 'menu de configuracion de sliders en el app'])->syncRoles([$super_admin]);
+        Permission::create(['name' => 'sale-menu', 'description' => 'menu de configuracion de ventas en el sistema'])->syncRoles([$super_admin]);
+        Permission::create(['name' => 'egress-menu', 'description' => 'menu de configuracion de egresos en el sistema'])->syncRoles([$super_admin]);
+        Permission::create(['name' => 'withdrawal-menu', 'description' => 'menu de configuracion de solicitudes de retiros en el sistema'])->syncRoles([$super_admin]);
+        Permission::create(['name' => 'report-menu', 'description' => 'menu de configuracion de reportes en el sistema'])->syncRoles([$super_admin]);
+        Permission::create(['name' => 'notification-menu', 'description' => 'menu de configuracion de notificaciones en el sistema'])->syncRoles([$super_admin]);
+        Permission::create(['name' => 'rewards-bonuses-menu', 'description' => 'menu de configuracion de bonos y recompensas en el sistema'])->syncRoles([$super_admin]);
 
         User::create([
             'name' => 'Super Admin',

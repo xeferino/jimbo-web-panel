@@ -6,6 +6,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\CountrySeeder;
+use Database\Seeders\LevelSeeder;
+use Database\Seeders\SettingSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,6 +20,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([UserSeeder::class]);
         $this->call([CountrySeeder::class]);
+        $this->call([LevelSeeder::class]);
+        $this->call([SettingSeeder::class]);
 
         // \App\Models\User::factory(500)->create();
 
