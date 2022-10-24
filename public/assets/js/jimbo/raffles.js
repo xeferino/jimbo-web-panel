@@ -178,6 +178,12 @@ jQuery(document).ready(function() {
                         $('.has-danger-cash_to_draw').text('');
                     }
 
+                    if (error.response.data.errors.type) {
+                        $('.has-danger-type').text('' + error.response.data.errors.type + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-type').text('');
+                    }
+
                     if (error.response.data.errors.description) {
                         $('.has-danger-description').text('' + error.response.data.errors.description + '').css("color", "#dc3545e3");
                     }else{
@@ -387,6 +393,12 @@ jQuery(document).ready(function() {
                         $('.has-danger-cash_to_draw').text('' + error.response.data.errors.cash_to_draw + '').css("color", "#dc3545e3");
                     }else{
                         $('.has-danger-cash_to_draw').text('');
+                    }
+
+                    if (error.response.data.errors.type) {
+                        $('.has-danger-type').text('' + error.response.data.errors.type + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-type').text('');
                     }
 
                     if (error.response.data.errors.description) {

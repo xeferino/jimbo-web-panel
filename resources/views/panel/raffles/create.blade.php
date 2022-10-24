@@ -107,14 +107,15 @@
                         <div class="col-form-label has-danger-cash_to_collect"></div>
                     </div>
 
-                    {{-- <div class="col-sm-6">
-                        <label class="col-form-label">Porcentaje de la pasarela</label>
-                        <div class="input-group">
-                            <input type="number" min="1" name="percent" id="percent" class="form-control">
-                            <span class="input-group-addon" id="percent">%</span>
-                        </div>
-                        <div class="col-form-label has-danger-percent"></div>
-                    </div> --}}
+                    <div class="col-sm-6">
+                        <label class="col-form-label">Tipo</label>
+                        <select name="type" id="type" class="form-control">
+                            <option value="">.::Seleccione::.</option>
+                            <option value="raffle">Sorteo</option>
+                            <option value="product">Producto</option>
+                        </select>
+                        <div class="col-form-label has-danger-type"></div>
+                    </div>
 
                     <div class="col-sm-6">
                         <label class="col-form-label">Visibilidad</label>

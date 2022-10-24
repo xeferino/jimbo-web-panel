@@ -14,7 +14,7 @@ class Helper
      */
     public static function amount($value)
 	{
-		return NumberFormatter::create( 'es_ES', NumberFormatter::CURRENCY )->formatCurrency($value, 'USD');
+		return NumberFormatter::create( 'en_US', NumberFormatter::CURRENCY )->formatCurrency($value, 'USD');
 	}
 
     /**

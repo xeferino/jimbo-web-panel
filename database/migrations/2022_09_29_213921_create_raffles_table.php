@@ -21,9 +21,9 @@ return new class extends Migration
             $table->string('promoter')->nullable();
             $table->string('place');
             $table->string('provider')->nullable();
-            $table->double('cash_to_draw');
-            $table->double('cash_to_collect');
-            $table->string('image');
+            $table->float('cash_to_draw',10,2);
+            $table->float('cash_to_collect',10,2);
+            $table->enum('type', ['raffle', 'product']);
             $table->date('date_start');
             $table->date('date_end');
             $table->date('date_release');

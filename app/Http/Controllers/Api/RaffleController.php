@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Exception;
 use App\Models\Raffle;
 use App\Models\FavoriteDraw;
+use App\Helpers\Helper;
 
 
 class RaffleController extends Controller
@@ -105,7 +106,7 @@ class RaffleController extends Controller
                         'id'        => $value->promotion->id,
                         'name'      => $value->promotion->name,
                         'code'      => $value->promotion->code,
-                        'price'     => $value->promotion->price,
+                        'price'     => Helper::amount($value->promotion->price),
                         'quantity'  => $value->promotion->quantity,
                         'active'    => $value->promotion->active,
                         'available' => ($value->quantity>0) ? true : false
@@ -122,7 +123,7 @@ class RaffleController extends Controller
                     'promoter'      => $raffle->promoter,
                     'place'         => $raffle->place,
                     'provider'      => $raffle->provider,
-                    'cash_to_draw'  => $raffle->cash_to_draw,
+                    'cash_to_draw'  => Helper::amount($raffle->cash_to_draw),
                     'logo'          => $raffle->image != 'raffle.jpg' ? $this->asset.$raffle->image : $this->asset.'raffle.jpg',
                     'date_start'    => $raffle->date_start->format('d/m/Y'),
                     'date_end'      => $raffle->date_end->format('d/m/Y'),
@@ -130,17 +131,18 @@ class RaffleController extends Controller
                     'date_extend'   => $raffle->date_extend != null ? $raffle->date_extend->format('d/m/Y') : 'No hay fecha de prorroga',
                     'active'        => $raffle->active,
                     'public'        => $raffle->public,
+                    'type'          => ($raffle->type == 'raffle') ? 'Sorteo' : 'Producto',
                     'awards' => [
-                        'first'     => ($raffle->cash_to_draw*$raffle->prize_1)/100,
-                        'second'    => ($raffle->cash_to_draw*$raffle->prize_2)/100,
-                        'third'     => ($raffle->cash_to_draw*$raffle->prize_3)/100,
-                        'fourth'    => ($raffle->cash_to_draw*$raffle->prize_4)/100,
-                        'fifth'     => ($raffle->cash_to_draw*$raffle->prize_5)/100,
-                        'sixth'     => ($raffle->cash_to_draw*$raffle->prize_6)/100,
-                        'seventh'   => ($raffle->cash_to_draw*$raffle->prize_7)/100,
-                        'eighth'    => ($raffle->cash_to_draw*$raffle->prize_8)/100,
-                        'nineth'    => ($raffle->cash_to_draw*$raffle->prize_9)/100,
-                        'tenth'     => ($raffle->cash_to_draw*$raffle->prize_10)/100,
+                        'first'     => Helper::amount(($raffle->cash_to_draw*$raffle->prize_1)/100),
+                        'second'    => Helper::amount(($raffle->cash_to_draw*$raffle->prize_2)/100),
+                        'third'     => Helper::amount(($raffle->cash_to_draw*$raffle->prize_3)/100),
+                        'fourth'    => Helper::amount(($raffle->cash_to_draw*$raffle->prize_4)/100),
+                        'fifth'     => Helper::amount(($raffle->cash_to_draw*$raffle->prize_5)/100),
+                        'sixth'     => Helper::amount(($raffle->cash_to_draw*$raffle->prize_6)/100),
+                        'seventh'   => Helper::amount(($raffle->cash_to_draw*$raffle->prize_7)/100),
+                        'eighth'    => Helper::amount(($raffle->cash_to_draw*$raffle->prize_8)/100),
+                        'nineth'    => Helper::amount(($raffle->cash_to_draw*$raffle->prize_9)/100),
+                        'tenth'     => Helper::amount(($raffle->cash_to_draw*$raffle->prize_10)/100),
                     ],
                     'tickets' => $tickets,
                 ]

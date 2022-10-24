@@ -9,6 +9,7 @@ use App\Models\Raffle;
 use App\Models\Promotion;
 use App\Models\Ticket;
 use DataTables;
+use App\Helpers\Helper;
 
 
 class RaffleController extends Controller
@@ -24,8 +25,8 @@ class RaffleController extends Controller
             $raffle = Raffle::select(
                                     'id',
                                     'title',
-                                    DB::raw("CONCAT(cash_to_draw,'$') AS cash_to_draw"),
-                                    DB::raw("CONCAT(cash_to_collect,'$') AS cash_to_collect"),
+                                    'cash_to_draw',
+                                    'cash_to_collect',
                                     'date_start',
                                     'date_end',
                                     'date_release',
@@ -68,26 +69,15 @@ class RaffleController extends Controller
                             $btn .= '<span class="badge badge-danger" title="Borrador">Borrador</span>';
                         }
                         return $btn;
+                    })->addColumn('cash_to_draw', function($raffle){
+                        return Helper::amount($raffle->cash_to_draw);
+                    })->addColumn('cash_to_collect', function($raffle){
+                        return Helper::amount($raffle->cash_to_collect);
                     })
-                    ->rawColumns(['action','active', 'public'])
+
+                    ->rawColumns(['action','active', 'public', 'cash_to_draw', 'cash_to_collect' ])
                     ->make(true);
         }
-
-        return $balance = DB::table('balance_histories')->select(
-            'balance_histories.id',
-            'balance_histories.reference',
-            'balance_histories.description',
-            'balance_histories.type',
-            'balance_histories.currency',
-            'balance_histories.balance',
-            'balance_histories.date',
-            'balance_histories.hour',
-            )
-            ->join('users', 'users.id', '=', 'balance_histories.user_id')
-            ->where('users.id', 12)
-            ->get();
-
-
 
         return view('panel.raffles.index', [
             'title'              => 'Sorteos',
@@ -132,6 +122,7 @@ class RaffleController extends Controller
         $raffle->provider         = $request->provider;
         $raffle->cash_to_draw     = $request->cash_to_draw;
         $raffle->cash_to_collect  = $request->cash_to_collect;
+        $raffle->type             = $request->type;
         $raffle->public           = $request->public;
         $raffle->active           = $request->active;
         $raffle->prize_1          = $request->prize_1;
@@ -232,6 +223,7 @@ class RaffleController extends Controller
         $raffle->provider         = $request->provider;
         $raffle->cash_to_draw     = $request->cash_to_draw;
         $raffle->cash_to_collect  = $request->cash_to_collect;
+        $raffle->type             = $request->type == 'raffle' ? 'raffle' : 'product';
         $raffle->public           = $request->public == 1 ? 1 : 0;
         $raffle->active           = $request->active == 1 ? 1 : 0;
         $raffle->prize_1          = $request->prize_1;
