@@ -10,6 +10,9 @@
                     <a href="{{ route('panel.raffles.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nuevo Sorteo"><i class="ti-plus"></i></a>
                 </div>
             @endcan
+            <div class="card-header-left">
+                <a href="" class="btn btn-warning mb-2" data-toggle="tooltip" data-placement="top"><i class="ti-money"></i>Finalizados</a>
+            </div>
         </div>
         <div class="card-block table-border-style">
             <div class="table-responsive">

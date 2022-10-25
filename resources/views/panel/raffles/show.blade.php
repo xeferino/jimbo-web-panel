@@ -14,11 +14,11 @@
                 </div>
                 <div class="card-block text-center">
                     <div class="row">
-                        <div class="col-4 b-r-default">
+                        <div class="col-3 b-r-default">
                             <h2>{{Helper::amount($raffle->cash_to_draw)}}</h2>
                             <p class="text-muted">Premio Mayor</p>
                         </div>
-                        <div class="col-4 b-r-default">
+                        <div class="col-3 b-r-default">
                             @php
                                 $amount = ((($raffle->cash_to_draw*$raffle->prize_1)/100) +
                                           (($raffle->cash_to_draw*$raffle->prize_2)/100) +
@@ -30,13 +30,18 @@
                                           (($raffle->cash_to_draw*$raffle->prize_8)/100) +
                                           (($raffle->cash_to_draw*$raffle->prize_9)/100) +
                                           (($raffle->cash_to_draw*$raffle->prize_10)/100));
+                                $percent = (($raffle->totalSale->sum('amount')*100)/($raffle->cash_to_collect-$amount))
                             @endphp
                             <h2>{{Helper::amount($amount)}}</h2>
                             <p class="text-muted">Dinero de premiaciones</p>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3 b-r-default">
                             <h2>{{Helper::amount($raffle->cash_to_collect-$amount)}}</h2>
                             <p class="text-muted">Dinero total a recaudar</p>
+                        </div>
+                        <div class="col-3">
+                            <h2>{{ $percent == 100 ?  Helper::percent(100) : Helper::percent($percent) }}</h2>
+                            <p class="text-muted">Porcentaje de recaudacion</p>
                         </div>
                     </div>
                 </div>
@@ -86,8 +91,8 @@
                     <p class="text-muted">{{$raffle->date_release->format('d/m/Y')}}</p>
                     <hr>
 
-                    <strong class="text-uppercase">Fecha de prorroga</strong>
-                    <p class="text-muted">{{$raffle->date_extend != null ? $raffle->date_extend->format('d/m/Y') : 'No hay prorroga'}}</p>
+                    <strong class="text-uppercase">Dias de prorroga</strong>
+                    <p class="text-muted">{{$raffle->days_extend != null ? $raffle->days_extend : 'No hay dias prorroga'}}</p>
                     <hr>
 
                     <strong class="text-uppercase">Tipo</strong>
@@ -108,8 +113,9 @@
                     <hr>
                     <strong class="text-uppercase">Progreso de recaudacion</strong>
                     <div class="progress mt-2">
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                        <div class="progress-bar bg-warning" data-toggle="tooltip" data-placement="top" title="{{Helper::percent($percent)}} ({{Helper::amount($raffle->cash_to_collect-$amount).' - '.Helper::amount($raffle->totalSale->sum('amount'))}})" role="progressbar" style="width: {{$percent}}%;" aria-valuenow="{{$percent}}" aria-valuemin="0" aria-valuemax="100">{{Helper::percent($percent)}}</div>
                     </div>
+                    <p><b>({{Helper::amount($raffle->cash_to_collect-$amount).' - '.Helper::amount($raffle->totalSale->sum('amount'))}}) {{Helper::percent($percent)}}</b></p>
                 </div>
             </div>
         </div>
@@ -354,16 +360,36 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Dias</th>
-                                    <th>Fecha Anterior</th>
+                                    <th>Dias de prorroga</th>
+                                    <th>Fecha de cierre Anterior</th>
+                                    <th>Fecha de sorteo Anterior</th>
                                     <th>Fecha de prorroga</th>
                                     <th>Estatus</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td colspan="5">No hay fechas de prorrogas</td>
-                                </tr>
+                                @php
+                                    $i =1;
+                                @endphp
+                                @forelse ($raffle->ExtendsDate as $date)
+                                    <tr>
+                                        <td>{{ $i++}}</td>
+                                        <td>{{ $date->days}}</td>
+                                        <td>{{ $date->date_end_back->format('d/m/Y')}}</td>
+                                        <td>{{ $date->date_release_back->format('d/m/Y')}}</td>
+                                        <td>{{ $date->date_release_next->format('d/m/Y')}}</td>
+                                        <td>
+                                            <span class="badge badge-{{$raffle->active == 1 ? 'success' : 'danger'}}" title="{{$raffle->active == 1 ? 'Activa' : 'Inactiva'}}">
+                                                <i class="ti-{{$raffle->active == 1 ? 'check' : 'close'}}"></i>
+                                                {{$raffle->active == 1 ? 'Activa' : 'Inactiva'}}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6">No hay fechas de prorrogas</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

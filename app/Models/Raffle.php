@@ -18,6 +18,16 @@ class Raffle extends Model
         return $this->hasMany('App\Models\Ticket');
     }
 
+    public function ExtendsDate()
+    {
+        return $this->hasMany('App\Models\ExtendGiveaway', 'raffle_id', 'id');
+    }
+
+    public function totalSale()
+    {
+        return $this->hasMany('App\Models\Sale', 'raffle_id', 'id');
+    }
+
     public function setDateStartAttribute($value):void
     {
         $this->attributes['date_start'] = Carbon::createFromFormat('d/m/Y',$value)->format('Y-m-d');
@@ -32,6 +42,11 @@ class Raffle extends Model
     {
         $this->attributes['date_release'] = Carbon::createFromFormat('d/m/Y',$value)->format('Y-m-d');
     }
+
+    /* public function moneyRaising () {
+        $total = \App\Models\Sale::where('raffle_id', $id)->where('status', 'approved')->sum('amount');
+        return Helper::amount($total);
+    } */
 
     /**
      * The attributes that should be cast.

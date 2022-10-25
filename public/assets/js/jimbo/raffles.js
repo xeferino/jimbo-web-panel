@@ -401,6 +401,12 @@ jQuery(document).ready(function() {
                         $('.has-danger-type').text('');
                     }
 
+                    if (error.response.data.errors.days_extend) {
+                        $('.has-danger-days_extend').text('' + error.response.data.errors.days_extend + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-days_extend').text('');
+                    }
+
                     if (error.response.data.errors.description) {
                         $('.has-danger-description').text('' + error.response.data.errors.description + '').css("color", "#dc3545e3");
                     }else{

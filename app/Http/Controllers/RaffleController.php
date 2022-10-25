@@ -10,7 +10,8 @@ use App\Models\Promotion;
 use App\Models\Ticket;
 use DataTables;
 use App\Helpers\Helper;
-
+use App\Models\ExtendGiveaway;
+use Illuminate\Support\Carbon;
 
 class RaffleController extends Controller
 {
@@ -253,6 +254,35 @@ class RaffleController extends Controller
             $fileName       = time() . '.' . $extension;
             $raffle->image      = $fileName;
             $file->move(public_path('assets/images/raffles/'), $fileName);
+        }
+
+        if($request->has('days_extend') && $request->days_extend>0){
+            $ExtendGiveaway = ExtendGiveaway::where('raffle_id', $raffle->id)->where('active', 1)->first();
+
+            if($ExtendGiveaway) {
+                $ExtendGiveaway->active = 0;
+                $ExtendGiveaway->save();
+            }
+
+            $date_end       = $raffle->date_end->addDay($request->days_extend);
+            $date_release   = $raffle->date_release->addDay($request->days_extend);
+
+            $extend = ExtendGiveaway::insert([
+                'date_end_back'     => $raffle->date_end,
+                'date_release_back' => $raffle->date_release,
+                'days'              => $request->days_extend,
+                'date_release_next' => $raffle->date_release->addDay($request->days_extend),
+                'raffle_id'         => $raffle->id,
+                'active'            =>  1,
+                'created_at'        => now(),
+                'updated_at'        => now(),
+            ]);
+
+            if($extend) {
+                $raffle->days_extend    = $request->days_extend;
+                $raffle->date_end       = $date_end->format('d/m/Y');
+                $raffle->date_release   = $date_release->format('d/m/Y');
+            }
         }
 
         $saved = $raffle->save();

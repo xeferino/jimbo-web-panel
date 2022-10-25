@@ -35,8 +35,8 @@
                 </li>
             @endcan
             @can('sale-menu')
-                <li class="">
-                        <a href="">
+                    <li class="{{(\Request::segment(2)=='sales')?'active':''}}">
+                        <a href="{{route('panel.sales.index')}}">
                             <span class="pcoded-micon"><i class="icofont icofont-bars"></i><b>VT</b></span>
                             <span class="pcoded-mtext" data-i18n="nav.form-components.main">Ventas</span>
                             <span class="pcoded-mcaret"></span>

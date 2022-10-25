@@ -27,7 +27,7 @@ return new class extends Migration
             $table->date('date_start');
             $table->date('date_end');
             $table->date('date_release');
-            $table->date('date_extend')->nullable();
+            $table->integer('days_extend')->nullable();
             $table->boolean('active')->default(1);
             $table->boolean('public')->default(0);
             $table->string('image')->nullable();

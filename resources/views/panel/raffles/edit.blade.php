@@ -135,6 +135,15 @@
                         </select>
                         <div class="col-form-label has-danger-active"></div>
                     </div>
+
+                    <div class="col-sm-6">
+                        <label class="col-form-label">Dias de prorroga</label>
+                        <div class="input-group">
+                            <input type="number" min="1" name="days_extend" id="days_extend" class="form-control">
+                            <span class="input-group-addon" id="days_extend"><i class="icofont icofont-calendar"></i></span>
+                        </div>
+                        <div class="col-form-label has-danger-days_extend"></div>
+                    </div>
                     <div class="col-sm-12 mt-4">
                         <div class="alert alert-warning" role="alert"><b>Porcentaje de premios en el sorteo</b></div>
                     </div>

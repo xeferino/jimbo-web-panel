@@ -128,7 +128,7 @@ class RaffleController extends Controller
                     'date_start'    => $raffle->date_start->format('d/m/Y'),
                     'date_end'      => $raffle->date_end->format('d/m/Y'),
                     'date_release'  => $raffle->date_release->format('d/m/Y'),
-                    'date_extend'   => $raffle->date_extend != null ? $raffle->date_extend->format('d/m/Y') : 'No hay fecha de prorroga',
+                    'days_extend'   => $raffle->days_extend != null ? $raffle->days_extend : 'No hay dias de prorroga',
                     'active'        => $raffle->active,
                     'public'        => $raffle->public,
                     'type'          => ($raffle->type == 'raffle') ? 'Sorteo' : 'Producto',
