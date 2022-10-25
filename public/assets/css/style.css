@@ -8967,8 +8967,8 @@ body[themebg-pattern="pattern9"] {
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item>li.active:hover>a,
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item>li:hover>a {
     /*background: #fff;*/
-    color: #ff9a4e !important;
-    background: #ff9a4e63 !important;
+    color: #000 !important;
+    background: #ff980087 !important;
 }
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item .pcoded-hasmenu .pcoded-submenu li:hover>a {
@@ -9024,7 +9024,7 @@ body[themebg-pattern="pattern9"] {
 
 .pcoded .pcoded-navbar[navbar-theme="themelight1"] .pcoded-item>li.active>a {
     color: #FFF;
-    background: #ff9a4e63 !important;
+    background: #ff980087 !important;
     /*border-radius: 5px;
     width: 200px;
     margin-left: 18px;*/

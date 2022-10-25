@@ -8,31 +8,6 @@ $(function () {
 var extensionesValidas = ".png, .svg, .jpeg, .jpg";
 var pesoPermitido = 512;
 
-// toggle full screen
-function toggleFullScreen() {
-    var a = $(window).height() - 10;
-
-    if (!document.fullscreenElement && // alternative standard method
-        !document.mozFullScreenElement && !document.webkitFullscreenElement) { // current working methods
-        if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen();
-        } else if (document.documentElement.mozRequestFullScreen) {
-            document.documentElement.mozRequestFullScreen();
-        } else if (document.documentElement.webkitRequestFullscreen) {
-            document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-        }
-    } else {
-        if (document.cancelFullScreen) {
-            document.cancelFullScreen();
-        } else if (document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
-        } else if (document.webkitCancelFullScreen) {
-            document.webkitCancelFullScreen();
-        }
-    }
-}
-
-
 //image validate
 function validarExtension(datos) {
 	var ruta = datos.value;
@@ -48,29 +23,29 @@ function validarExtension(datos) {
         }
     }
 
-   // Validacion de peso del fichero en kbs
-    function validarPeso(datos) {
-        if (datos.files && datos.files[0]) {
-            var pesoFichero = datos.files[0].size/1024;
+// Validacion de peso del fichero en kbs
+function validarPeso(datos) {
+    if (datos.files && datos.files[0]) {
+        var pesoFichero = datos.files[0].size/1024;
 
-            if(pesoFichero > pesoPermitido) {
-                $('.has-danger-image').text('El peso maximo permitido del fichero es: ' + pesoPermitido + ' KBs Su fichero tiene: '+ pesoFichero +' KBs').css("color", "red");
-                return false;
-            } else {
-                $('.has-danger-image').text('');
-                return true;
-            }
-	    }
+        if(pesoFichero > pesoPermitido) {
+            $('.has-danger-image').text('El peso maximo permitido del fichero es: ' + pesoPermitido + ' KBs Su fichero tiene: '+ pesoFichero +' KBs').css("color", "red");
+            return false;
+        } else {
+            $('.has-danger-image').text('');
+            return true;
+        }
     }
+}
 
-  // Vista preliminar de la imagen.
-  function verImagen(datos, elemento) {
+// Vista preliminar de la imagen.
+function verImagen(datos, elemento) {
 
-      if (datos.files && datos.files[0]) {
-          var reader = new FileReader();
-          reader.onload = function (e) {
-	          $('#avatar').attr('src', e.target.result);
-          };
-          reader.readAsDataURL(datos.files[0]);
-       }
-   }
+    if (datos.files && datos.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#avatar').attr('src', e.target.result);
+        };
+        reader.readAsDataURL(datos.files[0]);
+    }
+}

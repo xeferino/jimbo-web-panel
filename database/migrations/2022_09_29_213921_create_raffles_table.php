@@ -29,6 +29,7 @@ return new class extends Migration
             $table->date('date_release');
             $table->integer('days_extend')->nullable();
             $table->boolean('active')->default(1);
+            $table->boolean('finish')->default(0);
             $table->boolean('public')->default(0);
             $table->string('image')->nullable();
             $table->double('prize_1')->nullable();

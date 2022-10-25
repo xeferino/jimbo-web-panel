@@ -34,6 +34,7 @@ jQuery(document).ready(function() {
     var table = $('.table-raffle').DataTable({
         processing: true,
         serverSide: true,
+        searching: false,
         "language": {
             "decimal":        "",
             "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ sorteos",
@@ -73,7 +74,26 @@ jQuery(document).ready(function() {
                 "sortDescending": ": activate to sort column descending"
             }
         },
-        ajax: APP_URL+JIMBO.url,
+        dom: 'Bfrtip',
+        //dom: 'B<"float-left"i><"float-left"f>t<"float-right"l><"float-right"p><"clearfix">',
+        buttons: [
+            'csv', 'excel'
+            //'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        ajax: {
+            url: APP_URL+JIMBO.url,
+            data: function (d) {
+                d.public           = $('#public').val(),
+                d.active           = $('#active').val(),
+                d.finish           = $('#finish').val(),
+                d.type             = $('#type').val(),
+                d.title            = $('#title').val(),
+                d.cash_to_draw     = $('#cash_to_draw').val(),
+                d.cash_to_collect  = $('#cash_to_collect').val(),
+                d.date_start       = $('#date_start').val(),
+                d.date_end         = $('#date_end').val()
+              }
+          },
         columns: [
             {data: 'id', name: 'id'},
             {data: 'title', name: 'title'},
@@ -82,11 +102,31 @@ jQuery(document).ready(function() {
             {data: 'date_start', name: 'date_start'},
             {data: 'date_end', name: 'date_end'},
             {data: 'date_release', name: 'date_release'},
+            {data: 'type', name: 'type'},
             {data: 'public', name: 'public'},
             {data: 'active', name: 'active'},
+            {data: 'finish', name: 'finish'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
+
+    $("#form-raffle-filter").submit(function( event ) {
+        event.preventDefault();
+        table.draw();
+    });
+
+    $('#form-raffle-filter').each(function () {
+        var form = $(this),
+            reset = form.find(':reset'),
+            inputs = form.find(':input');
+        reset.on('click', function () {
+          setTimeout(function () {
+            //inputs.trigger('change');
+            $('select').select2('');
+            table.draw();
+          }, 50);
+        });
+      });
     /*DataTables*/
 
     /*raffle-register*/

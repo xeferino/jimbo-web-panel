@@ -42,7 +42,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/datepicker/css/bootstrap-datepicker3.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datepicker/css/bootstrap-datepicker.standalone.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}"/>
-
+    <link rel="stylesheet" href="{{ asset('assets/css/dataTable/buttons.dataTables.min.css')}}">
     <style>
     .swal-modal{
         border: 3px solid #f4893f  !important;
@@ -180,7 +180,15 @@
     <script src="{{ asset('assets/pages/widget/amchart/amcharts.min.js') }}"></script>
     <script src="{{ asset('assets/pages/widget/amchart/serial.min.js') }}"></script>
     <!-- Datatables -->
-    <script src="{{ asset('assets/js/datatables/datatables.min.js') }}"></script>
+    <script src="{{ asset('assets/js/dataTable/datatables.min.js') }}"></script>
+    <script src="{{ asset('assets/js/dataTable/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('assets/js/dataTable/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('assets/js/dataTable/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('assets/js/dataTable/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('assets/js/dataTable/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('assets/js/dataTable/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('assets/js/dataTable/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('assets/js/dataTable/jszip.min.js') }}"></script>
     <!-- Datepicker -->
     <script src="{{ asset('assets/js/datepicker/bootstrap-datepicker.min.js') }}"></script>
     <script src="{{ asset('assets/js/datepicker/locales/bootstrap-datepicker.es.min.js') }}" charset="UTF-8"></script>
@@ -203,8 +211,6 @@
     <script src="{{ asset('assets/js/pcoded.min.js') }}"></script>
     <script src="{{ asset('assets/js/demo-12.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
-    <script src="{{ asset('assets/js/demo-12.js') }}"></script>
-
     <script src="{{ asset('assets/js/jimbo/core.js') }}"></script>
     <script>
         $(function () {

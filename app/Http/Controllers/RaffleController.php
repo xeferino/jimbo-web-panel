@@ -32,8 +32,12 @@ class RaffleController extends Controller
                                     'date_end',
                                     'date_release',
                                     'public',
-                                    'active')
-                                    ->whereNull('deleted_at')->get();
+                                    'active',
+                                    'finish',
+                                    'type')
+                                    ->whereNull('deleted_at')
+                                    ->latest();
+
                 return Datatables::of($raffle)
                     ->addIndexColumn()
                     ->addColumn('action', function($raffle){
@@ -74,9 +78,61 @@ class RaffleController extends Controller
                         return Helper::amount($raffle->cash_to_draw);
                     })->addColumn('cash_to_collect', function($raffle){
                         return Helper::amount($raffle->cash_to_collect);
-                    })
+                    })->addColumn('finish', function($raffle){
+                        $btn = '';
+                        if($raffle->finish==1){
+                            $btn .= '<span class="badge badge-warning" title="Completado">Finalizado</span>';
+                        }else{
+                            $btn .= '<span class="badge badge-success" title="En Proceso">Abierto</span>';
+                        }
+                        return $btn;
+                    })->addColumn('type', function($raffle){
+                        $btn = '';
+                        if($raffle->type=='raffle'){
+                            $btn .= '<span class="badge badge-warning" title="Sorteo">Sorteo</span>';
+                        }else{
+                            $btn .= '<span class="badge badge-inverse" title="Producto">Producto</span>';
+                        }
+                        return $btn;
+                    })->filter(function ($query) use ($request) {
+                        if ($request->get('public') == '0' || $request->get('public') == '1') {
+                            $query->where('public', $request->get('public'));
+                        }
+                        if ($request->get('active') == '0' || $request->get('active') == '1') {
+                            $query->where('active', $request->get('active'));
+                        }
+                        if ($request->get('finish') == '0' || $request->get('finish') == '1') {
+                            $query->where('finish', $request->get('finish'));
+                        }
+                        if ($request->has('type') && ($request->get('type') == 'raffle' || $request->get('type') == 'product')) {
+                            $query->where('type', $request->get('type'));
+                        }
+                        if ($request->has('title') && $request->get('title')) {
+                            $query->where('title', 'LIKE', "%{$request->get('title')}%");
 
-                    ->rawColumns(['action','active', 'public', 'cash_to_draw', 'cash_to_collect' ])
+                        }
+                        if ($request->has('cash_to_draw') && $request->get('cash_to_draw')) {
+                            $amout = explode('-',$request->get('cash_to_draw'));
+                            $from = $amout[0];
+                            $to   = $amout[1];
+                            $query->whereBetween('cash_to_draw', [$from, $to]);
+                        }
+                        if ($request->has('cash_to_collect') && $request->get('cash_to_collect')) {
+                            $amout = explode('-',$request->get('cash_to_collect'));
+                            $from = $amout[0];
+                            $to   = $amout[1];
+                            $query->whereBetween('cash_to_collect', [$from, $to]);
+
+                        }
+                        if ($request->has('date_start') && $request->has('date_end') && $request->date_start && $request->date_end) {
+                            $date_start =explode('/',$request->get('date_start'));
+                            $date_end =explode('/',$request->get('date_end'));
+                            $from = $date_start[2].'-'.$date_start[1].'-'.$date_start[0];
+                            $to   = $date_end[2].'-'.$date_end[1].'-'.$date_end[0];
+                            $query->whereBetween('date_release', [$from, $to]);
+                        }
+                    })
+                    ->rawColumns(['action','active', 'public', 'cash_to_draw', 'cash_to_collect', 'finish', 'type' ])
                     ->make(true);
         }
 
@@ -85,7 +141,8 @@ class RaffleController extends Controller
             'title_header'       => 'Listado de sorteos',
             'description_module' => 'Informacion de los sorteos que se encuentran en el sistema.',
             'title_nav'          => 'Listado',
-            'icon'               => 'icofont-gift'
+            'icon'               => 'icofont-gift',
+            'raffles'            => Raffle::select('cash_to_draw','cash_to_collect')->get()
         ]);
     }
 

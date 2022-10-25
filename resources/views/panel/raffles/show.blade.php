@@ -322,6 +322,7 @@
                                     <th>Promocion</th>
                                     <th>Boletos</th>
                                     <th>Conjuntos</th>
+                                    <th>Precio</th>
                                     <th>Cantidad</th>
                                     <th>Disponibles</th>
                                 </tr>
@@ -336,6 +337,7 @@
                                         <td>{{$data->promotion->name}}</td>
                                         <td>{{$data->quantity}}</td>
                                         <td>{{$data->quantity/$data->promotion->quantity}}</td>
+                                        <td>{{Helper::amount($data->promotion->price)}}</td>
                                         <td>{{$data->total}}</td>
                                         <td>{{$data->quantity}}</td>
                                     </tr>
