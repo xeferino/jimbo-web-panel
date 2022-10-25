@@ -26,7 +26,7 @@ class FormRequestVerifiedEmailUser extends FormRequest
     {
         return [
             'email' => 'required|email|exists:users,email',
-            'code'  => $this->has('code') ? 'required|integer|exists:users,code' : 'nullable',
+            'code'  => $this->has('code') ? 'required|exists:users,code' : 'nullable',
         ];
     }
 
@@ -37,7 +37,6 @@ class FormRequestVerifiedEmailUser extends FormRequest
             'email.email'      =>  'Ingrese un email valido!',
             'email.exists'     =>  'El email ingresado no existe, verifique!',
             'code.required'    =>  'El codigo es requerido.',
-            'code.integer'     =>  'El codido debe ser entero.',
             'code.exists'      =>  'El codigo ingresado es invalido, verifique!',
         ];
     }

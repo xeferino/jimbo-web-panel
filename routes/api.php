@@ -42,13 +42,13 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
     Route::post('/logout/{user}', [AuthController::class, 'logout']);
     Route::get('/balance/{user}', [BalanceController::class, 'balance']);
     //cards
-    Route::get('/cards/user/{user}', [CardController::class, 'index']);
+    Route::get('/cards/all/{user}', [CardController::class, 'index']);
     Route::get('/cards/{card}', [CardController::class, 'show']);
     Route::post('/cards', [CardController::class, 'store']);
     Route::put('/cards/{card}', [CardController::class, 'update']);
     Route::delete('cards/{card}', [CardController::class, 'destroy']);
     //accounts
-    Route::get('/accounts/user/{user}', [AccountController::class, 'index']);
+    Route::get('/accounts/all/{user}', [AccountController::class, 'index']);
     Route::get('/accounts/{account}', [AccountController::class, 'show']);
     Route::post('/accounts', [AccountController::class, 'store']);
     Route::put('/accounts/{account}', [AccountController::class, 'update']);
@@ -62,8 +62,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/raffles/{raffle}', [RaffleController::class, 'show']);
     Route::post('/raflles/favorites', [RaffleController::class, 'store']);
     //payments
-    Route::get('/payment', [PaymentController::class, 'payment'])->name('payment');
     Route::get('/payment/{user}', [PaymentController::class, 'paymentHistory']);
+    Route::post('/payment/detail', [PaymentController::class, 'paymentDetail']);
     //sales
     Route::post('/sales/payment', [SaleController::class, 'saleTicketCard']);
     //shoppings

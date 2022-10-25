@@ -17,12 +17,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sale_id')->nullable();
             $table->foreign('sale_id')->references('id')->on('sales')->onDelete('cascade');
-            $table->string('description');
-            $table->string('payment_method');
-            $table->float('total_paid', 10,2);
-            $table->text('response');
-            $table->string('code_response', 50);
-            $table->enum('status',['approved','refused']);
+            $table->foreignId('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('description')->nullable();
+            $table->string('payment_method')->nullable();
+            $table->float('total_paid', 10,2)->nullable();
+            $table->text('response')->nullable();
+            $table->string('code_response', 50)->nullable();
+            $table->enum('status',['approved','refused'])->nullable();
             $table->timestamps();
         });
     }

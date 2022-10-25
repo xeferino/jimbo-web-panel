@@ -14,6 +14,7 @@ use App\Models\Ticket;
 use App\Models\Sale;
 use App\Models\TicketUser;
 use App\Models\User;
+use App\Helpers\Helper;
 
 class SaleController extends Controller
 {
@@ -56,7 +57,7 @@ class SaleController extends Controller
                             "amount" => $ticket->promotion->price*100,
                             "capture" => true,
                             "currency_code" => "USD",
-                            "description" => 'Compra de boleto: '.$ticket->promotion->name. ', para el producto: '.$ticket->Raffle->title,
+                            "description" => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
                             "email" => "payment@jimbosorteos.com",
                             "installments" => 0,
                         ];
@@ -76,17 +77,22 @@ class SaleController extends Controller
                             TicketUser::insert($tickets);
                         }
 
-                        $payment = json_decode($payment, true);
-                        $type = $payment['type'] ?? '';
-                        $merchant_message = $payment['merchant_message'] ?? '';
+                        $type = null;
+                        $merchant_message = null;
+                        if($pay != 'charge') {
+                            $payment = json_decode($payment, true);
+                            $type = $payment['type'];
+                            $merchant_message = $payment['merchant_message'];
+                        }
 
                         $data = [
                             'sale_id'        => $saleUpdate->id,
-                            "description"    => 'Compra de boleto: '.$ticket->promotion->name. ', para el producto: '.$ticket->Raffle->title,
+                            'user_id'        => $user->id,
+                            "description"    => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
                             'payment_method' => 'Card',
                             'total_paid'     => $ticket->promotion->price,
-                            'response'       => ($status == 'approved') ? 'charge: successful payment' : 'Error: '.$type,
-                            'code_response'  => ($status == 'approved') ? null : $merchant_message,
+                            'response'       => ($status == 'approved') ? 'charge: successful payment Culqi platform' : 'Error: '.$type,
+                            'code_response'  => ($status == 'approved') ? '200' : $merchant_message,
                             'status'         => $status,
                             'created_at'     => now(),
                             'updated_at'     => now()

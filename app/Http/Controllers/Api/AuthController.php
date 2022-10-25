@@ -137,7 +137,7 @@ class AuthController extends Controller
 
             $data = [
                 'user'  => $user,
-                'code'  => date('Y').$user->id.date('m').date('d')
+                'code'  => substr(sha1(time()), 0, 6)
             ];
 
             Mail::to($user->email)->send(new RegisterUser($data));
@@ -303,7 +303,7 @@ class AuthController extends Controller
 
                 $data = [
                     'user'      => $user,
-                    'password'  => date('Y').$user->id.date('m').date('d')
+                    'password'  => substr(sha1(time()), 0, 6)
                 ];
 
                 $user->code = $data['password'];
@@ -376,7 +376,7 @@ class AuthController extends Controller
             if ($user) {
                 $data = [
                     'user'  => $user,
-                    'code'  => date('Y').$user->id.date('m').date('d')
+                    'code'  => substr(sha1(time()), 0, 6)
                 ];
 
                 $user->code = $data['code'];
@@ -410,18 +410,17 @@ class AuthController extends Controller
     public function verifiedEmail(FormRequestVerifiedEmailUser $request)
     {
         try {
-            $data = [];
             $user = User::where('email', $request->email)->where('code', $request->code)->first();
 
             if ($user) {
                 $user->email_verified_at = now();
+                $user->code = null;
                 $user->save();
             }
             return response()->json([
                 'status'   => 404,
-                'message' =>  'El email igresado no existe!.'
+                'message' =>  'El email ha sido verificado exitosamente.!'
             ], 404);
-
         } catch (Exception $e) {
             return response()->json([
                 'status'   => 500,

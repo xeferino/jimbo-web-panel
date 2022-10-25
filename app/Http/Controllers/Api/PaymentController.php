@@ -14,39 +14,6 @@ class PaymentController extends Controller
     public static function payment($card, $charge)
     {
         try{
-            /* //card token
-            $card = [
-                //'card_number' => '4000020000000000',
-                'card_number' => '4111111111111111',
-                'cvv' => '123',
-                'expiration_month' => '09',
-                'expiration_year' => '25',
-                'email' => 'josegregoriolozadae@gmail.com',
-                'metadata' => [
-                    'fullname'  => 'Jose Lozada',
-                    'phone'     => '4149585692',
-                    'dni'       => '2073816',
-                ]
-            ];
-
-            //charge in card client payment
-            $charge  = [
-                "amount" => 10*100,
-                "capture" => true,
-                "currency_code" => "PEN",
-                "description" => "Venta de prueba",
-                "email" => "test@culqi.com",
-                "installments" => 0,
-                "antifraud_details" => [
-                    "address" => "Av. Lima 123",
-                    "address_city" => "LIMA",
-                    "country_code" => "PE",
-                    "first_name" => "Will",
-                    "last_name" => "Muro",
-                    "phone_number" => "9889678986",
-                ],
-            ]; */
-
             $culqi = new Culqi($card);
             return $culqi->charge($charge);
         } catch (Exception $e) {
@@ -72,11 +39,11 @@ class PaymentController extends Controller
 
     public function paymentDetail(Request $request)
     {
-        $payments = PaymentHistory::where('user_id', $request->user)->get();
+        $payment = PaymentHistory::where('user_id', $request->user_id)->where('id', $request->payment_id)->first();
 
         return response()->json([
             'status'  => 200,
-            'payment_histories' => $payments
+            'payment' => $payment
         ], 200);
     }
 }

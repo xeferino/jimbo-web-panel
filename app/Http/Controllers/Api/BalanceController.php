@@ -32,7 +32,7 @@ class BalanceController extends Controller
                 'balance_histories.hour',
                 )
                 ->join('users', 'users.id', '=', 'balance_histories.user_id')
-                ->where('users.id', $request->user_id)
+                ->where('users.id', $request->user)
                 ->get();
 
             return response()->json(['balance' => $balance], 200);

@@ -74,8 +74,7 @@ jQuery(document).ready(function() {
                 "sortDescending": ": activate to sort column descending"
             }
         },
-        dom: 'Bfrtip',
-        //dom: 'B<"float-left"i><"float-left"f>t<"float-right"l><"float-right"p><"clearfix">',
+        dom: 'lBfrtip',
         buttons: [
             'csv', 'excel'
             //'copy', 'csv', 'excel', 'pdf', 'print'

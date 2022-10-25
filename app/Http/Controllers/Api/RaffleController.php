@@ -40,7 +40,7 @@ class RaffleController extends Controller
             $raffles = Raffle::select(
                 'raffles.id',
                 'raffles.title',
-                DB::raw("CONCAT(raffles.cash_to_draw,'$') AS cash_to_draw"),
+                'raffles.cash_to_draw',
                 'raffles.date_start',
                 'raffles.date_end',
                 'raffles.date_release',
@@ -56,7 +56,7 @@ class RaffleController extends Controller
                 $raffles = Raffle::select(
                     'raffles.id',
                     'raffles.title',
-                    DB::raw("CONCAT(raffles.cash_to_draw,'$') AS cash_to_draw"),
+                    'raffles.cash_to_draw',
                     'raffles.date_start',
                     'raffles.date_end',
                     'raffles.date_release',
