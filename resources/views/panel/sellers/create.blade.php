@@ -46,11 +46,11 @@
                         <div class="col-form-label has-danger-phone"></div>
                     </div>
 
-                    <div class="col-sm-6">
+                    {{-- <div class="col-sm-6">
                         <label class="col-form-label">Balance Jib</label>
                         <input type="text" name="balance_jib" id="balance_jib" class="form-control">
                         <div class="col-form-label has-danger-balance_jib"></div>
-                    </div>
+                    </div> --}}
 
                     <div class="col-sm-6">
                         <label class="col-form-label">Role</label>

@@ -14,11 +14,11 @@
                 </div>
                 <div class="card-block text-center">
                     <div class="row">
-                        <div class="col-3 b-r-default">
+                        <div class="col-sm-3 b-r-default">
                             <h2>{{Helper::amount($raffle->cash_to_draw)}}</h2>
                             <p class="text-muted">Premio Mayor</p>
                         </div>
-                        <div class="col-3 b-r-default">
+                        <div class="col-sm-3 b-r-default">
                             @php
                                 $amount = ((($raffle->cash_to_draw*$raffle->prize_1)/100) +
                                           (($raffle->cash_to_draw*$raffle->prize_2)/100) +
@@ -35,11 +35,11 @@
                             <h2>{{Helper::amount($amount)}}</h2>
                             <p class="text-muted">Dinero de premiaciones</p>
                         </div>
-                        <div class="col-3 b-r-default">
+                        <div class="col-sm-3 b-r-default">
                             <h2>{{Helper::amount($raffle->cash_to_collect-$amount)}}</h2>
                             <p class="text-muted">Dinero total a recaudar</p>
                         </div>
-                        <div class="col-3">
+                        <div class="col-sm-3">
                             <h2>{{ $percent == 100 ?  Helper::percent(100) : Helper::percent($percent) }}</h2>
                             <p class="text-muted">Porcentaje de recaudacion</p>
                         </div>

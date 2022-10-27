@@ -130,7 +130,11 @@ class SaleController extends Controller
                     }
                 }
             }
-            return response()->json(['error' => true, 'message' => 'El pago no se proceso con exito.'], 422);
+            return response()->json([
+                'error'             => true, 
+                'message'           => 'El pago no se proceso con exito.',
+                'culqi_response'    => $merchant_message
+            ], 422);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([

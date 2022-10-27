@@ -91,6 +91,7 @@ class AuthController extends Controller
                                 'usd'          => $user->balance_usd,
                                 'jib'          => $user->balance_jib,
                                 'image'        => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
+                                'role'         => $user->getRoleNames()->join(''),
                                 'country'      => [
                                     'id'    => $user->country->id,
                                     'name'  => $user->country->name,
@@ -157,6 +158,7 @@ class AuthController extends Controller
                     'usd'          => $user->balance_usd,
                     'jib'          => $user->balance_jib,
                     'email_verified_at' => $user->email_verified_at,
+                    'role'         => $user->getRoleNames()->join(''),
                     'image'        => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
                     'country'      => [
                         'id'    => $user->country->id,
@@ -200,6 +202,7 @@ class AuthController extends Controller
                         'usd'          => $user->balance_usd,
                         'jib'          => $user->balance_jib,
                         'email_verified_at' => $user->email_verified_at,
+                        'role'         => $user->getRoleNames()->join(''),
                         'image'        => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
                         'country'      => [
                             'id'    => $user->country->id,
@@ -271,6 +274,7 @@ class AuthController extends Controller
                         'usd'          => $user->balance_usd,
                         'jib'          => $user->balance_jib,
                         'email_verified_at' => $user->email_verified_at,
+                        'role'         => $user->getRoleNames()->join(''),
                         'image'        => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
                         'country'      => [
                             'id'    => $user->country->id,

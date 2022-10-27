@@ -11,6 +11,7 @@ use App\Models\Raffle;
 use App\Models\FavoriteDraw;
 use App\Helpers\Helper;
 use App\Models\Ticket;
+use Carbon\Carbon;
 
 class RaffleController extends Controller
 {
@@ -114,7 +115,23 @@ class RaffleController extends Controller
                 ]);
             }
 
-            array_push($data, [
+            $amount = ((($raffle->cash_to_draw*$raffle->prize_1)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_2)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_3)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_4)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_5)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_6)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_7)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_8)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_9)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_10)/100));
+            $percent = (($raffle->totalSale->sum('amount')*100)/($raffle->cash_to_collect-$amount));
+
+            $start =  Carbon::now();;
+            $end   = Carbon::parse($raffle->date_end);
+            $days  = $end->diffInDays($start);
+
+            return response()->json([
                 'raflle' => [
                     'id'            => $raffle->id,
                     'title'         => $raffle->title,
@@ -132,6 +149,8 @@ class RaffleController extends Controller
                     'active'        => $raffle->active,
                     'public'        => $raffle->public,
                     'type'          => ($raffle->type == 'raffle') ? 'Sorteo' : 'Producto',
+                    'progress'      => $percent == 100 ?  100 : $percent,
+                    'days'          => $days,
                     'awards' => [
                         'first'     => Helper::amount(($raffle->cash_to_draw*$raffle->prize_1)/100),
                         'second'    => Helper::amount(($raffle->cash_to_draw*$raffle->prize_2)/100),
@@ -146,8 +165,7 @@ class RaffleController extends Controller
                     ],
                     'tickets' => $tickets,
                 ]
-            ]);
-            return response()->json([$data], 200);
+            ], 200);
         } catch (Exception $e) {
 
             return response()->json([
@@ -202,7 +220,7 @@ class RaffleController extends Controller
                     ]
                 ]);
             }
-            return response()->json([$data], 200);
+            return response()->json($data, 200);
         } catch (Exception $e) {
 
             return response()->json([

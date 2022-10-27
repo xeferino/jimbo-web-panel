@@ -69,7 +69,7 @@ class UserController extends Controller
                         return $btn;
                     })
                     ->addColumn('image', function($user){
-                        $img = $user->image != 'avatar.svg' ? asset('assets/images/users/'.$user->image): asset('assets/images/avatar.svg');
+                        $img = $user->image != 'avatar.svg' ? asset('/').'storage/users/'.$user->image: asset('assets/images/avatar.svg');
                         return '<img src="'.$img.'" class="img-50 img-radius" alt="User-Profile-Image">';
                     })
                     ->addColumn('role', function($user){
