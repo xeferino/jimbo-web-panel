@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class VerifiedEmail extends Mailable
+class ReceiptPayment extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -29,8 +29,8 @@ class VerifiedEmail extends Mailable
      */
     public function build()
     {
-        return $this->from(config('sender-email.events.notif_user_verified_email_from'), config('app.name'))
-            ->subject('¿Para disfrutar sin limites de Jimbo sorteos verifique su email?')
-            ->view('emails.verifiedEmail', ['data' => $this->data]);
+        return $this->from(config('sender-email.events.notif_user_receipt_payment_email_from'), config('app.name'))
+            ->subject('¿Recibo de pago, Compra de Boleto?')
+            ->view('emails.receiptPayment', ['data' => $this->data]);
     }
 }

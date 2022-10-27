@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\SaleController;
 use App\Http\Controllers\Api\ShoppingController;
 use App\Http\Controllers\Api\CardController;
 use App\Http\Controllers\Api\AccountController;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,8 +59,10 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     //raffles
-    Route::get('/raffles/{user?}', [RaffleController::class, 'index']);
-    Route::get('/raffles/{raffle}', [RaffleController::class, 'show']);
+    Route::post('/raffles/ticket', [RaffleController::class, 'ticket']);
+    Route::get('/raffles/favorites/{user?}', [RaffleController::class, 'index']);
+    Route::get('/raffles', [RaffleController::class, 'index']);
+    Route::get('/raffles/detail/{raffle}', [RaffleController::class, 'show']);
     Route::post('/raflles/favorites', [RaffleController::class, 'store']);
     //payments
     Route::get('/payment/{user}', [PaymentController::class, 'paymentHistory']);
@@ -71,4 +74,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/shoppings/tickets/{shopping}', [ShoppingController::class, 'show']);
     //jibs
     Route::get('/jibs', [JibController::class, 'index']);
+});
+
+Route::get('/foo', function () {
+    return Artisan::call('storage:link');
 });

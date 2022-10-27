@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\FormSaleRequest;
 use App\Models\CardUser as Card;
 use Illuminate\Support\Facades\DB;
+use App\Mail\ReceiptPayment;
+use Illuminate\Support\Facades\Mail;
 use Exception;
 use App\Models\Slider;
 use App\Models\Ticket;
@@ -75,6 +77,17 @@ class SaleController extends Controller
                             $saleUpdate->status = $status;
                             $saleUpdate->save();
                             TicketUser::insert($tickets);
+                            $payment_receipt = [
+                                'fullname'          => $saleUpdate->name,
+                                'date'              => $saleUpdate->created_at,
+                                'code_ticket'       => $ticket->serial,
+                                'tickets'           => $saleUpdate->TicketsUsers,
+                                'quantity'          => $ticket->promotion->quantity,
+                                'number_operation'  => $saleUpdate->number,
+                                'amount'            => $ticket->promotion->price,
+                                'raffle'            =>$ticket->raffle->title
+                            ];
+                            Mail::to($user->email)->send(new ReceiptPayment($payment_receipt));
                         }
 
                         $type = null;
@@ -112,7 +125,6 @@ class SaleController extends Controller
                                 'quantity'          => $ticket->promotion->quantity,
                                 'number_operation'  => $saleUpdate->number,
                                 'amount'            => $ticket->promotion->price,
-                                'code_ticket'       => $ticket->serial,
                             ]
                         ], 200);
                     }

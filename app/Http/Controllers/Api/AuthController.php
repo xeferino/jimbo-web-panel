@@ -34,7 +34,8 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->asset = config('app.url').'/assets/images/';
+        $this->asset  = config('app.url').'/assets/images/';
+        $this->avatar = asset('/').'storage/';
         $this->data = [];
     }
 
@@ -89,7 +90,7 @@ class AuthController extends Controller
                                 'phone'        => $user->phone,
                                 'usd'          => $user->balance_usd,
                                 'jib'          => $user->balance_jib,
-                                'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
+                                'image'        => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
                                 'country'      => [
                                     'id'    => $user->country->id,
                                     'name'  => $user->country->name,
@@ -156,7 +157,7 @@ class AuthController extends Controller
                     'usd'          => $user->balance_usd,
                     'jib'          => $user->balance_jib,
                     'email_verified_at' => $user->email_verified_at,
-                    'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
+                    'image'        => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
                     'country'      => [
                         'id'    => $user->country->id,
                         'name'  => $user->country->name,
@@ -199,7 +200,7 @@ class AuthController extends Controller
                         'usd'          => $user->balance_usd,
                         'jib'          => $user->balance_jib,
                         'email_verified_at' => $user->email_verified_at,
-                        'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
+                        'image'        => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
                         'country'      => [
                             'id'    => $user->country->id,
                             'name'  => $user->country->name,
@@ -241,18 +242,21 @@ class AuthController extends Controller
                 $user->password     = Hash::make($request->password);
             }
 
-            if($request->file('image')){
+            if ($request->has('image') && isset($request->image)) {
                 if ($user->image != "avatar.svg") {
-                    if (File::exists(public_path('assets/images/users/' . $user->image))) {
-                        File::delete(public_path('assets/images/users/' . $user->image));
+                    if (Storage::disk('public')->exists('users/'.$user->image))
+                    {
+                        Storage::disk('public')->delete('users/'.$user->image);
                     }
                 }
 
-                $file           = $request->file('image');
-                $extension      = $file->getClientOriginalExtension();
-                $fileName       = time() . '.' . $extension;
-                $user->image      = $fileName;
-                $file->move(public_path('assets/images/users/'), $fileName);
+                $image_64 = $request->image;
+                $replace = substr($image_64, 0, strpos($image_64, ',')+1);
+                $image = str_replace($replace, '', $image_64);
+                $image = str_replace(' ', '+', $image);
+                $imageName = Str::random(10).'.png';
+                Storage::disk('public')->put('users/'.$imageName, base64_decode($image));
+                $user->image = $imageName;
             }
 
             if ($user->save()) {
@@ -267,7 +271,7 @@ class AuthController extends Controller
                         'usd'          => $user->balance_usd,
                         'jib'          => $user->balance_jib,
                         'email_verified_at' => $user->email_verified_at,
-                        'image'        => $user->image != 'avatar.svg' ? $this->asset.'users/'.$user->image : $this->asset.'avatar.svg',
+                        'image'        => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
                         'country'      => [
                             'id'    => $user->country->id,
                             'name'  => $user->country->name,
