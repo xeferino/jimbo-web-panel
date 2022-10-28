@@ -99,15 +99,15 @@ $(function () {
                     /* $.each(err, function( key, value) {
                         notify(value, 'danger', '5000', 'bottom', 'right');
                     }); */
-                    if (error.response.data.errors.name) {
-                        $('.has-danger-name').text('' + error.response.data.errors.name + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.names) {
+                        $('.has-danger-names').text('' + error.response.data.errors.names + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-name').text('');
+                        $('.has-danger-names').text('');
                     }
-                    if (error.response.data.errors.surname) {
-                        $('.has-danger-surname').text('' + error.response.data.errors.surname + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.surnames) {
+                        $('.has-danger-surnames').text('' + error.response.data.errors.surnames + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-surname').text('');
+                        $('.has-danger-surnames').text('');
                     }
                     if (error.response.data.errors.email) {
                         $('.has-danger-email').text('' + error.response.data.errors.email + '').css("color", "#dc3545e3");
@@ -203,15 +203,15 @@ $(function () {
                         /* $.each(err, function( key, value) {
                             notify(value, 'danger', '5000', 'top', 'right');
                         }); */
-                        if (error.response.data.errors.name) {
-                            $('.has-danger-name').text('' + error.response.data.errors.name + '').css("color", "#dc3545e3");
+                        if (error.response.data.errors.names) {
+                            $('.has-danger-names').text('' + error.response.data.errors.names + '').css("color", "#dc3545e3");
                         }else{
-                            $('.has-danger-name').text('');
+                            $('.has-danger-names').text('');
                         }
-                        if (error.response.data.errors.surname) {
-                            $('.has-danger-surname').text('' + error.response.data.errors.surname + '').css("color", "#dc3545e3");
+                        if (error.response.data.errors.surnames) {
+                            $('.has-danger-surnames').text('' + error.response.data.errors.surnames + '').css("color", "#dc3545e3");
                         }else{
-                            $('.has-danger-surname').text('');
+                            $('.has-danger-surnames').text('');
                         }
                         if (error.response.data.errors.email) {
                             $('.has-danger-email').text('' + error.response.data.errors.email + '').css("color", "#dc3545e3");

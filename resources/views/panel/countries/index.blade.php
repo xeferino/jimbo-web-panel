@@ -19,6 +19,7 @@
                             <th>#</th>
                             <th>Nombre</th>
                             <th>Code</th>
+                            <th>Iso</th>
                             <th>Imagen</th>
                             <th>Moneda</th>
                             <th>tasa de Cambio</th>

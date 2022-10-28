@@ -70,12 +70,12 @@ $(function () {
         }
     });
 
-    /*seller-register*/
-    $("#form-seller-create").submit(function( event ) {
+    /*competitor-register*/
+    $("#form-competitor-create").submit(function( event ) {
         event.preventDefault();
         $('.jimbo-loader').show();
         $('.load-text').text('Enviando...');
-        $('.btn-seller').prop("disabled", true).text('Enviando...');
+        $('.btn-competitor').prop("disabled", true).text('Enviando...');
 
         var formData = new FormData(event.currentTarget);
 
@@ -86,8 +86,8 @@ $(function () {
         }).then(response => {
             if(response.data.success){
                 notify(response.data.message, 'success', '3000', 'top', 'right');
-                $('#form-seller-create').trigger("reset");
-                $('.btn-seller').prop("disabled", false).text('Registrar');
+                $('#form-competitor-create').trigger("reset");
+                $('.btn-competitor').prop("disabled", false).text('Registrar');
                 $('div.col-form-label').text('');
                 setTimeout(() => {$('.jimbo-loader').hide();}, 500);
                 setTimeout(() => {location.href = APP_URL+JIMBO.url;}, 3000);
@@ -99,15 +99,15 @@ $(function () {
                     /* $.each(err, function( key, value) {
                         notify(value, 'danger', '5000', 'bottom', 'right');
                     }); */
-                    if (error.response.data.errors.name) {
-                        $('.has-danger-name').text('' + error.response.data.errors.name + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.names) {
+                        $('.has-danger-names').text('' + error.response.data.errors.names + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-name').text('');
+                        $('.has-danger-names').text('');
                     }
-                    if (error.response.data.errors.surname) {
-                        $('.has-danger-surname').text('' + error.response.data.errors.surname + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.surnames) {
+                        $('.has-danger-surnames').text('' + error.response.data.errors.surnames + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-surname').text('');
+                        $('.has-danger-surnames').text('');
                     }
                     if (error.response.data.errors.email) {
                         $('.has-danger-email').text('' + error.response.data.errors.email + '').css("color", "#dc3545e3");
@@ -165,20 +165,20 @@ $(function () {
             }else{
                 notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
             }
-            $('.btn-seller').prop("disabled", false).text('Registrar');
+            $('.btn-competitor').prop("disabled", false).text('Registrar');
             setTimeout(() => {$('.jimbo-loader').hide();}, 500);
         });
     });
-    /* seller-register*/
+    /* competitor-register*/
 
-    /*seller-edit*/
-    $("#form-seller-edit").submit(function( event ) {
+    /*competitor-edit*/
+    $("#form-competitor-edit").submit(function( event ) {
         event.preventDefault();
         $('.jimbo-loader').show();
         $('.load-text').text('Enviando...');
         $('.jimbo-loader').show();
         $('.load-text').text('Enviando...');
-        $('.btn-seller').prop("disabled", true).text('Enviando...');
+        $('.btn-competitor').prop("disabled", true).text('Enviando...');
 
         var formData = new FormData(event.currentTarget);
         formData.append('_method', 'PUT');
@@ -191,8 +191,8 @@ $(function () {
             if(response.data.success){
                 notify(response.data.message, 'success', '3000', 'top', 'right');
                 setTimeout(() => {$('.jimbo-loader').hide();}, 500);
-                $('#form-seller-edit').trigger("reset");
-                $('.btn-seller').prop("disabled", false).text('Actualizar');
+                $('#form-competitor-edit').trigger("reset");
+                $('.btn-competitor').prop("disabled", false).text('Actualizar');
                 $('div.col-form-label').text('');
                 setTimeout(() => {location.href = APP_URL+JIMBO.url;}, 3000);
             }
@@ -203,15 +203,15 @@ $(function () {
                         /* $.each(err, function( key, value) {
                             notify(value, 'danger', '5000', 'top', 'right');
                         }); */
-                        if (error.response.data.errors.name) {
-                            $('.has-danger-name').text('' + error.response.data.errors.name + '').css("color", "#dc3545e3");
+                        if (error.response.data.errors.names) {
+                            $('.has-danger-names').text('' + error.response.data.errors.names + '').css("color", "#dc3545e3");
                         }else{
-                            $('.has-danger-name').text('');
+                            $('.has-danger-names').text('');
                         }
-                        if (error.response.data.errors.surname) {
-                            $('.has-danger-surname').text('' + error.response.data.errors.surname + '').css("color", "#dc3545e3");
+                        if (error.response.data.errors.surnames) {
+                            $('.has-danger-surnames').text('' + error.response.data.errors.surnames + '').css("color", "#dc3545e3");
                         }else{
-                            $('.has-danger-surname').text('');
+                            $('.has-danger-surnames').text('');
                         }
                         if (error.response.data.errors.email) {
                             $('.has-danger-email').text('' + error.response.data.errors.email + '').css("color", "#dc3545e3");
@@ -222,6 +222,18 @@ $(function () {
                             $('.has-danger-dni').text('' + error.response.data.errors.dni + '').css("color", "#dc3545e3");
                         }else{
                             $('.has-danger-dni').text('');
+                        }
+
+                        if (error.response.data.errors.address) {
+                            $('.has-danger-address').text('' + error.response.data.errors.address + '').css("color", "#dc3545e3");
+                        }else{
+                            $('.has-danger-address').text('');
+                        }
+
+                        if (error.response.data.errors.address_city) {
+                            $('.has-danger-address_city').text('' + error.response.data.errors.address_city + '').css("color", "#dc3545e3");
+                        }else{
+                            $('.has-danger-address_city').text('');
                         }
                         if (error.response.data.errors.phone) {
                             $('.has-danger-phone').text('' + error.response.data.errors.phone + '').css("color", "#dc3545e3");
@@ -269,13 +281,13 @@ $(function () {
                 }else{
                     notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
                 }
-                $('.btn-seller').prop("disabled", false).text('Actualizar');
+                $('.btn-competitor').prop("disabled", false).text('Actualizar');
                 setTimeout(() => {$('.jimbo-loader').hide();}, 500);
         });
     });
-    /*seller-edit*/
+    /*competitor-edit*/
 
-    /*alert-seller-delete*/
+    /*alert-competitor-delete*/
     $('body').on('click', '.deleteSeller', function () {
         var url = $(this).data("url");
         swal({
@@ -325,5 +337,5 @@ $(function () {
                 }
             });
     });
-    /*alert-seller-delete*/
+    /*alert-competitor-delete*/
 });

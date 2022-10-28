@@ -35,6 +35,9 @@ jQuery(document).ready(function() {
         processing: true,
         serverSide: true,
         searching: false,
+        scrollX: true,
+        scrollY: "50vh",
+        scrollCollapse: true,
         "language": {
             "decimal":        "",
             "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ sorteos",

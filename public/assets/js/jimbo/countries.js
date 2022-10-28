@@ -51,6 +51,7 @@ $(function () {
             {data: 'id', name: 'id'},
             {data: 'name', name: 'name'},
             {data: 'code', name: 'code'},
+            {data: 'iso', name: 'iso'},
             {data: 'img', name: 'img'},
             {data: 'currency', name: 'currency'},
             {data: 'exchange_rate', name: 'exchange_rate'},
@@ -109,6 +110,12 @@ $(function () {
                         $('.has-danger-code').text('' + error.response.data.errors.code + '').css("color", "#dc3545e3");
                     }else{
                         $('.has-danger-code').text('');
+                    }
+
+                    if (error.response.data.errors.iso) {
+                        $('.has-danger-iso').text('' + error.response.data.errors.iso + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-iso').text('');
                     }
 
                     if (error.response.data.errors.currency) {
@@ -211,6 +218,12 @@ $(function () {
                             $('.has-danger-code').text('' + error.response.data.errors.code + '').css("color", "#dc3545e3");
                         }else{
                             $('.has-danger-code').text('');
+                        }
+
+                        if (error.response.data.errors.iso) {
+                            $('.has-danger-iso').text('' + error.response.data.errors.iso + '').css("color", "#dc3545e3");
+                        }else{
+                            $('.has-danger-iso').text('');
                         }
 
                     }else{

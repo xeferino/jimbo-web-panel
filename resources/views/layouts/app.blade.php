@@ -42,6 +42,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/datepicker/css/bootstrap-datepicker3.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datepicker/css/bootstrap-datepicker.standalone.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}"/>
+    <!-- datatables -->
     <link rel="stylesheet" href="{{ asset('assets/css/dataTable/buttons.dataTables.min.css')}}">
     <style>
     .swal-modal{
@@ -183,7 +184,6 @@
     <script src="{{ asset('assets/js/dataTable/datatables.min.js') }}"></script>
     <script src="{{ asset('assets/js/dataTable/dataTables.buttons.min.js') }}"></script>
     <script src="{{ asset('assets/js/dataTable/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('assets/js/dataTable/pdfmake.min.js') }}"></script>
     <script src="{{ asset('assets/js/dataTable/pdfmake.min.js') }}"></script>
     <script src="{{ asset('assets/js/dataTable/vfs_fonts.js') }}"></script>
     <script src="{{ asset('assets/js/dataTable/buttons.flash.min.js') }}"></script>

@@ -24,7 +24,8 @@ class FormUserCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'          => 'required|min:3',
+            'names'         => 'required|min:3',
+            'surnames'      => 'required|min:3',
             'email'         => 'required|email|unique:users,email',
             'role'          => 'required',
             'active'        => 'required',
@@ -43,8 +44,10 @@ class FormUserCreateRequest extends FormRequest
         return [
             'role.required'         =>  'El rol es requerido.',
             'active.required'       =>  'El estatus es requerido.',
-            'name.required'         =>  'El nombre es requerido.',
-            'name.min'              =>  'El nombre debe contener un minimo de 3 caracteres.',
+            'names.required'        =>  'El nombre es requerido.',
+            'names.min'             =>  'El nombre debe contener un minimo de 3 caracteres.',
+            'surnames.required'     =>  'El apellido es requerido.',
+            'surnames.min'          =>  'El apellido debe contener un minimo de 3 caracteres.',
             'email.required'        =>  'El email es requerido.',
             'email.email'           =>  'Ingrese un email valido!',
             'email.unique'          =>  'El email ingresado ya existe!',

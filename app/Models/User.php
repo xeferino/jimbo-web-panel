@@ -25,11 +25,13 @@ class User extends Authenticatable
     protected $guarded = ['id'];
 
     protected $fillable = [
-        'name',
+        'names',
+        'surnames',
         'dni',
         'phone',
         'email',
         'address',
+        'address_city',
         'password',
         'active',
         'image',

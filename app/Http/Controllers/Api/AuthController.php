@@ -84,23 +84,28 @@ class AuthController extends Controller
                         [
                             'profile'    => [
                                 'id'           => $user->id,
-                                'name'         => $user->name,
+                                'names'        => $user->names,
+                                'surnames'     => $user->surnames,
                                 'email'        => $user->email,
                                 'dni'          => $user->dni,
                                 'phone'        => $user->phone,
+                                'address'      => $user->address,
+                                'address_city' => $user->address_city,
                                 'usd'          => $user->balance_usd,
                                 'jib'          => $user->balance_jib,
-                                'image'        => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
+                                'email_verified_at' => $user->email_verified_at,
                                 'role'         => $user->getRoleNames()->join(''),
+                                'image'        => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
                                 'country'      => [
                                     'id'    => $user->country->id,
                                     'name'  => $user->country->name,
+                                    'iso'   => $user->country->iso,
                                     'code'  => $user->country->code,
                                     'icon'  => $user->country->img != 'flag.png' ? $this->asset.'flags/'.$user->country->img : $this->asset.'flags/flag.png'
                                 ]
                             ],
                             'token'   => $accessToken,
-                            'message' => "Bienvenido a Jimbo, ".$user->name,
+                            'message' => "Bienvenido a Jimbo, ".$user->names,
                             'status'  => 200
                         ],
                         200
@@ -126,7 +131,8 @@ class AuthController extends Controller
     {
         try {
             $user = new User();
-            $user->name             = $request->name;
+            $user->names            = $request->names;
+            $user->surnames         = $request->surnames;
             $user->email            = $request->email;
             $user->dni              = $request->dni;
             $user->phone            = $request->phone;
@@ -150,11 +156,13 @@ class AuthController extends Controller
             return response()->json([
                 'profile'    => [
                     'id'           => $user->id,
-                    'name'         => $user->name,
+                    'names'        => $user->names,
+                    'surnames'     => $user->surnames,
                     'email'        => $user->email,
                     'dni'          => $user->dni,
                     'phone'        => $user->phone,
                     'address'      => $user->address,
+                    'address_city' => $user->address_city,
                     'usd'          => $user->balance_usd,
                     'jib'          => $user->balance_jib,
                     'email_verified_at' => $user->email_verified_at,
@@ -163,12 +171,13 @@ class AuthController extends Controller
                     'country'      => [
                         'id'    => $user->country->id,
                         'name'  => $user->country->name,
+                        'iso'   => $user->country->iso,
                         'code'  => $user->country->code,
                         'icon'  => $user->country->img != 'flag.png' ? $this->asset.'flags/'.$user->country->img : $this->asset.'flags/flag.png'
                     ]
                 ],
                 'token'    => $accessToken,
-                'message'  => 'Bienvenido a Jimbo, '.$user->name,
+                'message'  => 'Bienvenido a Jimbo, '.$user->names,
                 'status'   => 200
             ], 200);
 
@@ -194,11 +203,13 @@ class AuthController extends Controller
                 return response()->json([
                     'profile'    => [
                         'id'           => $user->id,
-                        'name'         => $user->name,
+                        'names'        => $user->names,
+                        'surnames'     => $user->surnames,
                         'email'        => $user->email,
                         'dni'          => $user->dni,
                         'phone'        => $user->phone,
                         'address'      => $user->address,
+                        'address_city' => $user->address_city,
                         'usd'          => $user->balance_usd,
                         'jib'          => $user->balance_jib,
                         'email_verified_at' => $user->email_verified_at,
@@ -207,6 +218,7 @@ class AuthController extends Controller
                         'country'      => [
                             'id'    => $user->country->id,
                             'name'  => $user->country->name,
+                            'iso'   => $user->country->iso,
                             'code'  => $user->country->code,
                             'icon'  => $user->country->img != 'flag.png' ? $this->asset.'flags/'.$user->country->img : $this->asset.'flags/flag.png'
                         ]
@@ -234,12 +246,17 @@ class AuthController extends Controller
     public function settingProfile(FormRequestProfileUserSetting $request, User $User, $id)
     {
         try {
-            $user                   = User::find($id);
-            $user->name             = $request->name;
-            $user->email            = $request->email;
-            $user->dni              = $request->dni;
-            $user->phone            = $request->phone;
-            $user->address          = $request->address;
+            $user                    = User::find($id);
+            $user->names             = $request->names;
+            $user->surnames          = $request->surnames;
+            $user->email             = $request->email;
+            $user->dni               = $request->dni;
+            $user->phone             = $request->phone;
+            $user->address           = $request->address;
+            $user->address_city      = $request->address_city;
+            if ($request->has('code') && $request->code && $user->code == $request->code) {
+                $user->email_verified_at = now();
+            }
 
             if($request->password){
                 $user->password     = Hash::make($request->password);
@@ -266,11 +283,13 @@ class AuthController extends Controller
                 return response()->json([
                     'profile'    => [
                         'id'           => $user->id,
-                        'name'         => $user->name,
+                        'names'        => $user->names,
+                        'surnames'     => $user->surnames,
                         'email'        => $user->email,
                         'dni'          => $user->dni,
                         'phone'        => $user->phone,
                         'address'      => $user->address,
+                        'address_city' => $user->address_city,
                         'usd'          => $user->balance_usd,
                         'jib'          => $user->balance_jib,
                         'email_verified_at' => $user->email_verified_at,
@@ -279,12 +298,13 @@ class AuthController extends Controller
                         'country'      => [
                             'id'    => $user->country->id,
                             'name'  => $user->country->name,
+                            'iso'   => $user->country->iso,
                             'code'  => $user->country->code,
                             'icon'  => $user->country->img != 'flag.png' ? $this->asset.'flags/'.$user->country->img : $this->asset.'flags/flag.png'
                         ]
                     ],
                     'status' => 200,
-                    'message' => $user->name.'!, Perfil actualizado',
+                    'message' => $user->names.'!, Perfil actualizado',
                 ], 200);
             }
         } catch (Exception $e) {
@@ -375,22 +395,24 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function sendCodeVerifiedEmail(FormRequestVerifiedEmailUser $request)
+    public function sendCodeVerifiedEmail(Request $request)
     {
         try {
             $data = [];
-            $user = User::where('email', $request->email)->first();
+            $search = User::where('email', $request->email)->where('id', '<>', $request->id)->first();
 
-            if ($user) {
+            if (!$search) {
+                $user = User::find($request->id);
                 $data = [
                     'user'  => $user,
                     'code'  => substr(sha1(time()), 0, 6)
                 ];
+                Mail::to($request->email)->send(new VerifiedEmail($data));
+
 
                 $user->code = $data['code'];
                 $user->save();
 
-                Mail::to($user->email)->send(new VerifiedEmail($data));
                 return response()->json([
                     'status'   => 200,
                     'message' =>  'Su codigo de verificacion ha sido enviado exitosamente!'
@@ -398,7 +420,7 @@ class AuthController extends Controller
             }
             return response()->json([
                 'status'   => 404,
-                'message' =>  'El email igresado no existe!.'
+                'message' =>  'El email igresado no esta disponible!.'
             ], 404);
 
         } catch (Exception $e) {

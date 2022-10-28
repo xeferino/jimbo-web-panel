@@ -25,9 +25,14 @@
                         <div class="col-form-label has-danger-image"></div>
                     </div>
                     <div class="col-sm-6">
-                        <label class="col-form-label">Nombres y Apellidos</label>
-                        <input type="text" name="name" id="name" class="form-control">
-                        <div class="col-form-label has-danger-name"></div>
+                        <label class="col-form-label">Nombres</label>
+                        <input type="text" name="names" id="names" class="form-control">
+                        <div class="col-form-label has-danger-names"></div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="col-form-label">Apellidos</label>
+                        <input type="text" name="surnames" id="surnames" class="form-control">
+                        <div class="col-form-label has-danger-surnames"></div>
                     </div>
                     <div class="col-sm-6">
                         <label class="col-form-label">Email</label>

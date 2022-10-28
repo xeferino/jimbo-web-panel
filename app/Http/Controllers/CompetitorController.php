@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\FormUserEditRequest;
-use App\Http\Requests\FormUserCreateRequest;
+use App\Http\Requests\FormCompetitorRequest;
 use App\Models\Country;
 use Illuminate\Support\Facades\File;
 
@@ -35,7 +34,7 @@ class CompetitorController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $competitor = Competitor::select('id',  'image', 'name AS fullname', 'email', 'active')->whereHas("roles", function ($q) {
+            $competitor = Competitor::select('id',  'image', DB::raw("CONCAT(names,' ',surnames) AS fullname"), 'email', 'active')->whereHas("roles", function ($q) {
                         $q->whereIn('name', ['competitor']);
                     })->whereNull('deleted_at')->get();
             return Datatables::of($competitor)
@@ -44,17 +43,17 @@ class CompetitorController extends Controller
                            $btn = '';
                         if(auth()->user()->can('edit-competitor')){
 
-                            $btn .= '<a href="'.route('panel.competitors.edit',['competitor' => $competitor->id]).'" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$competitor->id.'" id="edit_'.$competitor->id.'" class="btn btn-warning btn-sm mr-1 editSeller">
+                            $btn .= '<a href="'.route('panel.competitors.edit',['competitor' => $competitor->id]).'" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$competitor->id.'" id="edit_'.$competitor->id.'" class="btn btn-warning btn-sm mr-1 editCompetitor">
                                             <i class="ti-pencil"></i>
                                     </a>';
                         }
-                        if(auth()->user()->can('detail-competitor')){
-                            $btn .= '<a href="'.route('panel.competitors.detail',['competitor' => $competitor->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$competitor->id.'" id="det_'.$competitor->id.'" class="btn btn-info btn-sm  mr-1 detailSeller">
+                        /* if(auth()->user()->can('detail-competitor')){
+                            $btn .= '<a href="'.route('panel.competitors.detail',['competitor' => $competitor->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$competitor->id.'" id="det_'.$competitor->id.'" class="btn btn-info btn-sm  mr-1 detailCompetitor">
                                         <i class="ti-search"></i>
                                     </a>';
-                        }
+                        } */
                         if(auth()->user()->can('delete-competitor')){
-                            $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="right" title="Eliminar"  data-url="'.route('panel.competitors.destroy',['competitor' => $competitor->id]).'" class="btn btn-danger btn-sm deleteSeller">
+                            $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="right" title="Eliminar"  data-url="'.route('panel.competitors.destroy',['competitor' => $competitor->id]).'" class="btn btn-danger btn-sm deleteCompetitor">
                                             <i class="ti-trash"></i>
                                     </a>';
                         }
@@ -115,9 +114,9 @@ class CompetitorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(FormUserCreateRequest $request, Seller $competitor)
+    public function store(FormUserCreateRequest $request, Competitor $competitor)
     {
-        $competitor                   = new Seller();
+        $competitor                   = new Competitor();
         $competitor->name             = $request->name;
         $competitor->email            = $request->email;
         $competitor->dni              = $request->dni;
@@ -178,12 +177,12 @@ class CompetitorController extends Controller
     {
         $competitorRole = DB::table('model_has_roles')->select('role_id')->where('model_id',  $id)->pluck('role_id')->toArray();
         return view('panel.competitors.edit', [
-            'title'              => 'Vendedores',
-            'title_header'       => 'Editar vendedores',
+            'title'              => 'Participantes',
+            'title_header'       => 'Editar participantes',
             'description_module' => 'Actualice la informacion del usuario en el formulario de Edicion.',
             'title_nav'          => 'Editar',
             'icon'               => 'icofont-user',
-            'competitor'             => Seller::find($id),
+            'competitor'             => Competitor::find($id),
             'competitorRole'         => $competitorRole,
             'roles'              => Role::whereIn('name', ['competitor'])->get(),
             'countries'          => Country::where('active', 1)->whereNull('deleted_at')->get()
@@ -197,21 +196,23 @@ class CompetitorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(FormUserEditRequest $request, Seller $competitor)
+    public function update(FormCompetitorRequest $request, Competitor $competitor)
     {
-        $competitor                   = Seller::find($competitor->id);
-        $competitor->name             = $request->name;
+        $competitor                   = Competitor::find($competitor->id);
+        $competitor->names            = $request->names;
+        $competitor->surnames         = $request->surnames;
         $competitor->email            = $request->email;
         $competitor->dni              = $request->dni;
         $competitor->phone            = $request->phone;
-        $competitor->balance_jib      = $request->balance_jib;
+        $competitor->address          = $request->address;
+        $competitor->address_city     = $request->address_city;
         $competitor->country_id       = $request->country_id;
         $competitor->active           = $request->active==1 ? 1 : 0;
         if($request->password){
             $competitor->password     = Hash::make($request->password);
         }
 
-        if($request->file('image')){
+        /* if($request->file('image')){
             if ($competitor->image != "avatar.svg") {
                 if (File::exists(public_path('assets/images/competitors/' . $competitor->image))) {
                     File::delete(public_path('assets/images/competitors/' . $competitor->image));
@@ -223,11 +224,11 @@ class CompetitorController extends Controller
             $fileName       = time() . '.' . $extension;
             $competitor->image      = $fileName;
             $file->move(public_path('assets/images/competitors/'), $fileName);
-        }
+        } */
         $saved = $competitor->save();
         if($saved)
             $competitor->syncRoles($request->role);
-            return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Vendedor actualizado exitosamente.'], 200);
+            return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: participante actualizado exitosamente.'], 200);
     }
 
     /**
@@ -239,7 +240,7 @@ class CompetitorController extends Controller
     public function destroy($id)
     {
         if(\Request::wantsJson()){
-            $competitor = Seller::findOrFail($id);
+            $competitor = Competitor::findOrFail($id);
             /* if ($competitor->image != "avatar.svg") {
                 if (File::exists(public_path('assets/images/competitors/' . $competitor->image))) {
                     File::delete(public_path('assets/images/competitors/' . $competitor->image));
@@ -247,9 +248,9 @@ class CompetitorController extends Controller
             } */
             $delete = $competitor->delete();
             if ($delete) {
-                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Vendedor eliminado exitosamente.'], 200);
+                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: participante eliminado exitosamente.'], 200);
             } else {
-                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: El Vendedor no se elimino correctamente. Intente mas tarde.'], 200);
+                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: El participante no se elimino correctamente. Intente mas tarde.'], 200);
             }
         }
         abort(404);

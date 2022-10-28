@@ -35,7 +35,7 @@ class BalanceController extends Controller
                 ->where('users.id', $request->user)
                 ->get();
 
-            return response()->json(['balance' => $balance], 200);
+            return response()->json(['balances' => $balance], 200);
 
         } catch (Exception $e) {
 

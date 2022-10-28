@@ -19,7 +19,7 @@
                 @method('PUT')
                 <div class="form-group row">
                     <div class="col-sm-12">
-                        <img src="{{ $seller->image != 'avatar.svg' ? asset('assets/images/users/'.$seller->image): asset('assets/images/avatar.svg') }}" style= "margin: 0px 0 5px 0;" width="100px" height="100px" alt="avatar" id="avatar" class="img-radius">
+                        <img src="{{ $seller->image != 'avatar.svg' ? asset('assets/images/sellers/'.$seller->image): asset('assets/images/avatar.svg') }}" style= "margin: 0px 0 5px 0;" width="100px" height="100px" alt="avatar" id="avatar" class="img-radius">
 
                         <br>
                         <label for="exampleFormControlFile1"><b>Imagen <i class="ti ti-info-alt" data-toggle="tooltip" data-placement="top" title="El formato de imagen debe ser (jpg, jpeg, png o svg). El peso maximo de la imagen es de 512 KB"></i></b></label>
@@ -27,9 +27,14 @@
                         <div class="col-form-label has-danger-image"></div>
                     </div>
                     <div class="col-sm-6">
-                        <label class="col-form-label">Nombres y Apellidos</label>
-                        <input type="text" name="name" id="name" value="{{ $seller->name }}" class="form-control">
-                        <div class="col-form-label has-danger-name"></div>
+                        <label class="col-form-label">Nombres</label>
+                        <input type="text" name="names" id="names" value="{{ $seller->names }}" class="form-control">
+                        <div class="col-form-label has-danger-names"></div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="col-form-label">Apellidos</label>
+                        <input type="text" name="surnames" id="surnames" value="{{ $seller->surnames }}" class="form-control">
+                        <div class="col-form-label has-danger-surnames"></div>
                     </div>
                     <div class="col-sm-6">
                         <label class="col-form-label">Email</label>

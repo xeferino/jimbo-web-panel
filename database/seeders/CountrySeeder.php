@@ -12,6 +12,7 @@ class CountrySeeder extends Seeder
         [
             'name'      => 'Peru',
             'code'      => '+51',
+            'iso'       => 'PE',
             'currency'  => 'SOL',
             'img'       => 'flag.png'
         ],
@@ -19,6 +20,7 @@ class CountrySeeder extends Seeder
             'name'      => 'Ecuador',
             'currency'  => 'USD',
             'code'      => '+56',
+            'iso'       => 'ECU',
             'img'       => 'flag.png'
         ]
     ];

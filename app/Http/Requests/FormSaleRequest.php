@@ -33,7 +33,7 @@ class FormSaleRequest extends FormRequest
             'ticket_id'     => 'required|integer',
             'seller_id'     => $this->has('seller_id') ? 'required|integer' : 'nullable',
             'user_id'       => 'required|integer',
-            'card_id'       => 'required|integer',
+            //'card_id'       => 'required|integer',
         ];
     }
 

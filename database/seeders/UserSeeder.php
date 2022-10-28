@@ -94,7 +94,8 @@ class UserSeeder extends Seeder
         Permission::create(['name' => 'rewards-bonuses-menu', 'description' => 'menu de configuracion de bonos y recompensas en el sistema'])->syncRoles([$super_admin]);
 
         User::create([
-            'name' => 'Super Admin',
+            'names' => 'Super ',
+            'surnames' => 'Admin',
             'email' => 'super-admin@jimbosorteos.com',
             'password' => Hash::make('admin'),
         ])->assignRole($super_admin);

@@ -47,10 +47,11 @@ class SaleController extends Controller
                             'expiration_year' => $expire[1],
                             'email' => $user ? $user->email :  $request->email,
                             'metadata' => [
-                                'fullname'  => $user->name,
+                                'fullname'  => $user->names. ' ' .$user->surnames,
                                 'phone'     => $user->phone,
                                 'dni'       => $user->dni,
-                                'address'   => $user->address ?? 'null'
+                                'address'   => $user->address,
+                                'address_city'   => $user->address_city
                             ]
                         ];
 
@@ -64,13 +65,14 @@ class SaleController extends Controller
                             "installments" => 0,
                         ];
 
-                        $payment = PaymentController::payment($card, $charge);
-                        $pay =  $payment->object ?? '';
+                        //$payment = PaymentController::payment($card, $charge);
+                        //$pay =  $payment->object ?? '';
 
                         $saleUpdate = Sale::find($sale->id);
-                        $status  = 'refused';
+                        //$status  = 'refused';
+                        $status  = 'approved';
 
-                        if ($pay == 'charge') {
+                        /*if ($pay == 'charge') {
                             $status = 'approved';
                             $ticket->total = $ticket->total-$ticket->promotion->quantity;
                             $ticket->save();
@@ -85,18 +87,18 @@ class SaleController extends Controller
                                 'quantity'          => $ticket->promotion->quantity,
                                 'number_operation'  => $saleUpdate->number,
                                 'amount'            => $ticket->promotion->price,
-                                'raffle'            =>$ticket->raffle->title
+                                'raffle'            => $ticket->raffle->title
                             ];
                             Mail::to($user->email)->send(new ReceiptPayment($payment_receipt));
-                        }
+                        }*/
 
                         $type = null;
                         $merchant_message = null;
-                        if($pay != 'charge') {
+                        /*if($pay != 'charge') {
                             $payment = json_decode($payment, true);
                             $type = $payment['type'];
                             $merchant_message = $payment['merchant_message'];
-                        }
+                        }*/
 
                         $data = [
                             'sale_id'        => $saleUpdate->id,

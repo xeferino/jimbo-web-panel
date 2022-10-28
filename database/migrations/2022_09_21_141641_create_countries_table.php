@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code');
+            $table->string('iso');
             $table->string('img')->nullable();
             $table->boolean('active')->default(1);
             $table->string('currency')->nullable();

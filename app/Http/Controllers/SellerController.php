@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\FormUserEditRequest;
-use App\Http\Requests\FormUserCreateRequest;
+use App\Http\Requests\FormSellerRequest;
 use App\Models\Country;
 use Illuminate\Support\Facades\File;
 
@@ -35,7 +34,7 @@ class SellerController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $seller = Seller::select('id',  'image', 'name AS fullname', 'email', 'active')->whereHas("roles", function ($q) {
+            $seller = Seller::select('id',  'image', DB::raw("CONCAT(names,' ',surnames) AS fullname"), 'email', 'active')->whereHas("roles", function ($q) {
                         $q->whereIn('name', ['seller']);
                     })->whereNull('deleted_at')->get();
             return Datatables::of($seller)
@@ -115,10 +114,11 @@ class SellerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(FormUserCreateRequest $request, Seller $seller)
+    public function store(FormSellerRequest $request, Seller $seller)
     {
         $seller                   = new Seller();
-        $seller->name             = $request->name;
+        $seller->names            = $request->names;
+        $seller->surnames         = $request->surnames;
         $seller->email            = $request->email;
         $seller->dni              = $request->dni;
         $seller->phone            = $request->phone;
@@ -197,10 +197,11 @@ class SellerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(FormUserEditRequest $request, Seller $seller)
+    public function update(FormSellerRequest $request, Seller $seller)
     {
         $seller                   = Seller::find($seller->id);
-        $seller->name             = $request->name;
+        $seller->names            = $request->names;
+        $seller->surnames         = $request->surnames;
         $seller->email            = $request->email;
         $seller->dni              = $request->dni;
         $seller->phone            = $request->phone;

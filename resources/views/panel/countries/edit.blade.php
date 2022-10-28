@@ -35,6 +35,12 @@
                         <input type="text" name="code" id="code" value="{{ $country->code }}" class="form-control">
                         <div class="col-form-label has-danger-code"></div>
                     </div>
+                    
+                    <div class="col-sm-6">
+                        <label class="col-form-label">Iso</label>
+                        <input type="text" name="iso" id="iso" value="{{ $country->iso }}" class="form-control">
+                        <div class="col-form-label has-danger-iso"></div>
+                    </div>
 
                     <div class="col-sm-6">
                         <label class="col-form-label">Moneda</label>

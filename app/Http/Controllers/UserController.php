@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\FormUserEditRequest;
-use App\Http\Requests\FormUserCreateRequest;
+use App\Http\Requests\FormUserRequest;
 use Illuminate\Support\Facades\File;
 
 
@@ -34,7 +33,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $user = User::select('id',  'image', 'name AS fullname', 'email', 'active')->whereHas("roles", function ($q) {
+            $user = User::select('id',  'image', DB::raw("CONCAT(names,' ',surnames) AS fullname"), 'email', 'active')->whereHas("roles", function ($q) {
                         $q->whereNotIn('name', ['seller','competitor']);
                     })->whereNull('deleted_at')->get();
             return Datatables::of($user)
@@ -69,7 +68,7 @@ class UserController extends Controller
                         return $btn;
                     })
                     ->addColumn('image', function($user){
-                        $img = $user->image != 'avatar.svg' ? asset('/').'storage/users/'.$user->image: asset('assets/images/avatar.svg');
+                        $img = $user->image != 'avatar.svg' ? asset('assets/images/users/'.$user->image): asset('assets/images/avatar.svg');
                         return '<img src="'.$img.'" class="img-50 img-radius" alt="User-Profile-Image">';
                     })
                     ->addColumn('role', function($user){
@@ -113,10 +112,11 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(FormUserCreateRequest $request, User $user)
+    public function store(FormUserRequest $request, User $user)
     {
         $user                   = new User();
-        $user->name             = $request->name;
+        $user->names            = $request->names;
+        $user->surnames         = $request->surnames;
         $user->email            = $request->email;
         $user->active           = $request->active;
         $user->password         = Hash::make($request->password);
@@ -190,10 +190,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(FormUserEditRequest $request, User $User)
+    public function update(FormUserRequest $request, User $user)
     {
-        $user                   = User::find($User->id);
-        $user->name             = $request->name;
+        $user                   = User::find($user->id);
+        $user->names            = $request->names;
+        $user->surnames         = $request->surnames;
         $user->email            = $request->email;
         $user->active           = $request->active==1 ? 1 : 0;
         if($request->password){

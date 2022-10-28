@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FormUserRequest extends FormRequest
+class FormCompetitorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,16 +26,12 @@ class FormUserRequest extends FormRequest
         return [
             'names'         => 'required|min:3',
             'surnames'      => 'required|min:3',
-            'email'         => 'required|email|unique:users,email,'.$this->user->id,
+            'email'         => isset($this->user->id) ? 'required|email|unique:users,email,'.$this->user->id : 'required|email|unique:users,email',
             'role'          => 'required',
             'active'        => 'required',
-            'password'      => 'nullable|min:8|max:16',
-            'cpassword'     => 'nullable|min:8|max:16|required_with:password|same:password',
+            'password'      => isset($this->user->id) ? 'nullable|min:8|max:16' : 'required|min:8|max:16',
+            'cpassword'     => isset($this->user->id) ? 'nullable|min:8|max:16|required_with:password|same:password' : 'required|min:8|max:16|required_with:password|same:password',
             'image'         => $this->hasFile('image') ? 'required|sometimes|mimes:jpeg,jpg,png,svg|max:512' : 'nullable',
-            'dni'           => $this->has('dni') ? 'required|integer|unique:users,dni,'.$this->user->id : 'nullable',
-            'phone'         => $this->has('phone') ? 'required|integer' : 'nullable',
-            'country_id'    => $this->has('country_id') ? 'required|integer' : 'nullable',
-            'balance_jib'   => $this->has('balance_jib') ? 'required|integer' : 'nullable',
         ];
     }
 
@@ -52,11 +48,13 @@ class FormUserRequest extends FormRequest
             'email.email'                =>  'Ingrese un email valido!',
             'email.unique'               =>  'El email ingresado ya existe!',
             'cpassword.required_with'    =>  'Confirmar contraseña es requerida.',
-            'cpassword.min'              =>  'Confirmar contraseña debe debe contener un minimo de 8 caracteres.',
-            'cpassword.max'              =>  'Confirmar contraseña debe debe contener un maximo de 16 caracteres.',
-            'cpassword.same'             =>  'Contraseña y confirmar contraseña deben coincidir.',
+            'cpassword.required'         =>  'Confirmar contraseña es requerida.',
+            'password.required'          =>  'La contraseña es requerida.',
             'password.min'               =>  'La contraseña debe debe contener un minimo de 8 caracteres.',
             'password.max'               =>  'La contraseña debe debe contener un maximo de 16 caracteres.',
+            'cpassword.same'             =>  'La contraseña y confirmar contraseña deben coincidir.',
+            'cpassword.max'              =>  'Confirmar contraseña debe debe contener un maximo de 16 caracteres.',
+            'cpassword.min'              =>  'Confirmar contraseña debe debe contener un minimo de 8 caracteres.',
             'image.mimes'                =>  'El formato de imagen no esta permitido, la imagen debe ser jpg, jpeg, png o svg.',
             'image.max'                  =>  'El peso maximo de la imagen es de 512 KB.',
             'dni.required'               =>  'El DNI es requerido.',

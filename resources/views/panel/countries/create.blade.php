@@ -36,6 +36,12 @@
                     </div>
 
                     <div class="col-sm-6">
+                        <label class="col-form-label">Iso</label>
+                        <input type="text" name="iso" id="iso" class="form-control">
+                        <div class="col-form-label has-danger-iso"></div>
+                    </div>
+
+                    <div class="col-sm-6">
                         <label class="col-form-label">Moneda</label>
                         <input type="text" name="currency" id="currency" class="form-control">
                         <div class="col-form-label has-danger-currency"></div>
