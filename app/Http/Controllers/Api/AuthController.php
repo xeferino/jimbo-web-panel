@@ -9,11 +9,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use File;
 use Exception;
-use App\Http\Requests\FormRequestSignupUser;
-use App\Http\Requests\FormRequestProfileUserSetting;
-use App\Http\Requests\FormRequestForgotUser;
-use App\Http\Requests\FormRequestRecoveryPasswordUser;
-use App\Http\Requests\FormRequestVerifiedEmailUser;
+use App\Http\Requests\Api\FormRequestSignup;
+use App\Http\Requests\Api\FormRequestProfile;
+use App\Http\Requests\Api\FormRequestForgot;
+use App\Http\Requests\Api\FormRequestRecoveryPassword;
+use App\Http\Requests\Api\FormRequestVerifiedEmail;
 use App\Mail\RecoveryPassword;
 use App\Mail\VerifiedEmail;
 use App\Mail\RegisterUser;
@@ -127,7 +127,7 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function signup(FormRequestSignupUser $request)
+    public function signup(FormRequestSignup $request)
     {
         try {
             $user = new User();
@@ -243,7 +243,7 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function settingProfile(FormRequestProfileUserSetting $request, User $User, $id)
+    public function settingProfile(FormRequestProfile $request, User $User, $id)
     {
         try {
             $user                    = User::find($id);
@@ -321,7 +321,7 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function forgot(FormRequestForgotUser $request)
+    public function forgot(FormRequestForgot $request)
     {
         try {
             $data = [];
@@ -362,7 +362,7 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function RecoveryPassword(FormRequestRecoveryPasswordUser $request)
+    public function RecoveryPassword(FormRequestRecoveryPassword $request)
     {
         try {
             $data = [];
@@ -409,7 +409,6 @@ class AuthController extends Controller
                 ];
                 Mail::to($request->email)->send(new VerifiedEmail($data));
 
-
                 $user->code = $data['code'];
                 $user->save();
 
@@ -437,7 +436,7 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function verifiedEmail(FormRequestVerifiedEmailUser $request)
+    public function verifiedEmail(FormRequestVerifiedEmail $request)
     {
         try {
             $user = User::where('email', $request->email)->where('code', $request->code)->first();

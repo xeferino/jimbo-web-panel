@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FormCountryEditRequest extends FormRequest
+class FormCountryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,9 @@ class FormCountryEditRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'           => 'required|min:3|unique:countries,name,'.$this->country->id.',id,deleted_at,NULL',
-            'code'           => 'required|min:3|unique:countries,code,'.$this->country->id.',id,deleted_at,NULL',
-            'iso'            => 'required|min:2|unique:countries,iso,'.$this->country->id.',id,deleted_at,NULL',
+            'name'           => isset($this->country->id) ? 'required|min:3|unique:countries,name,'.$this->country->id.',id,deleted_at,NULL' : 'required|min:3|unique:countries,name,'.$this->country.',id,deleted_at,NULL',
+            'code'           => isset($this->country->id) ? 'required|min:3|unique:countries,code,'.$this->country->id.',id,deleted_at,NULL' : 'required|min:3|unique:countries,code,'.$this->country.',id,deleted_at,NULL',
+            'iso'            => isset($this->country->id) ? 'required|min:2|unique:countries,iso,'.$this->country->id.',id,deleted_at,NULL' : 'required|min:2|unique:countries,iso,'.$this->country.',id,deleted_at,NULL',
             'currency'       => 'required',
             'exchange_rate'  => 'required|numeric|between:0.0,100',
             'active'         => 'required',

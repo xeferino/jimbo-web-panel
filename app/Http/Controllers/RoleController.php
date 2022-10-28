@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
-use App\Http\Requests\FormRoleEditRequest;
-use App\Http\Requests\FormRoleCreateRequest;
-
+use App\Http\Requests\FormRoleRequest;
 
 class RoleController extends Controller
 {
@@ -93,7 +91,7 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(FormRoleCreateRequest $request)
+    public function store(FormRoleRequest $request, Role $role)
     {
         $store = Role::create([
             'name'        => $request->name,
@@ -158,9 +156,9 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(FormRoleEditRequest $request, Role $Role)
+    public function update(FormRoleRequest $request, Role $role)
     {
-        $role = Role::findOrFail($Role->id);
+        $role = Role::findOrFail($role->id);
 
         $update = $role->update([
             'name'         => $request->name,

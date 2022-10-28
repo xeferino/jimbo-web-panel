@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class FormRequestSignupUser extends FormRequest
+class FormRequestSignup extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

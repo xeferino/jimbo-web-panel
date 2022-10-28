@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\FormFavoriteRequest;
+use App\Http\Requests\Api\FormFavoriteRequest;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use App\Models\Raffle;

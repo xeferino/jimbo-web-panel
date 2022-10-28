@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Http\Request;
-use App\Http\Requests\FormSaleRequest;
+use App\Http\Requests\Api\FormSaleRequest;
 use App\Models\CardUser as Card;
 use Illuminate\Support\Facades\DB;
 use Exception;

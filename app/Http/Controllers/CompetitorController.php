@@ -114,7 +114,7 @@ class CompetitorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(FormUserCreateRequest $request, Competitor $competitor)
+    public function store(Request $request, Competitor $competitor)
     {
         $competitor                   = new Competitor();
         $competitor->name             = $request->name;

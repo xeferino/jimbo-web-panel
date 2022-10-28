@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FormCardRequest;
+use App\Http\Requests\Api\FormCardRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;

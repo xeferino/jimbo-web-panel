@@ -6,8 +6,7 @@ use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Country;
-use App\Http\Requests\FormCountryEditRequest;
-use App\Http\Requests\FormCountryCreateRequest;
+use App\Http\Requests\FormCountryRequest;
 use Illuminate\Support\Facades\File;
 
 
@@ -95,7 +94,7 @@ class CountryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(FormCountryCreateRequest $request, Country $country)
+    public function store(FormCountryRequest $request, Country $country)
     {
         $country                   = new Country();
         $country->name             = $request->name;
@@ -145,9 +144,9 @@ class CountryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(FormCountryEditRequest $request, Country $Country)
+    public function update(FormCountryRequest $request, Country $country)
     {
-        $country = Country::findOrFail($Country->id);
+        $country = Country::findOrFail($country->id);
 
         $country->name          = $request->name;
         $country->code          = $request->code;

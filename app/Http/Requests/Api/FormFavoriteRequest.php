@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class FormRequestForgotUser extends FormRequest
+class FormFavoriteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -17,7 +16,7 @@ class FormRequestForgotUser extends FormRequest
         return true;
     }
 
-    /**
+     /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -25,16 +24,19 @@ class FormRequestForgotUser extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email|exists:users,email',
+            'user_id'       => 'required|integer',
+            'raffle_id'     => 'required|integer',
+
         ];
     }
 
     public function messages()
     {
         return [
-            'email.required' =>  'El email es requerido.',
-            'email.email'    =>  'Ingrese un email valido!',
-            'email.exists'   =>  'El email ingresado no existe, verifique!',
+            'user_id.required'      => 'El usuario es requerido.',
+            'user_id.integer'       => 'El usuario debe ser entero.',
+            'raffle_id.required'    => 'El sorteo es requerido.',
+            'raffle_id.integer'     => 'El sorteo debe ser entero.',
         ];
     }
 }
