@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call([CountrySeeder::class]);
         $this->call([LevelSeeder::class]);
         $this->call([SettingSeeder::class]);
+        $this->call([PaymentMethodSeeder::class]);
 
         // \App\Models\User::factory(500)->create();
 

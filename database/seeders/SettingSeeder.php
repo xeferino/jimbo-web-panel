@@ -10,8 +10,12 @@ class SettingSeeder extends Seeder
     private $table = 'settings';
     private $items = [
         [
-            'name'      => 'jib',
+            'name'      => 'jib_usd',
             'value'     => '0.10',
+        ],
+        [
+            'name'      => 'jib_unit_x_usd',
+            'value'     => '1',
         ],
         [
             'name'      => 'register',

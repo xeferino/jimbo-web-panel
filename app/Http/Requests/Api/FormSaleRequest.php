@@ -33,7 +33,8 @@ class FormSaleRequest extends FormRequest
             'ticket_id'     => 'required|integer',
             'seller_id'     => $this->has('seller_id') ? 'required|integer' : 'nullable',
             'user_id'       => 'required|integer',
-            //'card_id'       => 'required|integer',
+            'method_id'     => 'required|integer',
+            'method_type'   => 'required',
         ];
     }
 
@@ -52,8 +53,9 @@ class FormSaleRequest extends FormRequest
             'raffle_id.integer'         => 'El sorteo debe ser entero.',
             'user_id.required'          => 'El usuario es requerido.',
             'user_id.integer'           => 'El usuario  debe ser entero.',
-            'card_id.required'          => 'La tarjeta es requerida.',
-            'card_id.integer'           => 'La tarjeta  debe ser entero.',
+            'method_type.required'      => 'El metodo de pago es requerido.',
+            'method_id.required'        => 'El id de la tarjeta es requerida.',
+            'method_id.integer'         => 'El id de la tarjeta  debe ser entero.',
             'name.required'             =>  'El nombre es requerido.',
             'name.min'                  =>  'El nombre debe contener un minimo de 3 caracteres.',
             'email.required'            =>  'El email es requerido.',

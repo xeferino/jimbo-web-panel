@@ -84,6 +84,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\AccountUser', 'user_id', 'id');
     }
 
+    public function Customer()
+    {
+        return $this->hasOne('App\Models\Customer'::class);
+    }
+
 
     /**
      * Send a password reset notification to the user.

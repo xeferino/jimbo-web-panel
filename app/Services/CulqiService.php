@@ -12,7 +12,7 @@ class CulqiService
     protected $culqi;
     protected $card;
 
-    public function __construct($card)
+    public function __construct($card = null)
     {
         $this->baseUri = config('services.culqi.base_url');
         $this->key = config('services.culqi.key');
@@ -46,7 +46,7 @@ class CulqiService
 
 
     /**
-     * Get access and gener token using a user and password
+     * store charge
      *
      * @return void
      */
@@ -54,9 +54,62 @@ class CulqiService
     {
         //Creamos Cargo a una tarjeta
         try {
-            $data = array_merge($array, ["source_id" => $this->generateToken()]);
-            $charge = $this->culqi->Charges->create($data);
+            //$data = array_merge($array, ["source_id" => $this->generateToken()]);
+            $charge = $this->culqi->Charges->create($array);
             return $charge;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+
+    /**
+     * store customer
+     *
+     * @return void
+     */
+    public function customer(array $data)
+    {
+        //Creamos un cliente
+        try {
+            $customer = $this->culqi->Customers->create($data);
+            return $customer;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+
+    /**
+     * store card
+     *
+     * @return void
+     */
+    public function card(array $array)
+    {
+        //Creamos una tarjeta a cliente
+        try {
+            $data = array_merge($array, ["token_id" => $this->generateToken()]);
+            //$charge = $this->culqi->Charges->create($array);
+            $card = $this->culqi->Cards->create($data);
+            return $card;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function deleteCard($id)
+    {
+        try {
+            $client = new Client();
+            $response = $client->request('DELETE', $this->baseUri.'/cards/{$id}', [
+                'body' => json_encode($this->card),
+                'headers' => [
+                    'Content-Type'  => 'application/json',
+                    'Authorization' => 'Bearer ' . $this->key
+                ]
+            ]);
+            return $response;
         } catch (Exception $e) {
             return $e->getMessage();
         }

@@ -17,6 +17,7 @@ use App\Models\Sale;
 use App\Models\TicketUser;
 use App\Models\User;
 use App\Helpers\Helper;
+use App\Models\Setting;
 
 class SaleController extends Controller
 {
@@ -36,49 +37,98 @@ class SaleController extends Controller
                     $ticket = Ticket::where('id', $request->ticket_id)->where('raffle_id', $request->raffle_id)->first();
                     if($ticket) {
                         $user = isset($request->user_id) ? User::find($request->user_id) : null;
-                        $cardUser = Card::find($request->card_id);
-                        $expire = explode('/',$cardUser->date_expire);
+                        $status  = 'refused';
+                        $reference_code = null;
 
-                        //token de la tarjeta a validar para hacer la compra
-                        $card = [
-                            'card_number' => $cardUser->number,
-                            'cvv' => $cardUser->code,
-                            'expiration_month' => $expire[0],
-                            'expiration_year' => $expire[1],
-                            'email' => $user ? $user->email :  $request->email,
-                            'metadata' => [
-                                'fullname'  => $user->names. ' ' .$user->surnames,
-                                'phone'     => $user->phone,
-                                'dni'       => $user->dni,
-                                'address'   => $user->address,
-                                'address_city'   => $user->address_city
-                            ]
-                        ];
+                        if($request->method_type == 'card') {
+                            //id de la tarjeta a pagar
+                            $cardUser = Card::find($request->method_id);
+                            //cargo que se le aplica a tarjeta por la compra
+                            $charge  = [
+                                "amount" => $ticket->promotion->price*100,
+                                "capture" => true,
+                                "currency_code" => "USD",
+                                "description" => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
+                                "email" => $user->email,
+                                "installments" => 0,
+                                "source_id" => $cardUser->culqi_card_id
+                            ];
 
-                        //cargo que se le aplica a tarjeta por la compra
-                        $charge  = [
-                            "amount" => $ticket->promotion->price*100,
-                            "capture" => true,
-                            "currency_code" => "USD",
-                            "description" => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
-                            "email" => "payment@jimbosorteos.com",
-                            "installments" => 0,
-                        ];
+                            $payment = PaymentController::payment(null, $charge);
+                            $pay =  $payment->object ?? 'error';
 
-                        //$payment = PaymentController::payment($card, $charge);
-                        //$pay =  $payment->object ?? '';
+                            $saleUpdate = Sale::find($sale->id);
 
-                        $saleUpdate = Sale::find($sale->id);
-                        //$status  = 'refused';
-                        $status  = 'approved';
+                            if ($pay == 'charge') {
+                                $reference_code = $payment->reference_code;
+                                $status = 'approved';
+                                $ticket->total = $ticket->total-$ticket->promotion->quantity;
+                                $ticket->save();
+                                $saleUpdate->status = $status;
+                                $saleUpdate->save();
+                                TicketUser::insert($tickets);
 
-                        /*if ($pay == 'charge') {
+                                $payment_receipt = [
+                                    'fullname'          => $saleUpdate->name,
+                                    'date'              => $saleUpdate->created_at,
+                                    'code_ticket'       => $ticket->serial,
+                                    'tickets'           => $saleUpdate->TicketsUsers,
+                                    'quantity'          => $ticket->promotion->quantity,
+                                    'number_operation'  => $saleUpdate->number,
+                                    'amount'            => $ticket->promotion->price,
+                                    "description"       => 'Compra '.$ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
+                                    'raffle'            => $ticket->raffle->title,
+                                    'type'              => 'card'
+
+                                ];
+                                Mail::to($user->email)->send(new ReceiptPayment($payment_receipt));
+                            }
+
+                            $type = null;
+                            $merchant_message = null;
+                            if($pay != 'charge') {
+                                $payment = json_decode($payment, true);
+                                $type = $payment['type'];
+                                $merchant_message = $payment['merchant_message'];
+                            }
+
+                            $data = [
+                                'sale_id'        => $saleUpdate->id,
+                                'user_id'        => $user->id,
+                                "description"    => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
+                                'payment_method' => 'Card',
+                                'total_paid'     => Helper::amount($ticket->promotion->price),
+                                'response'       => ($status == 'approved') ? 'Su compra ha sido exitosa.' : 'Error: '.$type,
+                                'code_response'  => ($status == 'approved') ? $reference_code : $merchant_message,
+                                'status'         => $status,
+                                'created_at'     => now(),
+                                'updated_at'     => now()
+                            ];
+                            $PaymentHistory = PaymentController::paymentHistoryStore($data);
+                        }elseif ($request->method_type == 'jib') {
+                            # code...
+                            $jib_unit = Setting::where('name', 'jib_unit_x_usd')->first();
+                            $jib_usd = Setting::where('name', 'jib_usd')->first();
+
+                            $amout_jib = ($ticket->promotion->price*$jib_unit->value)/$jib_usd->value;
+
+                            $available_jib = $user->balance_jib-$amout_jib;
+
+                            if (intval($user->balance_jib)<$amout_jib) {
+                                return response()->json([
+                                    'error'    => true,
+                                    'message'  => 'Balance en jib '.$user->balance_jib.', es insuficiente, usted requiere de un saldo mayor o igual a '.$amout_jib.'.00 jib',
+                                ], 422);
+                            }
+                            $saleUpdate = Sale::find($sale->id);
+                            $reference_code = substr(sha1(time()), 0, 6);
                             $status = 'approved';
                             $ticket->total = $ticket->total-$ticket->promotion->quantity;
                             $ticket->save();
                             $saleUpdate->status = $status;
                             $saleUpdate->save();
                             TicketUser::insert($tickets);
+
                             $payment_receipt = [
                                 'fullname'          => $saleUpdate->name,
                                 'date'              => $saleUpdate->created_at,
@@ -86,33 +136,30 @@ class SaleController extends Controller
                                 'tickets'           => $saleUpdate->TicketsUsers,
                                 'quantity'          => $ticket->promotion->quantity,
                                 'number_operation'  => $saleUpdate->number,
-                                'amount'            => $ticket->promotion->price,
-                                'raffle'            => $ticket->raffle->title
+                                'amount'            => Helper::jib($amout_jib),
+                                "description"       => 'Compra '.$ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
+                                'raffle'            => $ticket->raffle->title,
+                                'type'              => 'jib'
                             ];
                             Mail::to($user->email)->send(new ReceiptPayment($payment_receipt));
-                        }*/
 
-                        $type = null;
-                        $merchant_message = null;
-                        /*if($pay != 'charge') {
-                            $payment = json_decode($payment, true);
-                            $type = $payment['type'];
-                            $merchant_message = $payment['merchant_message'];
-                        }*/
-
-                        $data = [
-                            'sale_id'        => $saleUpdate->id,
-                            'user_id'        => $user->id,
-                            "description"    => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
-                            'payment_method' => 'Card',
-                            'total_paid'     => $ticket->promotion->price,
-                            'response'       => ($status == 'approved') ? 'charge: successful payment Culqi platform' : 'Error: '.$type,
-                            'code_response'  => ($status == 'approved') ? '200' : $merchant_message,
-                            'status'         => $status,
-                            'created_at'     => now(),
-                            'updated_at'     => now()
-                        ];
-                        $PaymentHistory = PaymentController::paymentHistoryStore($data);
+                            $data = [
+                                'sale_id'        => $saleUpdate->id,
+                                'user_id'        => $user->id,
+                                "description"    => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
+                                'payment_method' => 'Card',
+                                'total_paid'     => Helper::jib($amout_jib),
+                                'response'       => ($status == 'approved') ? 'Su compra ha sido exitosa.' : 'Error: Su compra no ha sido exitosa',
+                                'code_response'  => ($status == 'approved') ? $reference_code : 'Error',
+                                'status'         => $status,
+                                'created_at'     => now(),
+                                'updated_at'     => now()
+                            ];
+                            $PaymentHistory     = PaymentController::paymentHistoryStore($data);
+                            $user->balance_jib  =  $available_jib;
+                            $user->save();
+                            BalanceController::store($data['description'], 'debit', $amout_jib, 'jib', $user->id);
+                        }
                     }
                     DB::commit();
                     if($status == 'approved') {
@@ -126,105 +173,18 @@ class SaleController extends Controller
                                 'tickets'           => $saleUpdate->TicketsUsers,
                                 'quantity'          => $ticket->promotion->quantity,
                                 'number_operation'  => $saleUpdate->number,
-                                'amount'            => $ticket->promotion->price,
+                                'amount'            => Helper::amount($ticket->promotion->price),
+                                'jib'               => Helper::jib($amout_jib),
                             ]
                         ], 200);
                     }
                 }
             }
             return response()->json([
-                'error'             => true, 
+                'error'             => true,
                 'message'           => 'El pago no se proceso con exito.',
-                'culqi_response'    => $merchant_message
+                'culqi_response'    => $request->method_type == 'card' ? $merchant_message : null
             ], 422);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'status'   => 500,
-                'message' =>  $e->getMessage()
-            ], 500);
-        }
-    }
-
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function saleTicketJib(FormSaleRequest $request)
-    {
-        try {
-            DB::beginTransaction();
-            $sale =  $this->saleOfTickets($request);
-            if($sale) {
-                $tickets = $this->generateTickets($request, $sale->id);
-                if(count($tickets)>0){
-                    $SaleTickets = TicketUser::insert($tickets);
-                    if($SaleTickets){
-                        $ticket = Ticket::where('id', $request->ticket_id)->where('raffle_id', $request->raffle_id)->first();
-                        if($ticket) {
-                            $ticket->total = $ticket->total-$ticket->promotion->quantity;
-                            $ticket->save();
-                            if($ticket->save()) {
-                                $saleUpdate = Sale::find($sale->id);
-                                $saleUpdate->status = 'approved';
-                                $saleUpdate->save();
-                                $user = isset($request->user_id) ? User::find($request->user_id) : null;
-                                $cardUser = Card::find($request->card_id);
-                                $expire = explode('/',$cardUser->date_expire);
-                                $card = [
-                                    //'card_number' => '4000020000000000',
-                                    'card_number' => $cardUser->number,
-                                    'cvv' => $cardUser->code,
-                                    'expiration_month' => $expire[0],
-                                    'expiration_year' => $expire[1],
-                                    'email' => $user ? $user->email :  $request->email,
-                                    'metadata' => [
-                                        'fullname'  => $user ? $user->name :  $request->name,
-                                        'phone'     => $user ? $user->dni :  $request->dni,
-                                        'dni'       => $user ? $user->dni :  $request->dni,
-                                        'address'   => $user ? $user->address :  $request->address,
-                                    ]
-                                ];
-
-
-                                $charge  = [
-                                    "amount" => 10*100,
-                                    "capture" => true,
-                                    "currency_code" => "PEN",
-                                    "description" => "Venta de prueba",
-                                    "email" => "test@culqi.com",
-                                    "installments" => 0,
-                                    "antifraud_details" => [
-                                        "address" => "Av. Lima 123",
-                                        "address_city" => "LIMA",
-                                        "country_code" => "PE",
-                                        "first_name" => "Will",
-                                        "last_name" => "Muro",
-                                        "phone_number" => "9889678986",
-                                    ],
-                                ];
-
-                                $PaymentHistory = payment::paymentHistoryStore($data);
-
-                                $data = [
-                                    'sale_id'        => $saleUpdate->id,
-                                    'description'    => $ticket->promotion->name,
-                                    'payment_method' => 'Card',
-                                    'total_paid'     => $ticket->promotion->price,
-                                    'response'       => 'Pago exitoso',
-                                    'code_response'  => 200,
-                                    'status'         => $saleUpdate->status
-                                ];
-                                $PaymentHistory = PaymentController::paymentHistoryStore($data);
-                            }
-                        }
-                    }
-                }
-                DB::commit();
-                return response()->json([$SaleTickets], 200);
-            }
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -261,7 +221,8 @@ class SaleController extends Controller
         if ($ticket) {
             $user = isset($data->user_id) ? User::find($data->user_id) : null;
             $sale = new Sale();
-            $sale->name       =   $user ? $user->name :  $data->name;
+            $fullnames        =   $user->names . ' ' . $user->surnames;
+            $sale->name       =   $fullnames;
             $sale->dni        =   $user ? $user->dni :  $data->dni;
             $sale->phone      =   $user ? $user->phone :  $data->phone;
             $sale->email      =   $user ? $user->email :  $data->email;

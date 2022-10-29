@@ -71,7 +71,7 @@ class BalanceController extends Controller
 
             $balanceHitory = BalanceHistory::insert($data);
 
-            if ($balanceHitory) {
+            if ($balanceHitory && $type == 'credit') {
                 $user               =  User::find($data['user_id']);
                 $user->balance_jib  =  $data['balance'];
                 $user->save();

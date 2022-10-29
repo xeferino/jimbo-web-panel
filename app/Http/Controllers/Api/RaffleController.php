@@ -220,7 +220,33 @@ class RaffleController extends Controller
                     ]
                 ]);
             }
-            return response()->json($data, 200);
+            return response()->json([
+                'raflle' => [
+                    'id'            => $ticket->raffle->id,
+                    'title'         => $ticket->raffle->title,
+                    'description'   => $ticket->raffle->description,
+                    'brand'         => $ticket->raffle->brand,
+                    'promoter'      => $ticket->raffle->promoter,
+                    'place'         => $ticket->raffle->place,
+                    'provider'      => $ticket->raffle->provider,
+                    'cash_to_draw'  => Helper::amount($ticket->raffle->cash_to_draw),
+                    'logo'          => $ticket->raffle->image != 'raffle.jpg' ? $this->asset.$ticket->raffle->image : $this->asset.'raffle.jpg',
+                    'date_start'    => $ticket->raffle->date_start->format('d/m/Y'),
+                    'date_end'      => $ticket->raffle->date_end->format('d/m/Y'),
+                    'date_release'  => $ticket->raffle->date_release->format('d/m/Y'),
+                    'days_extend'   => $ticket->raffle->days_extend != null ? $ticket->raffle->days_extend : 'No hay dias de prorroga',
+                    'active'        => $ticket->raffle->active,
+                    'public'        => $ticket->raffle->public,
+                    'type'          => ($ticket->raffle->type == 'raffle') ? 'Sorteo' : 'Producto',
+                    'promotion' => [
+                        'id'        => $ticket->promotion->id,
+                        'name'      => $ticket->promotion->name,
+                        'code'      => $ticket->promotion->code,
+                        'price'     =>Helper::amount($ticket->promotion->price),
+                        'quantity'  => $ticket->promotion->quantity,
+                    ],
+                ]
+            ], 200);
         } catch (Exception $e) {
 
             return response()->json([

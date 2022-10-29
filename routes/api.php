@@ -67,6 +67,8 @@ Route::middleware('auth:sanctum')->group(function () {
     //payments
     Route::get('/payment/{user}', [PaymentController::class, 'paymentHistory']);
     Route::post('/payment/detail', [PaymentController::class, 'paymentDetail']);
+    Route::get('/payment/methods/all', [PaymentController::class, 'paymentMethod']);
+
     //sales
     Route::post('/sales/payment', [SaleController::class, 'saleTicketCard']);
     //shoppings

@@ -14,11 +14,13 @@ use App\Http\Requests\Api\FormRequestProfile;
 use App\Http\Requests\Api\FormRequestForgot;
 use App\Http\Requests\Api\FormRequestRecoveryPassword;
 use App\Http\Requests\Api\FormRequestVerifiedEmail;
+use App\Services\CulqiService as Culqi;
 use App\Mail\RecoveryPassword;
 use App\Mail\VerifiedEmail;
 use App\Mail\RegisterUser;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
+use App\Models\Customer;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -149,7 +151,6 @@ class AuthController extends Controller
             ];
 
             Mail::to($user->email)->send(new RegisterUser($data));
-            Mail::to($user->email)->send(new VerifiedEmail($data));
 
             $accessToken = $user->createToken('AuthToken')->plainTextToken;
             $user = User::find($user->id);
@@ -279,7 +280,40 @@ class AuthController extends Controller
                 $user->image = $imageName;
             }
 
+            $data =    [
+                "address"       => $request->address,
+                "address_city"  => $request->address_city,
+                "country_code"  => $user->country->iso,
+                "email"         => $request->email,
+                "first_name"    => $request->names,
+                "last_name"     => $request->surnames,
+                "metadata"      => [
+                    "DNI"  => $request->dni
+                ],
+                "phone_number" => $request->phone
+            ];
+
+            $culqi = new Culqi();
+            $customer =  $culqi->customer($data);
+            $object = $customer->object ?? 'error';
+            $culqi_customer_id = null;
+            if($object =='customer') {
+                $culqi_customer_id = $customer->id;
+            } else {
+                $customer = json_decode($customer, true);
+                return response()->json([
+                    'error'     => true,
+                    'type'      => $customer['type'],
+                    'message'   =>  $customer['merchant_message']]);
+            }
+
             if ($user->save()) {
+                if($culqi_customer_id) {
+                    $customer =  Customer::updateOrCreate(
+                        ['culqi_customer_id' => $culqi_customer_id, 'user_id' => $user->id],
+                    );
+                }
+
                 return response()->json([
                     'profile'    => [
                         'id'           => $user->id,

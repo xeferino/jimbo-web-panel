@@ -28,4 +28,15 @@ class Helper
         return sprintf("%.2f%%", $value);
 	}
 
+     /**
+     * Return jib formated
+     *
+     * @param float $jib
+     * @return string
+     */
+    public static function jib($value)
+	{
+        return $value.' jib';
+	}
+
 }

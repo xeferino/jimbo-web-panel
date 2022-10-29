@@ -136,7 +136,7 @@
   <table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="23308eb9-3685-43e8-9470-799f5caf5f3f" data-mc-module-version="2019-10-22">
     <tbody>
       <tr>
-        <td style="padding:18px 0px 15px 0px; line-height:20px; text-align:inherit; background-color:#FFFFFF;" height="100%" valign="top" bgcolor="#FFFFFF" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 26px; color: #3f4096"><strong>¡Hola, {{ $data['user']['email'] }}!</strong></span></div><div></div></div></td>
+        <td style="padding:18px 0px 15px 0px; line-height:20px; text-align:inherit; background-color:#FFFFFF;" height="100%" valign="top" bgcolor="#FFFFFF" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 26$data['user']['names']px; color: #3f4096"><strong>¡Hola, {{ $data['user']['names'] .' '. $data['user']['surnames'] }}!</strong></span></div><div></div></div></td>
       </tr>
     </tbody>
   </table><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="c2fe3d16-e9c1-4492-a90e-70be0f0c31cb" data-mc-module-version="2019-10-22">

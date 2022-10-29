@@ -21,9 +21,9 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('description')->nullable();
             $table->string('payment_method')->nullable();
-            $table->float('total_paid', 10,2)->nullable();
+            $table->string('total_paid')->nullable();
             $table->text('response')->nullable();
-            $table->string('code_response', 50)->nullable();
+            $table->text('code_response')->nullable();
             $table->enum('status',['approved','refused'])->nullable();
             $table->timestamps();
         });

@@ -24,9 +24,7 @@ class FormCardRequest extends FormRequest
     public function rules()
     {
         return [
-            'bank'              => 'required|min:3',
             'number'            => isset($this->card->id) ? 'required|numeric|digits_between:6,20|unique:card_users,number,'.$this->card->id : 'required|numeric|digits_between:6,20|unique:card_users,number',
-            'type'              => 'required|min:3',
             'code'              => 'required|min:3',
             'date_expire'       => 'required|date_format:m/y',
             'user_id'           => 'required|integer',

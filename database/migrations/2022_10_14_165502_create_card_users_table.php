@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('culqi_token_id')->nullable();
             $table->string('culqi_customer_id')->nullable();
             $table->boolean('default')->default(1);
+            $table->string('icon')->nullable();
             $table->foreignId('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
