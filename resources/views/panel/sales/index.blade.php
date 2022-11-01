@@ -9,23 +9,25 @@
     <!-- Hover table card start -->
     <div class="card">
         <div class="card-header">
-            <h5>Tabla de Vendedores</h5>
-            @can('create-seller')
+            <h5>Tabla de ventas</h5>
+            @can('create-sale')
                 <div class="card-header-right">
-                    <a href="{{ route('panel.sellers.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nuevo Vendedor"><i class="ti-plus"></i></a>
+                    <a href="{{ route('panel.sales.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nueva Venta"><i class="ti-plus"></i></a>
                 </div>
             @endcan
         </div>
         <div class="card-block table-border-style">
             <div class="table-responsive">
-                <table class="table table-hover table-seller">
+                <table class="table table-hover table-sale">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Imagen</th>
-                            <th>Nombres y Apellidos</th>
-                            <th>Role</th>
-                            <th>Email</th>
+                            <th>Numero de operacion</th>
+                            <th>Refencia de culqi</th>
+                            <th>Monto</th>
+                            <th>Sorteo</th>
+                            <th>Cantidad de ticket</th>
+                            <th>Promocion</th>
                             <th>Estatus</th>
                             <th>Acciones</th>
                         </tr>
@@ -39,5 +41,5 @@
     <!-- Hover table card end -->
 @endsection
 @section('script-content')
-<script src="{{ asset('assets/js/jimbo/sellers.js') }}"></script>
+<script src="{{ asset('assets/js/jimbo/sales.js') }}"></script>
 @endsection

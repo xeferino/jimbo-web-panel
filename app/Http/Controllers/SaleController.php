@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use DataTables;
-use App\Models\User as Seller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\FormUserEditRequest;
-use App\Http\Requests\FormUserCreateRequest;
 use App\Models\Country;
 use App\Models\Sale;
 use Illuminate\Support\Facades\File;
@@ -37,59 +35,47 @@ class SaleController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $seller = Seller::select('id',  'image', 'name AS fullname', 'email', 'active')->whereHas("roles", function ($q) {
-                        $q->whereIn('name', ['seller']);
-                    })->whereNull('deleted_at')->get();
-            return Datatables::of($seller)
+            $sale = Sale::select('id',  'number', 'number_culqi', 'amount', 'quantity', 'status')->get();
+            return Datatables::of($sale)
                     ->addIndexColumn()
-                    ->addColumn('action', function($seller){
+                    ->addColumn('action', function($sale){
                            $btn = '';
-                        if(auth()->user()->can('edit-seller')){
 
-                            $btn .= '<a href="'.route('panel.sales.edit',['seller' => $seller->id]).'" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$seller->id.'" id="edit_'.$seller->id.'" class="btn btn-warning btn-sm mr-1 editSeller">
-                                            <i class="ti-pencil"></i>
-                                    </a>';
-                        }
-                        if(auth()->user()->can('detail-seller')){
-                            $btn .= '<a href="'.route('panel.sales.detail',['seller' => $seller->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$seller->id.'" id="det_'.$seller->id.'" class="btn btn-info btn-sm  mr-1 detailSeller">
-                                        <i class="ti-search"></i>
-                                    </a>';
-                        }
-                        if(auth()->user()->can('delete-seller')){
-                            $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="right" title="Eliminar"  data-url="'.route('panel.sales.destroy',['seller' => $seller->id]).'" class="btn btn-danger btn-sm deleteSeller">
-                                            <i class="ti-trash"></i>
+                        if(auth()->user()->can('detail-sale')){
+                            $btn .= '<a href="'.route('panel.sales.show',['sale' => $sale->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$sale->id.'" id="det_'.$sale->id.'" class="btn btn-info btn-sm  mr-1 detailSale">
+                                        <i class="ti-eye"></i>
                                     </a>';
                         }
                         return $btn;
                     })
-                    ->addColumn('active', function($seller){
+                    ->addColumn('status', function($sale){
                         $btn = '';
-                        if($seller->active==1){
-                            $btn .= '<span class="badge badge-success" title="Activo"><i class="ti-check"></i></span>';
-                        }else{
-                            $btn .= '<span class="badge badge-danger" title="Inactivo"><i class="ti-close"></i></span>';
+                        if($sale->status=='approved'){
+                            $btn .= '<span class="badge badge-success" title="Aprobada">Aprobada</span>';
+                        }elseif($sale->status=='refused'){
+                            $btn .= '<span class="badge badge-danger" title="Rechazada">Rechazada</span>';
+                        } else{
+                            $btn .= '<span class="badge badge-warning" title="Pendiente">Pendiente</span>';
                         }
                         return $btn;
                     })
-                    ->addColumn('image', function($seller){
-                        $img = $seller->image != 'avatar.svg' ? asset('assets/images/sellers/'.$seller->image): asset('assets/images/avatar.svg');
-                        return '<img src="'.$img.'" class="img-50 img-radius" alt="User-Profile-Image">';
+                    ->addColumn('raffle', function($sale){
+                        return $sale->raffle->title;
                     })
-                    ->addColumn('role', function($seller){
-                        $btn = '';
-                        $seller = Seller::find($seller->id);
-                        $btn .= '<span class="badge badge-inverse">'.$seller->getRoleNames()->join('').'</span>';
-                        return   $btn;
+                    ->addColumn('ticket', function($sale){
+                        return   $sale->ticket->promotion->name;
+                    })->addColumn('amount', function($sale){
+                        return   Helper::amount($sale->amount);
                     })
-                    ->rawColumns(['action','active', 'role', 'image'])
+                    ->rawColumns(['action','status', 'raffle', 'ticket', 'amount'])
                     ->make(true);
         }
         return view('panel.sales.index', [
-            'title'              => 'Vendedores',
-            'title_header'       => 'Listado de vendedores',
-            'description_module' => 'Informacion de los vendedores que se encuentran en el sistema.',
+            'title'              => 'Ventas',
+            'title_header'       => 'Listado de Ventas',
+            'description_module' => 'Informacion de las ventas que se encuentran en el sistema.',
             'title_nav'          => 'Listado',
-            'icon'               => 'icofont-users'
+            'icon'               => 'icofont icofont-bars'
         ]);
     }
 
@@ -106,7 +92,7 @@ class SaleController extends Controller
             'description_module' => 'Registrar nuevos vendedores en el sistema.',
             'title_nav'          => 'Registrar',
             'icon'               => 'icofont-users',
-            'roles'              => Role::whereIn('name', ['seller'])->get(),
+            'roles'              => Role::whereIn('name', ['sale'])->get(),
             'countries'          => Country::where('active', 1)->whereNull('deleted_at')->get()
         ]);
     }
@@ -117,57 +103,32 @@ class SaleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(FormUserCreateRequest $request, Seller $seller)
+    public function store(Request $request, Sale $sale)
     {
-        $seller                   = new Seller();
-        $seller->name             = $request->name;
-        $seller->email            = $request->email;
-        $seller->dni              = $request->dni;
-        $seller->phone            = $request->phone;
-        $seller->balance_jib      = $request->balance_jib;
-        $seller->country_id       = $request->country_id;
-        $seller->active           = $request->active;
-        $seller->password         = Hash::make($request->password);
+        $sale                   = new Sale();
+        $sale->name             = $request->name;
+        $sale->email            = $request->email;
+        $sale->dni              = $request->dni;
+        $sale->phone            = $request->phone;
+        $sale->balance_jib      = $request->balance_jib;
+        $sale->country_id       = $request->country_id;
+        $sale->active           = $request->active;
+        $sale->password         = Hash::make($request->password);
 
         if($request->file('image')){
             $file           = $request->file('image');
             $extension      = $file->getClientOriginalExtension();
             $fileName       = time().uniqid() . '.' . $extension;
-            $seller->image      = $fileName;
-            $file->move(public_path('assets/images/sellers/'), $fileName);
+            $sale->image      = $fileName;
+            $file->move(public_path('assets/images/sales/'), $fileName);
         }else{
-            $seller->image = 'avatar.svg';
+            $sale->image = 'avatar.svg';
         }
 
-        $saved = $seller->save();
+        $saved = $sale->save();
         if($saved)
-        $seller->assignRole($request->role);
+        $sale->assignRole($request->role);
             return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Vendedor registrado exitosamente.'], 200);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $id = Auth::user()->id;
-        $sellerRole = DB::table('model_has_roles')->select('role_id')->where('model_id',  $id)->pluck('role_id')->toArray();
-        return view('panel.sales.show', ['title' => 'Vendedores - Perfil', 'seller' => User::find($id), 'sellerRole' => $sellerRole, 'roles' => Role::all(), 'permissions' => User::findOrFail($id)->getAllPermissions()]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function detail($id)
-    {
-        $sellerRole = DB::table('model_has_roles')->select('role_id')->where('model_id',  $id)->pluck('role_id')->toArray();
-        return view('panel.sales.detail', ['title' => 'Vendedores - Detalle', 'seller' => User::find($id), 'sellerRole' => $sellerRole, 'roles' => Role::all(), 'permissions' => User::findOrFail($id)->getAllPermissions()]);
     }
 
     /**
@@ -178,16 +139,16 @@ class SaleController extends Controller
      */
     public function edit($id)
     {
-        $sellerRole = DB::table('model_has_roles')->select('role_id')->where('model_id',  $id)->pluck('role_id')->toArray();
+        $saleRole = DB::table('model_has_roles')->select('role_id')->where('model_id',  $id)->pluck('role_id')->toArray();
         return view('panel.sales.edit', [
             'title'              => 'Vendedores',
             'title_header'       => 'Editar vendedores',
             'description_module' => 'Actualice la informacion del usuario en el formulario de Edicion.',
             'title_nav'          => 'Editar',
             'icon'               => 'icofont-users',
-            'seller'             => Seller::find($id),
-            'sellerRole'         => $sellerRole,
-            'roles'              => Role::whereIn('name', ['seller'])->get(),
+            'sale'             => Sale::find($id),
+            'saleRole'         => $saleRole,
+            'roles'              => Role::whereIn('name', ['sale'])->get(),
             'countries'          => Country::where('active', 1)->whereNull('deleted_at')->get()
         ]);
     }
@@ -199,36 +160,36 @@ class SaleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(FormUserEditRequest $request, Seller $seller)
+    public function update(FormUserEditRequest $request, Sale $sale)
     {
-        $seller                   = Seller::find($seller->id);
-        $seller->name             = $request->name;
-        $seller->email            = $request->email;
-        $seller->dni              = $request->dni;
-        $seller->phone            = $request->phone;
-        $seller->balance_jib      = $request->balance_jib;
-        $seller->country_id       = $request->country_id;
-        $seller->active           = $request->active==1 ? 1 : 0;
+        $sale                   = Sale::find($sale->id);
+        $sale->name             = $request->name;
+        $sale->email            = $request->email;
+        $sale->dni              = $request->dni;
+        $sale->phone            = $request->phone;
+        $sale->balance_jib      = $request->balance_jib;
+        $sale->country_id       = $request->country_id;
+        $sale->active           = $request->active==1 ? 1 : 0;
         if($request->password){
-            $seller->password     = Hash::make($request->password);
+            $sale->password     = Hash::make($request->password);
         }
 
         if($request->file('image')){
-            if ($seller->image != "avatar.svg") {
-                if (File::exists(public_path('assets/images/sellers/' . $seller->image))) {
-                    File::delete(public_path('assets/images/sellers/' . $seller->image));
+            if ($sale->image != "avatar.svg") {
+                if (File::exists(public_path('assets/images/sales/' . $sale->image))) {
+                    File::delete(public_path('assets/images/sales/' . $sale->image));
                 }
             }
 
             $file           = $request->file('image');
             $extension      = $file->getClientOriginalExtension();
             $fileName       = time() . '.' . $extension;
-            $seller->image      = $fileName;
-            $file->move(public_path('assets/images/sellers/'), $fileName);
+            $sale->image      = $fileName;
+            $file->move(public_path('assets/images/sales/'), $fileName);
         }
-        $saved = $seller->save();
+        $saved = $sale->save();
         if($saved)
-            $seller->syncRoles($request->role);
+            $sale->syncRoles($request->role);
             return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Vendedor actualizado exitosamente.'], 200);
     }
 
@@ -241,13 +202,13 @@ class SaleController extends Controller
     public function destroy($id)
     {
         if(\Request::wantsJson()){
-            $seller = Seller::findOrFail($id);
-            /* if ($seller->image != "avatar.svg") {
-                if (File::exists(public_path('assets/images/sellers/' . $seller->image))) {
-                    File::delete(public_path('assets/images/sellers/' . $seller->image));
+            $sale = Sale::findOrFail($id);
+            /* if ($sale->image != "avatar.svg") {
+                if (File::exists(public_path('assets/images/sales/' . $sale->image))) {
+                    File::delete(public_path('assets/images/sales/' . $sale->image));
                 }
             } */
-            $delete = $seller->delete();
+            $delete = $sale->delete();
             if ($delete) {
                 return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Vendedor eliminado exitosamente.'], 200);
             } else {

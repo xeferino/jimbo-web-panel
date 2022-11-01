@@ -75,6 +75,12 @@ class UserSeeder extends Seeder
         Permission::create(['name' => 'show-slider', 'description' => 'listado y detalle de sliders de sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
         Permission::create(['name' => 'delete-slider', 'description' => 'Eliminar de sliders de sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
 
+         //permissions sales
+         Permission::create(['name' => 'create-sale', 'description' => 'Crear ventas de sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
+         Permission::create(['name' => 'edit-sale', 'description' => 'Editar ventas de sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
+         Permission::create(['name' => 'show-sale', 'description' => 'listado y detalle de ventas de sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
+         Permission::create(['name' => 'delete-sale', 'description' => 'Eliminar de ventas de sorteos en el sistema'])->syncRoles([$super_admin, $administrator]);
+
         //permissions menu
         Permission::create(['name' => 'setting-menu', 'description' => 'menu de configuracion en el sistema'])->syncRoles([$super_admin]);
         Permission::create(['name' => 'user-menu', 'description' => 'menu de configuracion de usuarios en el sistema'])->syncRoles([$super_admin]);

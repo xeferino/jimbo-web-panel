@@ -65,6 +65,7 @@ class SaleController extends Controller
                                 $ticket->total = $ticket->total-$ticket->promotion->quantity;
                                 $ticket->save();
                                 $saleUpdate->status = $status;
+                                $saleUpdate->number_culqi = $reference_code;
                                 $saleUpdate->save();
                                 TicketUser::insert($tickets);
 
@@ -75,7 +76,7 @@ class SaleController extends Controller
                                     'tickets'           => $saleUpdate->TicketsUsers,
                                     'quantity'          => $ticket->promotion->quantity,
                                     'number_operation'  => $saleUpdate->number,
-                                    'amount'            => $ticket->promotion->price,
+                                    'amount'            => Helper::amount($ticket->promotion->price),
                                     "description"       => 'Compra '.$ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
                                     'raffle'            => $ticket->raffle->title,
                                     'type'              => 'card'

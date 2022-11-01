@@ -24,6 +24,7 @@ return new class extends Migration
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('set null');
             $table->float('amount',10,2)->nullable();
             $table->string('number')->nullable();
+            $table->string('number_culqi')->nullable();
             $table->integer('quantity')->nullable();
             $table->foreignId('ticket_id')->nullable();
             $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('set null');
