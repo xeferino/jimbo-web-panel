@@ -129,10 +129,10 @@
             @can('setting-menu')
                 <div class="pcoded-navigatio-lavel" data-i18n="nav.category.navigation">Configuraciones</div>
                 @can('rewards-bonuses-menu')
-                    <li class="">
-                        <a href="">
+                    <li class="{{(\Request::segment(2)=='settings')?'active':''}}">
+                        <a href="{{route('panel.settings.index')}}">
                             <span class="pcoded-micon"><i class="icofont icofont-money-bag"></i><b>RB</b></span>
-                            <span class="pcoded-mtext" data-i18n="nav.form-components.main">Recompensas y Bonos</span>
+                            <span class="pcoded-mtext" data-i18n="nav.form-components.main">Jibs, Recompensas y Bonos</span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>

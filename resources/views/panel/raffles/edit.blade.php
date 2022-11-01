@@ -94,7 +94,7 @@
                     <div class="col-sm-6">
                         <label class="col-form-label">Premio en Efectivo</label>
                         <div class="input-group">
-                            <input type="number" min="1" name="cash_to_draw" id="cash_to_draw" value="{{$raffle->cash_to_draw}}" class="form-control">
+                            <input type="number" min="1" name="cash_to_draw" id="cash_to_draw" value="{{intval($raffle->cash_to_draw)}}" class="form-control">
                             <span class="input-group-addon" id="cash_to_draw"><i class="icofont icofont-bill-alt"></i></span>
                         </div>
                         <div class="col-form-label has-danger-cash_to_draw"></div>
@@ -103,7 +103,7 @@
                     <div class="col-sm-6">
                         <label class="col-form-label">Dinero a recolectar</label>
                         <div class="input-group">
-                            <input type="number" min="1" name="cash_to_collect" id="cash_to_collect" value="{{$raffle->cash_to_collect}}" class="form-control">
+                            <input type="number" min="1" name="cash_to_collect" id="cash_to_collect" value="{{intval($raffle->cash_to_collect)}}" class="form-control">
                             <span class="input-group-addon" id="cash_to_collect"><i class="icofont icofont-bill-alt"></i></span>
                         </div>
                         <div class="col-form-label has-danger-cash_to_collect"></div>

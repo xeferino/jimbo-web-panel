@@ -14,11 +14,11 @@
                 </div>
                 <div class="card-block text-center">
                     <div class="row">
-                        <div class="col-sm-3 b-r-default">
+                        <div class="col-sm-4 b-r-default">
                             <h2>{{Helper::amount($raffle->cash_to_draw)}}</h2>
                             <p class="text-muted">Premio Mayor</p>
                         </div>
-                        <div class="col-sm-3 b-r-default">
+                        <div class="col-sm-4 b-r-default">
                             @php
                                 $amount = ((($raffle->cash_to_draw*$raffle->prize_1)/100) +
                                           (($raffle->cash_to_draw*$raffle->prize_2)/100) +
@@ -30,16 +30,34 @@
                                           (($raffle->cash_to_draw*$raffle->prize_8)/100) +
                                           (($raffle->cash_to_draw*$raffle->prize_9)/100) +
                                           (($raffle->cash_to_draw*$raffle->prize_10)/100));
-                                $percent = (($raffle->totalSale->sum('amount')*100)/($raffle->cash_to_collect-$amount))
+                                $percent = (($raffle->totalSale->sum('amount')*100)/($raffle->cash_to_collect-$amount));
+
+                                $i = 1;
+                                $total = 0;
                             @endphp
+                            @foreach ($raffle->tickets as $data)
+                                @php
+                                    $total+=($data->quantity/$data->promotion->quantity)*$data->promotion->price;
+                                @endphp
+                            @endforeach
                             <h2>{{Helper::amount($amount)}}</h2>
                             <p class="text-muted">Dinero de premiaciones</p>
                         </div>
-                        <div class="col-sm-3 b-r-default">
+                        <div class="col-sm-4">
                             <h2>{{Helper::amount($raffle->cash_to_collect-$amount)}}</h2>
                             <p class="text-muted">Dinero total a recaudar</p>
                         </div>
-                        <div class="col-sm-3">
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-4 b-r-default">
+                            <h2>{{Helper::amount($total)}}</h2>
+                            <p class="text-muted">Total boleteria</p>
+                        </div>
+                        <div class="col-sm-4 b-r-default">
+                            <h2>{{Helper::amount(($total - ($raffle->cash_to_collect-$amount))-$amount)}}</h2>
+                            <p class="text-muted">Sobrande recaudado - boleteria</p>
+                        </div>
+                        <div class="col-sm-4">
                             <h2>{{ $percent == 100 ?  Helper::percent(100) : Helper::percent($percent) }}</h2>
                             <p class="text-muted">Porcentaje de recaudacion</p>
                         </div>
@@ -330,6 +348,7 @@
                             <tbody>
                                 @php
                                     $i = 1;
+                                    $total = 0;
                                 @endphp
                                 @foreach ($raffle->tickets as $data)
                                     <tr>
@@ -341,7 +360,19 @@
                                         <td>{{$data->total}}</td>
                                         <td>{{$data->quantity}}</td>
                                     </tr>
+                                    @php
+                                        $total+=($data->quantity/$data->promotion->quantity)*$data->promotion->price;
+                                    @endphp
                                 @endforeach
+                                <tr>
+                                    <td align="right" colspan="6">
+                                        <p><h5><strong>Total dinero de boleteria</strong></h5></p>
+                                    </td>
+                                    <td>
+                                        <p id="total"><h5><strong>{{ Helper::amount($total) }}</strong></h5></p>
+                                        <input type="hidden" name="total_tickets" id="total_tickets" value="{{ Helper::amount($total) }}">
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

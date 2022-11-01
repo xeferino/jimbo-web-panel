@@ -39,7 +39,7 @@ class SaleController extends Controller
                         $user = isset($request->user_id) ? User::find($request->user_id) : null;
                         $status  = 'refused';
                         $reference_code = null;
-
+                        $amout_jib = 0;
                         if($request->method_type == 'card') {
                             //id de la tarjeta a pagar
                             $cardUser = Card::find($request->method_id);

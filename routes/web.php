@@ -11,6 +11,7 @@ use App\Http\Controllers\RaffleController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SettingController;
 
 
 /*
@@ -45,6 +46,8 @@ Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     Route::resource('promotions', PromotionController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('sliders', SliderController::class);
+    Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
 
     Route::prefix('ajax')->name('ajax.')->middleware('auth')->group(function () {
         Route::post('raffles/promotions', [RaffleController::class, 'promotions'])->name('raffle.promotions');

@@ -97,7 +97,7 @@ class CardController extends Controller
             if($object == 'card') {
                 $cardUser                       = new Card();
                 $cardUser->number               = $card->source->card_number;
-                $cardUser->type                 = $card->source->iin->card_type;
+                $cardUser->type                 = 'card';//$card->source->iin->card_type;
                 $cardUser->brand                = $card->source->iin->card_brand;
                 $cardUser->culqi_card_id        = $card->id;
                 $cardUser->culqi_token_id       = $card->source->id;
