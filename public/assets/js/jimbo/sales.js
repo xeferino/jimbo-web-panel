@@ -52,6 +52,7 @@ $(function () {
             {data: 'number', name: 'number'},
             {data: 'number_culqi', name: 'number_culqi'},
             {data: 'amount', name: 'amount'},
+            {data: 'method', name: 'method'},
             {data: 'raffle', name: 'raffle'},
             {data: 'quantity', name: 'quantity'},
             {data: 'ticket', name: 'ticket'},

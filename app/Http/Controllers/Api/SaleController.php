@@ -66,6 +66,7 @@ class SaleController extends Controller
                                 $ticket->save();
                                 $saleUpdate->status = $status;
                                 $saleUpdate->number_culqi = $reference_code;
+                                $saleUpdate->method = 'card';
                                 $saleUpdate->save();
                                 TicketUser::insert($tickets);
 
@@ -125,6 +126,7 @@ class SaleController extends Controller
                             $reference_code = substr(sha1(time()), 0, 6);
                             $status = 'approved';
                             $ticket->total = $ticket->total-$ticket->promotion->quantity;
+                            $saleUpdate->method = 'jib';
                             $ticket->save();
                             $saleUpdate->status = $status;
                             $saleUpdate->save();

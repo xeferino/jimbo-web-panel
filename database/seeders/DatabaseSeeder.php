@@ -7,7 +7,8 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\CountrySeeder;
 use Database\Seeders\LevelSeeder;
-use Database\Seeders\SettingSeeder;
+use Database\Seeders\PromotionSeeder;
+
 
 class DatabaseSeeder extends Seeder
 {

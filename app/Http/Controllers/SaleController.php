@@ -35,7 +35,19 @@ class SaleController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $sale = Sale::select('id',  'number', 'number_culqi', 'amount', 'quantity', 'status')->get();
+            $sale = Sale::select(
+                'id',
+                'number',
+                'number_culqi',
+                'amount',
+                'quantity',
+                'status',
+                DB::raw('(CASE
+                            WHEN method = "card" THEN "Tarjeta"
+                            WHEN method = "jib" THEN "Jibs"
+                            ELSE "Otro"
+                            END) AS method')
+                )->get();
             return Datatables::of($sale)
                     ->addIndexColumn()
                     ->addColumn('action', function($sale){
@@ -60,9 +72,11 @@ class SaleController extends Controller
                         return $btn;
                     })
                     ->addColumn('raffle', function($sale){
+                        $sale = Sale::find($sale->id);
                         return $sale->raffle->title;
                     })
                     ->addColumn('ticket', function($sale){
+                        $sale = Sale::find($sale->id);
                         return   $sale->ticket->promotion->name;
                     })->addColumn('amount', function($sale){
                         return   Helper::amount($sale->amount);
@@ -70,6 +84,7 @@ class SaleController extends Controller
                     ->rawColumns(['action','status', 'raffle', 'ticket', 'amount'])
                     ->make(true);
         }
+
         return view('panel.sales.index', [
             'title'              => 'Ventas',
             'title_header'       => 'Listado de Ventas',

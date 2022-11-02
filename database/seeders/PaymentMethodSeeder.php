@@ -26,12 +26,6 @@ class PaymentMethodSeeder extends Seeder
             'valid'    => 0,
             'icon'     => 'yape.jpeg',
             'type'     => 'yape',
-        ],
-        [
-            'name'     => 'card',
-            'valid'    => 1,
-            'icon'     => 'card.jpeg',
-            'type'     => 'card',
         ]
     ];
 

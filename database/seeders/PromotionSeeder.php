@@ -77,7 +77,7 @@ class PromotionSeeder extends Seeder
             'active'     => 1,
             'created_at' => now(),
             'deleted_at' => now(),
-        ],
+        ]
     ];
 
     /**

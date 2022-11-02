@@ -25,6 +25,7 @@
                             <th>Numero de operacion</th>
                             <th>Refencia de culqi</th>
                             <th>Monto</th>
+                            <th>Metodo</th>
                             <th>Sorteo</th>
                             <th>Cantidad de ticket</th>
                             <th>Promocion</th>
