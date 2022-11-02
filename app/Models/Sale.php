@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Sale extends Model
 {
@@ -21,8 +22,32 @@ class Sale extends Model
         return $this->belongsTo('App\Models\Ticket');
     }
 
+    public function User()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
+
+    public function Seller()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
+
     public function TicketsUsers()
     {
         return $this->hasMany('App\Models\TicketUser', 'sale_id', 'id');
     }
+
+    /* public function getCreatedAtAttribute($value):void
+    {
+        $this->attributes['created_at'] = Carbon::createFromFormat('Y-m-d  H:i:s',$value)->format('d/m/Y H:i:s');
+    } */
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    /* protected $casts = [
+        'created_at'    => 'datetime:d/m/Y H:i:s',
+    ]; */
 }

@@ -34,6 +34,7 @@ class User extends Authenticatable
         'address_city',
         'password',
         'active',
+        'country_id',
         'image',
         'code',
         'balance_usd',

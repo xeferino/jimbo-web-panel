@@ -46,8 +46,8 @@
             @endcan
 
             @can('egress-menu')
-                <li class="">
-                    <a href="">
+                <li class="{{(\Request::segment(2)=='egress')?'active':''}}">
+                    <a href="{{route('panel.egress.index')}}">
                         <span class="pcoded-micon"><i class="icofont icofont-money"></i><b>EG</b></span>
                         <span class="pcoded-mtext" data-i18n="nav.form-components.main">Egresos</span>
                         <span class="pcoded-mcaret"></span>
@@ -96,8 +96,8 @@
             @endcan
 
             @can('withdrawal-menu')
-                <li class="">
-                    <a href="">
+                <li class="{{(\Request::segment(2)=='cash-request')?'active':''}}">
+                    <a href="{{route('panel.cash.request')}}">
                         <span class="pcoded-micon"><i class="icofont icofont-bill-alt"></i><b>SL</b></span>
                         <span class="pcoded-mtext" data-i18n="nav.form-components.main">Solicitudes de Retiros</span>
                         <span class="pcoded-mcaret"></span>

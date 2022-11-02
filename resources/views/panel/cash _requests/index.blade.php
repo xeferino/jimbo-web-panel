@@ -9,27 +9,19 @@
     <!-- Hover table card start -->
     <div class="card">
         <div class="card-header">
-            <h5>Tabla de ventas</h5>
-            @can('create-sale')
-                <div class="card-header-right">
-                    <a href="{{ route('panel.sales.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nueva Venta"><i class="ti-plus"></i></a>
-                </div>
-            @endcan
+            <h5>Tabla de solicitudes de efectivo</h5>
         </div>
         <div class="card-block table-border-style">
             <div class="table-responsive">
-                <table class="table table-hover table-sale">
+                <table class="table table-hover table-cash">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Numero de operacion</th>
-                            <th>Refencia de culqi</th>
                             <th>Monto</th>
-                            <th>Metodo</th>
-                            <th>Sorteo</th>
-                            <th>Cantidad de ticket</th>
-                            <th>Promocion</th>
                             <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Referencia</th>
+                            <th>Usuario</th>
                             <th>Estatus</th>
                             <th>Acciones</th>
                         </tr>
@@ -43,5 +35,5 @@
     <!-- Hover table card end -->
 @endsection
 @section('script-content')
-<script src="{{ asset('assets/js/jimbo/sales.js') }}"></script>
+<script src="{{ asset('assets/js/jimbo/cash_requests.js') }}"></script>
 @endsection

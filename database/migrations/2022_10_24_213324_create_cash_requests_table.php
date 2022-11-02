@@ -21,9 +21,11 @@ return new class extends Migration
             $table->time('hour')->nullable();
             $table->string('reference')->nullable();
             $table->string('description')->nullable();
-            $table->enum('status',['approved', 'refuse', 'pending', 'return', 'created']);
+            $table->enum('status',['approved', 'refused', 'pending', 'return', 'created']);
             $table->foreignId('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('account_user_id')->nullable();
+            $table->foreign('account_user_id')->references('id')->on('account_users')->onDelete('cascade');
             $table->timestamps();
         });
     }

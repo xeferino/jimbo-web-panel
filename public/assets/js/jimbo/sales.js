@@ -56,6 +56,7 @@ $(function () {
             {data: 'raffle', name: 'raffle'},
             {data: 'quantity', name: 'quantity'},
             {data: 'ticket', name: 'ticket'},
+            {data: 'date', name: 'date'},
             {data: 'status', name: 'status'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]

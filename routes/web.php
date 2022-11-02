@@ -12,6 +12,10 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\CashRequestController;
+use App\Http\Controllers\EgressController;
+
+
 
 
 /*
@@ -31,15 +35,17 @@ Route::get('/', function () {
     return redirect('login');
 });
 
-/* Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard'); */
-
 Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
     Route::resource('sellers', SellerController::class);
     Route::resource('sales', SaleController::class);
+    Route::get('cash-request', [CashRequestController::class, 'index'])->name('cash.request');
+    Route::get('cash-request/{id}', [CashRequestController::class, 'show'])->name('cash.request.show');
+    Route::get('egress', [EgressController::class, 'index'])->name('egress.index');
+    Route::get('egress/cash', [EgressController::class, 'cash'])->name('egress.cash');
+    Route::get('egress/jib', [EgressController::class, 'jib'])->name('egress.jib');
+    Route::get('egress/{id}', [EgressController::class, 'show'])->name('egress.show');
     Route::resource('competitors', CompetitorController::class);
     Route::resource('countries', CountryController::class);
     Route::resource('raffles', RaffleController::class);

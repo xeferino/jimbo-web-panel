@@ -42,6 +42,7 @@ class SaleController extends Controller
                 'amount',
                 'quantity',
                 'status',
+                'created_at AS date',
                 DB::raw('(CASE
                             WHEN method = "card" THEN "Tarjeta"
                             WHEN method = "jib" THEN "Jibs"
@@ -53,8 +54,8 @@ class SaleController extends Controller
                     ->addColumn('action', function($sale){
                            $btn = '';
 
-                        if(auth()->user()->can('detail-sale')){
-                            $btn .= '<a href="'.route('panel.sales.show',['sale' => $sale->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$sale->id.'" id="det_'.$sale->id.'" class="btn btn-info btn-sm  mr-1 detailSale">
+                        if(auth()->user()->can('show-sale')){
+                            $btn .= '<a href="'.route('panel.sales.show',['sale' => $sale->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$sale->id.'" id="det_'.$sale->id.'" class="btn btn-warning btn-sm  mr-1 detailSale">
                                         <i class="ti-eye"></i>
                                     </a>';
                         }
@@ -80,8 +81,10 @@ class SaleController extends Controller
                         return   $sale->ticket->promotion->name;
                     })->addColumn('amount', function($sale){
                         return   Helper::amount($sale->amount);
+                    })->addColumn('date', function($sale){
+                        return   $sale->date;
                     })
-                    ->rawColumns(['action','status', 'raffle', 'ticket', 'amount'])
+                    ->rawColumns(['action', 'status', 'raffle', 'ticket', 'amount', 'date'])
                     ->make(true);
         }
 
@@ -90,6 +93,24 @@ class SaleController extends Controller
             'title_header'       => 'Listado de Ventas',
             'description_module' => 'Informacion de las ventas que se encuentran en el sistema.',
             'title_nav'          => 'Listado',
+            'icon'               => 'icofont icofont-bars'
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        return view('panel.sales.show', [
+            'title'              => 'Ventas',
+            'title_header'       => 'Detalles de la venta',
+            'description_module' => 'Informacion de la venta en el sistema.',
+            'title_nav'          => 'Detalles',
+            'sale'               => Sale::findOrFail($id),
             'icon'               => 'icofont icofont-bars'
         ]);
     }
