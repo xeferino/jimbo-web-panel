@@ -67,7 +67,7 @@
         <div class="col-sm-12">
             <div class="card fb-card">
                 <div class="card-header">
-                    <i class="ti-money"></i>
+                    <i class="ti-calendar"></i>
                     <div class="d-inline-block">
                         <h5>Datos del sorteo</h5>
                         <span>Informacion</span>
@@ -117,8 +117,10 @@
         <div class="col-sm-12">
             <div class="card fb-card">
                 <div class="card-header">
+                    <i class="ti-user"></i>
                     <div class="d-inline-block">
                         <h5>Datos del usuario</h5>
+                        <span>Detalles</span>
                     </div>
                 </div>
                 <div class="card-block">
@@ -165,8 +167,10 @@
             <div class="col-sm-12">
                 <div class="card fb-card">
                     <div class="card-header">
+                        <i class="ti-id-badge"></i>
                         <div class="d-inline-block">
                             <h5>Datos del vendedor</h5>
+                            <span>Detalles</span>
                         </div>
                     </div>
                     <div class="card-block">

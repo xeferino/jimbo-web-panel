@@ -90,16 +90,28 @@ class DashboardController extends Controller
 
     private function sellers()
     {
-        $top = Sale::select(DB::raw("CONCAT(users.names,' ',users.surnames) AS fullnames"), DB::raw('SUM(amount) as amount'))
+       /*  $top = Sale::select(DB::raw("CONCAT(users.names,' ',users.surnames) AS fullnames"), DB::raw('SUM(amount) as amount'))
                 ->join('users', 'users.id', '=', 'sales.seller_id')
                 ->groupBy('sales.seller_id')
                 ->groupBy('sales.id')
                 ->whereNotNull('sales.seller_id')
                 ->offset(0)->limit(10)
                 ->orderBy('sales.id','DESC')
-                ->get();
+                ->get(); */
+        /* $top = DB::table('sales')
+        ->select(
+            DB::raw("CONCAT(users.names,' ',users.surnames) AS fullnames"),
+            DB::raw('SUM(sales.amount) as amount')
+        )->join('users', 'users.id', '=', 'sales.seller_id')
+        ->whereNotNull('sales.seller_id')
+        ->orderBy('sales.seller_id','DESC')
+        ->groupBy('sales.seller_id')
+        ->offset(0)->limit(10)
+        ->get()->groupBy(function($data) {
+            return $data->seller_id;
+        }); */
         return [
-            'top'  => $top
+            'top'  => $top ?? []
         ];
     }
 

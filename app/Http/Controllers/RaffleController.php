@@ -11,6 +11,8 @@ use App\Models\Ticket;
 use DataTables;
 use App\Helpers\Helper;
 use App\Models\ExtendGiveaway;
+use App\Models\Sale;
+use App\Models\TicketUser;
 use Illuminate\Support\Carbon;
 
 class RaffleController extends Controller
@@ -94,6 +96,30 @@ class RaffleController extends Controller
                             $btn .= '<span class="badge badge-inverse" title="Producto">Producto</span>';
                         }
                         return $btn;
+                    })->addColumn('progress', function($raffle){
+                        $btn = '';
+                        $raffle     = Raffle::find($raffle->id);
+                        $amount     = ((($raffle->cash_to_draw*$raffle->prize_1)/100)+(($raffle->cash_to_draw*$raffle->prize_2)/100)+(($raffle->cash_to_draw*$raffle->prize_3)/100)+(($raffle->cash_to_draw*$raffle->prize_4)/100)+(($raffle->cash_to_draw*$raffle->prize_5)/100)+(($raffle->cash_to_draw*$raffle->prize_6)/100)+(($raffle->cash_to_draw*$raffle->prize_7)/100)+(($raffle->cash_to_draw*$raffle->prize_8)/100)+(($raffle->cash_to_draw*$raffle->prize_9)/100)+(($raffle->cash_to_draw*$raffle->prize_10)/100));
+                        $percent    = (($raffle->totalSale->sum('amount')*100)/($raffle->cash_to_collect-$amount));
+                        $btn .= '<div class="progress">
+                                    <div
+                                    class="progress-bar bg-warning"
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="'.Helper::percent($percent).' '.Helper::amount($raffle->cash_to_collect-$amount).' - '.Helper::amount($raffle->totalSale->sum('amount')).')"
+                                    role="progressbar"
+                                    style="width: '.$percent.'%;"
+                                    aria-valuenow="'.$percent.'"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100">
+                                    '.Helper::percent($percent).'</div>
+                                </div>
+                                <p>
+                                    <b>
+                                    ('.Helper::amount($raffle->cash_to_collect-$amount).' - '.Helper::amount($raffle->totalSale->sum('amount')).') '.Helper::percent($percent).'
+                                    </b>
+                                </p>';
+                        return $btn;
                     })->filter(function ($query) use ($request) {
                         if ($request->get('public') == '0' || $request->get('public') == '1') {
                             $query->where('public', $request->get('public'));
@@ -132,7 +158,7 @@ class RaffleController extends Controller
                             $query->whereBetween('date_release', [$from, $to]);
                         }
                     })
-                    ->rawColumns(['action','active', 'public', 'cash_to_draw', 'cash_to_collect', 'finish', 'type' ])
+                    ->rawColumns(['action','active', 'public', 'cash_to_draw', 'cash_to_collect', 'finish', 'type', 'progress'])
                     ->make(true);
         }
 
@@ -234,6 +260,12 @@ class RaffleController extends Controller
      */
     public function show($id)
     {
+        $competitors =  Sale::select(DB::raw('COUNT(user_id) as competitors'), 'user_id')->where('raffle_id', $id)->groupBy('user_id')->get();
+        $users = 0;
+        foreach ($competitors as $key => $value) {
+            $users += $value->user_id;
+        }
+
         return view('panel.raffles.show', [
             'title'              => 'Sorteos',
             'title_header'       => 'Detalles sorteo - '.Raffle::findOrFail($id)->title,
@@ -241,6 +273,7 @@ class RaffleController extends Controller
             'title_nav'          => 'Detalles',
             'icon'               => 'icofont-gift',
             'raffle'             => Raffle::findOrFail($id),
+            'competitors'        => $users
         ]);
     }
 

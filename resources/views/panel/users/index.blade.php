@@ -7,12 +7,16 @@
 ])
 @section('page-content')
     <!-- Hover table card start -->
-    <div class="card">
+    <div class="card fb-card">
         <div class="card-header">
-            <h5>Tabla de Usuarios</h5>
+            <i class="ti-user"></i>
+            <div class="d-inline-block">
+                <h5>Tabla de Usuarios</h5>
+                <span>Informacion</span>
+            </div>
             @can('create-user')
-                <div class="card-header-right">
-                    <a href="{{ route('panel.users.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nuevo Usuario"><i class="ti-plus"></i></a>
+                <div class="float-right">
+                    <a href="{{ route('panel.users.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nuevo Usuario">Nuevo</a>
                 </div>
             @endcan
         </div>

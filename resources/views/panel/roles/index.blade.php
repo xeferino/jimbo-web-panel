@@ -2,12 +2,16 @@
 
 @section('page-content')
     <!-- Hover table card start -->
-    <div class="card">
+    <div class="card fb-card">
         <div class="card-header">
-            <h5>Tabla de roles</h5>
+            <i class="ti-panel"></i>
+            <div class="d-inline-block">
+                <h5>Tabla de roles</h5>
+                <span>Informacion</span>
+            </div>
             @can('create-role')
-                <div class="card-header-right">
-                    <a href="{{ route('panel.roles.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nuevo Role"><i class="ti-plus"></i></a>
+                <div class="float-right">
+                    <a href="{{ route('panel.roles.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nuevo Role">Nuevo</a>
                 </div>
             @endcan
         </div>

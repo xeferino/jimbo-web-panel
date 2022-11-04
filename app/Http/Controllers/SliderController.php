@@ -57,7 +57,7 @@ class SliderController extends Controller
             'title_header'       => 'Listado de sliders',
             'description_module' => 'Informacion de las sliders que se encuentran en el sistema.',
             'title_nav'          => 'Listado',
-            'icon'               => 'icofont-megaphone'
+            'icon'               => 'icofont-image'
         ]);
     }
 

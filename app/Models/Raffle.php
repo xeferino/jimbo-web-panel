@@ -28,6 +28,11 @@ class Raffle extends Model
         return $this->hasMany('App\Models\Sale', 'raffle_id', 'id');
     }
 
+    public function TicketUser()
+    {
+        return $this->hasMany('App\Models\TicketUser', 'raffle_id', 'id');
+    }
+
     public function setDateStartAttribute($value):void
     {
         $this->attributes['date_start'] = Carbon::createFromFormat('d/m/Y',$value)->format('Y-m-d');

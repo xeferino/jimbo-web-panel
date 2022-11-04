@@ -2,12 +2,16 @@
 
 @section('page-content')
     <!-- Hover table card start -->
-    <div class="card">
+    <div class="card fb-card">
         <div class="card-header">
-            <h5>Tabla de sliders</h5>
-            @can('create-country')
-                <div class="card-header-right">
-                    <a href="{{ route('panel.sliders.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nuevo Slider"><i class="ti-plus"></i></a>
+            <i class="ti-image"></i>
+            <div class="d-inline-block">
+                <h5>Tabla de sliders</h5>
+                <span>Informacion</span>
+            </div>
+            @can('create-slider')
+                <div class="float-right">
+                    <a href="{{ route('panel.sliders.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nuevo Slider">Nuevo</a>
                 </div>
             @endcan
         </div>

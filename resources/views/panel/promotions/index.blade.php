@@ -2,12 +2,16 @@
 
 @section('page-content')
     <!-- Hover table card start -->
-    <div class="card">
+    <div class="card fb-card">
         <div class="card-header">
-            <h5>Tabla de promociones</h5>
+            <i class="ti-announcement"></i>
+            <div class="d-inline-block">
+                <h5>Tabla de promociones</h5>
+                <span>Informacion</span>
+            </div>
             @can('create-promotion')
-                <div class="card-header-right">
-                    <a href="{{ route('panel.promotions.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nueva Promocion"><i class="ti-plus"></i></a>
+                <div class="float-right">
+                    <a href="{{ route('panel.promotions.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nueva Promocion">Nueva</a>
                 </div>
             @endcan
         </div>

@@ -15,7 +15,7 @@
                 <div class="card-block text-center">
                     <div class="row">
                         <div class="col-sm-4 b-r-default">
-                            <h2>{{Helper::amount($raffle->cash_to_draw)}}</h2>
+                            <h4>{{Helper::amount($raffle->cash_to_draw)}}</h4>
                             <p class="text-muted">Premio Mayor</p>
                         </div>
                         <div class="col-sm-4 b-r-default">
@@ -40,25 +40,25 @@
                                     $total+=($data->quantity/$data->promotion->quantity)*$data->promotion->price;
                                 @endphp
                             @endforeach
-                            <h2>{{Helper::amount($amount)}}</h2>
+                            <h4>{{Helper::amount($amount)}}</h4>
                             <p class="text-muted">Dinero de premiaciones</p>
                         </div>
                         <div class="col-sm-4">
-                            <h2>{{Helper::amount($raffle->cash_to_collect-$amount)}}</h2>
+                            <h4>{{Helper::amount($raffle->cash_to_collect-$amount)}}</h4>
                             <p class="text-muted">Dinero total a recaudar</p>
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-sm-4 b-r-default">
-                            <h2>{{Helper::amount($total)}}</h2>
+                            <h4>{{Helper::amount($total)}}</h4>
                             <p class="text-muted">Total boleteria</p>
                         </div>
                         <div class="col-sm-4 b-r-default">
-                            <h2>{{Helper::amount(($total - ($raffle->cash_to_collect-$amount))-$amount)}}</h2>
+                            <h4>{{Helper::amount(($total - ($raffle->cash_to_collect-$amount))-$amount)}}</h4>
                             <p class="text-muted">Sobrande recaudado - boleteria</p>
                         </div>
                         <div class="col-sm-4">
-                            <h2>{{ $percent == 100 ?  Helper::percent(100) : Helper::percent($percent) }}</h2>
+                            <h4>{{ $percent == 100 ?  Helper::percent(100) : Helper::percent($percent) }}</h4>
                             <p class="text-muted">Porcentaje de recaudacion</p>
                         </div>
                     </div>
@@ -134,6 +134,9 @@
                         <div class="progress-bar bg-warning" data-toggle="tooltip" data-placement="top" title="{{Helper::percent($percent)}} ({{Helper::amount($raffle->cash_to_collect-$amount).' - '.Helper::amount($raffle->totalSale->sum('amount'))}})" role="progressbar" style="width: {{$percent}}%;" aria-valuenow="{{$percent}}" aria-valuemin="0" aria-valuemax="100">{{Helper::percent($percent)}}</div>
                     </div>
                     <p><b>({{Helper::amount($raffle->cash_to_collect-$amount).' - '.Helper::amount($raffle->totalSale->sum('amount'))}}) {{Helper::percent($percent)}}</b></p>
+                    <hr>
+                    <strong class="text-uppercase">Usuarios participantes</strong>
+                    <p class="text-muted">{{ $competitors }}</p>
                 </div>
             </div>
         </div>

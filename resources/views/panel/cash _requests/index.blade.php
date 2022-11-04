@@ -7,9 +7,13 @@
 ])
 @section('page-content')
     <!-- Hover table card start -->
-    <div class="card">
+    <div class="card fb-card">
         <div class="card-header">
-            <h5>Tabla de solicitudes de efectivo</h5>
+            <i class="ti-money"></i>
+            <div class="d-inline-block">
+                <h5>Tabla de solicitudes de efectivo</h5>
+                <span>Informacion</span>
+            </div>
         </div>
         <div class="card-block table-border-style">
             <div class="table-responsive">

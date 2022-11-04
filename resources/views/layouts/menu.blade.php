@@ -1,7 +1,7 @@
 <nav class="pcoded-navbar">
     <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
     <div class="pcoded-inner-navbar main-menu">
-        <div class="">
+        {{-- <div class="">
             <div class="main-menu-header">
                 <img class="img-40 img-radius" src="{{ asset('assets/images/logo-icon.png') }}" alt="User-Profile-Image">
                 <div class="user-details">
@@ -23,7 +23,7 @@
                     </li>
                 </ul>
             </div>
-        </div>
+        </div> --}}
         <ul class="pcoded-item pcoded-left-item">
             @can('dashboard-menu')
                 <li class="{{(\Request::segment(2)=='dashboard')?'active':''}}">
@@ -177,7 +177,6 @@
                         </a>
                     </li>
                 @endcan
-
                 {{-- <li class="pcoded-hasmenu">
                     <a href="javascript:void(0)">
                         <span class="pcoded-micon"><i class="icofont icofont-options"></i><b>CF</b></span>

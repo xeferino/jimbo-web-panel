@@ -2,12 +2,16 @@
 
 @section('page-content')
     <!-- Hover table card start -->
-    <div class="card">
+    <div class="card fb-card">
         <div class="card-header">
-            <h5>Tabla de paises</h5>
+            <i class="ti-flag-alt"></i>
+            <div class="d-inline-block">
+                <h5>Tabla de paises</h5>
+                <span>Informacion</span>
+            </div>
             @can('create-country')
-                <div class="card-header-right">
-                    <a href="{{ route('panel.countries.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nuevo Pais"><i class="ti-plus"></i></a>
+                <div class="float-right">
+                    <a href="{{ route('panel.countries.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nuevo Pais">Nuevo</a>
                 </div>
             @endcan
         </div>

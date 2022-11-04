@@ -7,16 +7,18 @@
 ])
 @section('page-content')
     <!-- Hover table card start -->
-    <div class="card">
+    <div class="card fb-card">
         <div class="card-header">
-            <h5>Tabla de Participantes</h5>
-            {{-- @can('create-competitor')
-                <div class="card-header-right">
-                    <a href="{{ route('panel.competitors.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nuevo Vendedor"><i class="ti-plus"></i></a>
-                </div>
-            @endcan --}}
-            <div class="card-header-left">
-                <a href="" class="btn btn-warning mb-2" data-toggle="tooltip" data-placement="top"><i class="ti-money"></i>Ganadores</a>
+            <i class="ti-user"></i>
+            <div class="d-inline-block">
+                <h5>Tabla de Participantes</h5>
+                <span>Informacion</span>
+            </div>
+            <div class="float-right">
+                <a href="" class="btn btn-dark" data-toggle="tooltip" data-placement="top">Listados de ganadores</a>
+                @can('create-competitor')
+                    <a href="{{ route('panel.competitors.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nuevo participante">Nuevo</a>
+                @endcan
             </div>
         </div>
         <div class="card-block table-border-style">

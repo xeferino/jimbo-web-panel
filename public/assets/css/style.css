@@ -5756,7 +5756,7 @@ table tbody .border-bottom-info td {
 .header-navbar .navbar-wrapper .navbar-logo .mobile-menu {
     position: absolute;
     right: 22px;
-    border: 1px solid #fff;
+    border: 1px solid #ff9a4e;
     border-radius: 50%;
     padding: 5px 9px;
     top: 24px;
@@ -9072,7 +9072,7 @@ body[themebg-pattern="pattern9"] {
 }
 
 .pcoded .pcoded-header .navbar-logo[logo-theme="theme1"] {
-    background-color: #ff9a4e;
+    background-color: #fff;
 }
 
 .pcoded .pcoded-header .navbar-logo[logo-theme="theme2"] {
@@ -9774,15 +9774,15 @@ body[themebg-pattern="pattern9"] {
 }
 
 .pcoded .pcoded-header[header-theme="theme1"] {
-    background: #ff9a4e;
+    background: #fff;
 }
 
 .pcoded .pcoded-header[header-theme="theme1"] a {
-    color: #fff;
+    color: #000;
 }
 
 .pcoded .pcoded-header[header-theme="theme1"] .navbar-logo a {
-    color: #fff;
+    color: #ff9a4e;
 }
 
 .pcoded .pcoded-header[header-theme="theme2"] {
@@ -15887,8 +15887,8 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 .dribble-card .card-header,
 .fb-card .card-header,
 .twitter-card .card-header {
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .dribble-card .card-header i,
@@ -15906,14 +15906,14 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 .dribble-card .card-header h5,
 .fb-card .card-header h5,
 .twitter-card .card-header h5 {
-    color: #fff;
+    color: #000;
 }
 
 .dribble-card .card-header span,
 .fb-card .card-header span,
 .twitter-card .card-header span {
     font-weight: 100;
-    color: #fff;
+    color: #000;
 }
 
 .dribble-card .card-header+.card-block,
@@ -15926,6 +15926,14 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 .fb-card .card-header+.card-block h2,
 .twitter-card .card-header+.card-block h2 {
     font-weight: 400;
+    color:#ff9800;
+}
+
+.dribble-card .card-header+.card-block h4,
+.fb-card .card-header+.card-block h4,
+.twitter-card .card-header+.card-block h4 {
+    font-weight: 400;
+    color:#ff9800;
 }
 
 .dribble-card .card-block p,
@@ -15943,12 +15951,16 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 }
 
 .fb-card .card-header {
-    background-color: #ff9800;
+    /*background-color: #ff9800;*/
+    background-color: #ffffff;
+    border-bottom: #9e9e9e4a solid 1px;
 }
 
 .fb-card .card-header i {
-    background-color: #fff;
-    color:#000;
+    /*background-color: #fff;
+    color:#000;*/
+    background-color: #ff9800;
+    color: #f4f0f0;
 }
 
 .twitter-card .card-header {
