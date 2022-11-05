@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\FormCompetitorRequest;
 use App\Models\Country;
+use App\Models\Sale AS Shopping;
+use App\Models\PaymentHistory;
+use App\Models\CashRequest;
+use App\Models\BalanceHistory;
+use App\Helpers\Helper;
 use Illuminate\Support\Facades\File;
 
 
@@ -47,11 +52,11 @@ class CompetitorController extends Controller
                                             <i class="ti-pencil"></i>
                                     </a>';
                         }
-                        /* if(auth()->user()->can('detail-competitor')){
-                            $btn .= '<a href="'.route('panel.competitors.detail',['competitor' => $competitor->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$competitor->id.'" id="det_'.$competitor->id.'" class="btn btn-info btn-sm  mr-1 detailCompetitor">
-                                        <i class="ti-search"></i>
+                        if(auth()->user()->can('show-competitor')){
+                            $btn .= '<a href="'.route('panel.competitors.show',['competitor' => $competitor->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$competitor->id.'" id="det_'.$competitor->id.'" class="btn btn-inverse btn-sm  mr-1 detailCompetitor">
+                                        <i class="ti-eye"></i>
                                     </a>';
-                        } */
+                        }
                         if(auth()->user()->can('delete-competitor')){
                             $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="right" title="Eliminar"  data-url="'.route('panel.competitors.destroy',['competitor' => $competitor->id]).'" class="btn btn-danger btn-sm deleteCompetitor">
                                             <i class="ti-trash"></i>
@@ -148,11 +153,183 @@ class CompetitorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $id = Auth::user()->id;
-        $competitorRole = DB::table('model_has_roles')->select('role_id')->where('model_id',  $id)->pluck('role_id')->toArray();
-        return view('panel.competitors.show', ['title' => 'Vendedores - Perfil', 'competitor' => User::find($id), 'competitorRole' => $competitorRole, 'roles' => Role::all(), 'permissions' => User::findOrFail($id)->getAllPermissions()]);
+        if ($request->ajax()) {
+            if($request->mod == 'shopping'){
+                $shopping = Shopping::select(
+                    'id',
+                    'number',
+                    'number_culqi',
+                    'amount',
+                    'quantity',
+                    'status',
+                    'created_at AS date',
+                    DB::raw('(CASE
+                                WHEN method = "card" THEN "Tarjeta"
+                                WHEN method = "jib" THEN "Jibs"
+                                ELSE "Otro"
+                                END) AS method')
+                    )->where('user_id', $id)->get();
+                    return Datatables::of($shopping)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($shopping){
+                        if(auth()->user()->can('show-sale')){
+
+                            $btn = '';
+                            $shopping = Shopping::find($shopping->id);
+                            $btn .= '<a href="'.route('panel.sales.show',['sale' => $shopping->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  class="btn btn-warning btn-sm  mr-1 detailSale">
+                                            <i class="ti-eye"></i>
+                                        </a>';
+                            return $btn;
+                        }
+                    })
+                    ->addColumn('status', function($shopping){
+                        $btn = '';
+                        if($shopping->status=='approved'){
+                            $btn .= '<span class="badge badge-success" title="Aprobada">Aprobada</span>';
+                        }elseif($shopping->status=='refused'){
+                            $btn .= '<span class="badge badge-danger" title="Rechazada">Rechazada</span>';
+                        } else{
+                            $btn .= '<span class="badge badge-warning" title="Pendiente">Pendiente</span>';
+                        }
+                        return $btn;
+                    })
+                    ->addColumn('raffle', function($shopping){
+                        $shopping = Shopping::find($shopping->id);
+                        return $shopping->raffle->title;
+                    })
+                    ->addColumn('ticket', function($shopping){
+                        $shopping = Shopping::find($shopping->id);
+                        return   $shopping->ticket->promotion->name;
+                    })->addColumn('amount', function($shopping){
+                        return   Helper::amount($shopping->amount);
+                    })->addColumn('date', function($shopping){
+                        return   $shopping->date;
+                    })
+                    ->rawColumns(['action', 'status', 'raffle', 'ticket', 'amount', 'date'])
+                    ->make(true);
+            } elseif($request->mod == 'paymentHistory') {
+                $shopping = PaymentHistory::select(
+                    'id',
+                    'description',
+                    'total_paid AS amount',
+                    'response AS message',
+                    'code_response AS number',
+                    'status',
+                    'created_at AS date',
+                    DB::raw('(CASE
+                                WHEN payment_method = "Card" THEN "Tarjeta"
+                                WHEN payment_method = "Jib" THEN "Jibs"
+                                ELSE "Otro"
+                                END) AS method')
+                    )->where('user_id', $id)->get();
+                    return Datatables::of($shopping)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($shopping){
+
+                    })
+                    ->addColumn('status', function($shopping){
+                        $btn = '';
+                        if($shopping->status=='approved'){
+                            $btn .= '<span class="badge badge-success" title="Aprobada">Aprobada</span>';
+                        }elseif($shopping->status=='refused'){
+                            $btn .= '<span class="badge badge-danger" title="Rechazada">Rechazada</span>';
+                        } else{
+                            $btn .= '<span class="badge badge-warning" title="Pendiente">Pendiente</span>';
+                        }
+                        return $btn;
+                    })->addColumn('amount', function($shopping){
+                        return   $shopping->amount;
+                    })
+                    ->rawColumns(['action', 'status', 'amount'])
+                    ->make(true);
+            }elseif($request->mod == 'cash') {
+                $cash = CashRequest::select(
+                    'id',
+                    'amount',
+                    'date',
+                    'hour',
+                    'reference',
+                    'description',
+                    'status',
+                    'user_id'
+                )->where('user_id', $id)->get();
+                return Datatables::of($cash)
+                        ->addIndexColumn()
+                        ->addColumn('action', function($cash){
+                               $btn = '';
+                            if(auth()->user()->can('show-cash-request')){
+                                $btn .= '<a href="'.route('panel.cash.request.show',['id' => $cash->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$cash->id.'" id="det_'.$cash->id.'" class="btn btn-warning btn-sm  mr-1 detailCashRequest">
+                                            <i class="ti-eye"></i>
+                                        </a>';
+                            }
+                            return $btn;
+                        })->addColumn('amount', function($cash){
+                            return   Helper::amount($cash->amount);
+                        })->addColumn('date', function($cash){
+                            $cash = CashRequest::find($cash->id);
+                            $date = explode('-', $cash->date);
+                            return $date[2].'/'.$date[1].'/'.$date[0];
+                        })->addColumn('user', function($cash){
+                            $user = User::find($cash->user_id);
+                            return $user->names .' '. $user->surnames;
+                        })->addColumn('status', function($cash){
+                            $btn = '';
+                            if($cash->status=='approved'){
+                                $btn .= '<span class="badge badge-success" title="Aprobada">Aprobada</span>';
+                            }elseif($cash->status=='refused'){
+                                $btn .= '<span class="badge badge-danger" title="Rechazada">Rechazada</span>';
+                            }elseif($cash->status=='pending'){
+                                $btn .= '<span class="badge badge-danger" title="Pendiente">Pendiente</span>';
+                            }elseif($cash->status=='return'){
+                                $btn .= '<span class="badge badge-danger" title="Devuelta">Devuelta</span>';
+                            } else{
+                                $btn .= '<span class="badge badge-warning" title="Creada">Creada</span>';
+                            }
+                            return $btn;
+                        })
+                        ->rawColumns(['action', 'amount', 'date', 'user', 'status'])
+                        ->make(true);
+
+            } elseif($request->mod == 'balance') {
+                $cash = BalanceHistory::select(
+                    'id',
+                    'reference',
+                    'description',
+                    DB::raw('(CASE
+                                WHEN type = "debit" THEN "Debito"
+                                WHEN type = "credit" THEN "Credito"
+                                ELSE "Otro"
+                                END) AS type'),
+                    'balance AS amount',
+                    'date',
+                    'hour',
+                    'user_id'
+                )->where('user_id', $id)->get();
+                return Datatables::of($cash)
+                        ->addIndexColumn()
+                        ->addColumn('action', function($cash){
+                        })->addColumn('date', function($cash){
+                            $cash = CashRequest::find($cash->id);
+                            $date = explode('-', $cash->date);
+                            return $date[2].'/'.$date[1].'/'.$date[0];
+                        })->addColumn('user', function($cash){
+                            $user = User::find($cash->user_id);
+                            return $user->names .' '. $user->surnames;
+                        })->rawColumns(['action', 'amount', 'date', 'user', 'status'])
+                        ->make(true);
+            }
+        }
+
+        return view('panel.competitors.show', [
+            'title'              => 'Participantes',
+            'title_header'       => 'Participante detalles',
+            'description_module' => 'Informacion del participante en el sistema.',
+            'title_nav'          => 'Detalles',
+            'competitor'         => Competitor::findOrFail($id),
+            'icon'               => 'icofont icofont-users'
+        ]);
     }
 
     /**

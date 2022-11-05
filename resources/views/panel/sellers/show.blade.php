@@ -1,207 +1,146 @@
-@extends('layouts.app', ['title' => $title ?? 'Usuarios'])
-
-@section('page-header')
-    <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header card">
-            <div class="row align-items-end">
-                <div class="col-lg-8">
-                    <div class="page-header-title">
-                        <i class="ti-pencil bg-c-blue"></i>
-                        <div class="d-inline">
-                            <h4>Perfil de usuario</h4>
-                            <span>Actualice la informacion del detalle de su perfil en el sistema.</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="page-header-breadcrumb">
-                    <ul class="breadcrumb-title">
-                        <li class="breadcrumb-item">
-                            <a href="{{ route('dashboard') }}">
-                                <i class="icofont icofont-home"></i>
-                            </a>
-                        </li>
-                        <li class="breadcrumb-item"><a href="#">Perfil</a>
-                        </li>
-                        <li class="breadcrumb-item"><a href="#">Detalle</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-@endsection
+@extends('layouts.app', ['title' => $title ?? 'Vendedores'])
 
 @section('page-content')
-<div class="row">
-    <div class="col-sm-12">
-        <!-- Basic Form Inputs card start -->
-        <div class="card">
-            <div class="card-header">
-                <h5>Detalles de perfil</h5>
-                <div class="card-header-right">
-                    <i class="icofont icofont-spinner-alt-5"></i>
+    <!-- Basic card start -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card fb-card">
+                <div class="card-header">
+                    <i class="ti-money"></i>
+                    <div class="d-inline-block">
+                        <h5>Datos de ventas</h5>
+                        <span>Detalles</span>
+                    </div>
                 </div>
-                <div class="card-header-right">
-                    <i class="icofont icofont-spinner-alt-5"></i>
-                </div>
-            </div>
-            <div class="card-block">
-                <h4 class="sub-title">Informacion de perfil</h4>
-                <form method="POST" action="{{ route('users.update', ['user' =>  Auth::user()->id]) }}" name="form-user-edit" id="form-user-edit">
-                    @csrf
-                    @method('PUT')
-                    <div class="form-group row">
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Nombres</label>
-                            <input type="text" name="name" id="name" value="{{Auth::user()->name }}" class="form-control">
-                            <div class="col-form-label has-danger-name"></div>
+                <div class="card-block text-center">
+                    <div class="row">
+                        <div class="col-sm-4 b-r-default">
+                            <h4>{{Helper::amount($seller->sales->sum('amount'))}}</h4>
+                            <p class="text-muted">Monto</p>
                         </div>
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Apellidos</label>
-                            <input type="text" name="surname" id="surname" value="{{Auth::user()->surname }}" class="form-control">
-                            <div class="col-form-label has-danger-surname"></div>
+                        <div class="col-sm-4 b-r-default">
+                            <h4>{{$seller->sales->count()}}</h4>
+                            <p class="text-muted">Ventas</p>
                         </div>
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Email</label>
-                            <input type="text" name="email" id="email" value="{{Auth::user()->email }}" class="form-control">
-                            <div class="col-form-label has-danger-email"></div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Departamento</label>
-                            <select name="department" id="department" class="form-control">
-                                <option value="{{ Auth::user()->department->id }}">{{Auth::user()->department->name }}</option>
-                            </select>
-                            <div class="col-form-label has-danger-department"></div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Role</label>
-                            <select name="role" id="role" class="form-control">
-                                @foreach ($roles as $role)
-                                    @if (Auth::user()->getRoleNames()->join('') ==  $role->name)
-                                        <option value="{{ $role->id }}" {{ in_array($role->id, $userRole) ? 'selected' : '' }}>{{ $role->name }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                            <div class="col-form-label has-danger-role"></div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Estatus</label>
-                            <select name="active" id="active" class="form-control">
-                                @if (Auth::user()->active === 1)
-                                    <option value="1">Activo</option>
-                                @endif
-                                @if (Auth::user()->active === 0)
-                                    <option value="0">Inactivo</option>
-                                @endif
-                            </select>
-                            <div class="col-form-label has-danger-active"></div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Contrase&ntilde;a</label>
-                            <input type="password" name="password" id="password" class="form-control">
-                            <div class="col-form-label has-danger-password"></div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Confirmar Contrase&ntilde;a</label>
-                            <input type="password" name="cpassword" id="cpassword" class="form-control">
-                            <div class="col-form-label has-danger-cpassword"></div>
+                        <div class="col-sm-4">
+                            <h4>{{Helper::jib($seller->balance_jib ?? 0)}}</h4>
+                            <p class="text-muted">Balance de jibs</p>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary float-right btn-user">Actualizar</button>
-                </form>
-            </div>
-            <div class="card-block text-center">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="alert alert-info" role="alert"><b>Permisos en el sistema del role ({{ Auth::user()->getRoleNames()->join('') }}) </b></div>
-                    </div>
-                    @foreach ($permissions as $key => $item)
-                        <div class="col-6">
-                            <h6><b>{{ $item->name }}</b></h6>
-                            <p class="text-muted">{{ $item->description }}</p>
-                        </div>
-                    @endforeach
                 </div>
             </div>
         </div>
-        <!-- Basic Form Inputs card end -->
+        <div class="col-sm-12">
+            <div class="card fb-card">
+                <div class="card-header">
+                    <i class="ti-user"></i>
+                    <div class="d-inline-block">
+                        <h5>Datos del vendedor</h5>
+                        <span>Detalles</span>
+                    </div>
+                </div>
+                <div class="card-block">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <strong class="text-uppercase">{{$seller->names}}</strong>
+                            <p class="text-muted">Nombres</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <strong class="text-uppercase">{{$seller->surnames}}</strong>
+                            <p class="text-muted">Apellidos</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <strong class="text-uppercase">{{$seller->dni}}</strong>
+                            <p class="text-muted">Dni</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <strong class="text-uppercase">{{$seller->email}}</strong>
+                            <p class="text-muted">Email</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <strong class="text-uppercase">{{$seller->phone}}</strong>
+                            <p class="text-muted">Telefono</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <strong class="text-uppercase">{{$seller->country->name}}</strong>
+                            <p class="text-muted">Pais</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <strong class="text-uppercase">{{$seller->address_city}}</strong>
+                            <p class="text-muted">Ciudad</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <strong class="text-uppercase">{{$seller->address}}</strong>
+                            <p class="text-muted">Direcion</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <strong class="text-uppercase">
+                                <span class="badge badge-warning" style="float: left !important;">{{$seller->LevelSeller->level->name ?? '----'}}</span>
+                            </strong>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12">
+            <div class="card fb-card">
+                <div class="card-header">
+                    <i class="ti-money"></i>
+                    <div class="d-inline-block">
+                        <h5>Historial de ventas</h5>
+                        <span>Detalles</span>
+                    </div>
+                </div>
+                <div class="card-block p-b-10">
+                    <input type="hidden" name="seller_id" id="seller_id" value="{{$seller->id}}">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-seller-sales">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Numero de operacion</th>
+                                    <th>Refencia de culqi</th>
+                                    <th>Monto</th>
+                                    <th>Metodo</th>
+                                    <th>Sorteo</th>
+                                    <th>Cantidad de ticket</th>
+                                    <th>Promocion</th>
+                                    <th>Fecha</th>
+                                    <th>Estatus</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal fade" id="detailUser" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-b">
+                            <div class="col-sm-12">
+                                <div class="card fb-card">
+                                    <div class="card-header">
+                                        <i class="ti-user"></i>
+                                        <div class="d-inline-block">
+                                            <h5>Datos del comparador</h5>
+                                            <span>Detalles</span>
+                                        </div>
+                                    </div>
+                                    <div class="card-block">
+                                        <div id="info-user"></div>
+                                    </div>
+                                </div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+    <!-- Basic card end -->
 @endsection
 
 @section('script-content')
-<script>
-    $(function () {
-        $("#form-user-edit").submit(function( event ) {
-            event.preventDefault();
-            $('.btn-user').prop("disabled", true).text('Enviando...');
-            axios.put($("#form-user-edit").attr("action"), $(this).serialize(), {
-            }).then(response => {
-                if(response.data.success){
-                    notify(response.data.message, 'success', '3000', 'top', 'right');
-                    $('#form-user-edit').trigger("reset");
-                    $('.btn-user').prop("disabled", false).text('Actualizar');
-                    $('div.col-form-label').text('');
-                    setTimeout(function () {location.reload(); }, 3000);
-                }
-            }).catch(error => {
-                if (error.response) {
-                        if(error.response.status === 422){
-                            var err = error.response.data.errors;
-                            /* $.each(err, function( key, value) {
-                                notify(value, 'danger', '5000', 'top', 'right');
-                            }); */
-                            if (error.response.data.errors.name) {
-                                $('.has-danger-name').text('' + error.response.data.errors.name + '').css("color", "red");
-                            }else{
-                                $('.has-danger-name').text('');
-                            }
-                            if (error.response.data.errors.surname) {
-                                $('.has-danger-surname').text('' + error.response.data.errors.surname + '').css("color", "red");
-                            }else{
-                                $('.has-danger-surname').text('');
-                            }
-                            if (error.response.data.errors.email) {
-                                $('.has-danger-email').text('' + error.response.data.errors.email + '').css("color", "red");
-                            }else{
-                                $('.has-danger-email').text('');
-                            }
-                            if (error.response.data.errors.role) {
-                                $('.has-danger-role').text('' + error.response.data.errors.role + '').css("color", "red");
-                            }else{
-                                $('.has-danger-role').text('');
-                            }
-                            if (error.response.data.errors.active) {
-                                $('.has-danger-active').text('' + error.response.data.errors.active + '').css("color", "red");
-                            }else{
-                                $('.has-danger-active').text('');
-                            }
-                            if (error.response.data.errors.department) {
-                                $('.has-danger-department').text('' + error.response.data.errors.department + '').css("color", "red");
-                            }else{
-                                $('.has-danger-department').text('');
-                            }
-                            if (error.response.data.errors.password) {
-                                $('.has-danger-password').text('' + error.response.data.errors.password + '').css("color", "red");
-                            }else{
-                                $('.has-danger-password').text('');
-                            }
-                            if (error.response.data.errors.cpassword) {
-                                $('.has-danger-cpassword').text('' + error.response.data.errors.cpassword + '').css("color", "red");
-                            }else{
-                                $('.has-danger-cpassword').text('');
-                            }
-                        }else{
-                            notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
-                        }
-                    }else{
-                        notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
-                    }
-                    $('.btn-user').prop("disabled", false).text('Actualizar');
-            });
-        });
-    });
-</script>
+<script src="{{ asset('assets/js/jimbo/sellers.js') }}"></script>
 @endsection

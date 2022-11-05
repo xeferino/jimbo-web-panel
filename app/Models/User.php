@@ -80,6 +80,18 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\CardUser', 'user_id', 'id');
     }
 
+    public function Sales()
+    {
+        return $this->hasMany('App\Models\Sale', 'seller_id', 'id');
+    }
+
+    public function Shoppings()
+    {
+        return $this->hasMany('App\Models\Sale', 'user_id', 'id');
+    }
+
+
+
     public function Accounts()
     {
         return $this->hasMany('App\Models\AccountUser', 'user_id', 'id');
@@ -88,6 +100,11 @@ class User extends Authenticatable
     public function Customer()
     {
         return $this->hasOne('App\Models\Customer'::class);
+    }
+
+    public function LevelSeller()
+    {
+        return $this->hasOne('App\Models\LevelUser'::class, 'seller_id', 'id');
     }
 
 

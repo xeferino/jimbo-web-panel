@@ -3,6 +3,7 @@ const APP_URL = $('meta[name="base-url"]').attr('content');
 const JIMBO = { url : '/panel/sellers' };
 //alert(JIMBO.url)
 $(function () {
+    var id = $('#seller_id').val();
     /*DataTables*/
     var table = $('.table-seller').DataTable({
         processing: true,
@@ -57,6 +58,106 @@ $(function () {
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
+
+    var table = $('.table-seller-sales').DataTable({
+        processing: true,
+        serverSide: true,
+        "language": {
+            "decimal":        "",
+            "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ ventas",
+            "infoEmpty":      "Mostrando 0 para 0 de 0 ventas",
+            "infoFiltered":   "(Filtrado para un total de _MAX_ ventas)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Mostrar _MENU_ Registros",
+            "loadingRecords": `<div class="ball-scale">
+                                    <div class='contain'>
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <img src="${APP_URL+'/assets/images/jimbo-table.png'}" class="ring" width="48" alt="logo.png">
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <div class="ring"><div class="frame"></div></div>
+                                    </div>
+                                </div>`,
+            "processing": `<div class="ball-scale">
+                                <div class='contain'>
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <img src="${APP_URL+'/assets/images/jimbo-table.png'}" class="ring" width="48" alt="logo.png">
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <div class="ring"><div class="frame"></div></div>
+                                </div>
+                            </div>`,
+            "search":         "Buscar:",
+            "zeroRecords":    "No hay coicidencias de registros en la busqueda",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Ultimo",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": activate to sort column ascending",
+                "sortDescending": ": activate to sort column descending"
+            }
+        },
+        ajax: APP_URL+JIMBO.url+'/'+id,
+        columns: [
+            {data: 'id', name: 'id'},
+            {data: 'number', name: 'number'},
+            {data: 'number_culqi', name: 'number_culqi'},
+            {data: 'amount', name: 'amount'},
+            {data: 'method', name: 'method'},
+            {data: 'raffle', name: 'raffle'},
+            {data: 'quantity', name: 'quantity'},
+            {data: 'ticket', name: 'ticket'},
+            {data: 'date', name: 'date'},
+            {data: 'status', name: 'status'},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+    });
+
+    $('body').on('click', '.detailSale', function () {
+        var name = $(this).data("name");
+        var dni = $(this).data("dni");
+        var email = $(this).data("email");
+        var phone = $(this).data("phone");
+        var country = $(this).data("country");
+        var address = $(this).data("address");
+        $('#detailUser').modal('show');
+        $('#info-user').html(function(){
+            var html = '';
+                html +=`<div class="row">
+                        <div class="col-sm-4">
+                            <strong class="text-uppercase">${name}</strong>
+                            <p class="text-muted">Nombres y Apellidos</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <strong class="text-uppercase">${dni}</strong>
+                            <p class="text-muted">Dni</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <strong class="text-uppercase">${email}</strong>
+                            <p class="text-muted">Email</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <strong class="text-uppercase">${phone}</strong>
+                            <p class="text-muted">Telefono</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <strong class="text-uppercase">${country}</strong>
+                            <p class="text-muted">Pais</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <strong class="text-uppercase">${address}</strong>
+                            <p class="text-muted">Direcion</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-warning btn-sm float-right" data-dismiss="modal">Close</button>`;
+            return html;
+        });
+    });
+
     /*DataTables*/
 
     $("#image").on('change', function () {
@@ -124,6 +225,19 @@ $(function () {
                     }else{
                         $('.has-danger-phone').text('');
                     }
+
+                    if (error.response.data.errors.address) {
+                        $('.has-danger-address').text('' + error.response.data.errors.address + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-address').text('');
+                    }
+
+                    if (error.response.data.errors.address_city) {
+                        $('.has-danger-address_city').text('' + error.response.data.errors.address_city + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-address_city').text('');
+                    }
+
                     if (error.response.data.errors.balance_jib) {
                         $('.has-danger-balance_jib').text('' + error.response.data.errors.balance_jib + '').css("color", "#dc3545e3");
                     }else{

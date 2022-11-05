@@ -46,6 +46,18 @@
                     </div>
 
                     <div class="col-sm-6">
+                        <label class="col-form-label">Ciudad</label>
+                        <textarea name="address_city" id="address_city" class="form-control" cols="10" rows="5"></textarea>
+                        <div class="col-form-label has-danger-address_city"></div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label class="col-form-label">Direccion</label>
+                        <textarea name="address" id="address" class="form-control" cols="10" rows="5"></textarea>
+                        <div class="col-form-label has-danger-address"></div>
+                    </div>
+
+                    <div class="col-sm-6">
                         <label class="col-form-label">Telefono</label>
                         <input type="text" name="phone" id="phone" class="form-control">
                         <div class="col-form-label has-danger-phone"></div>

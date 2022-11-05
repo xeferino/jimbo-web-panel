@@ -16,9 +16,9 @@
             </div>
             <div class="float-right">
                 <a href="" class="btn btn-dark" data-toggle="tooltip" data-placement="top">Listados de ganadores</a>
-                @can('create-competitor')
+                {{-- @can('create-competitor')
                     <a href="{{ route('panel.competitors.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nuevo participante">Nuevo</a>
-                @endcan
+                @endcan --}}
             </div>
         </div>
         <div class="card-block table-border-style">

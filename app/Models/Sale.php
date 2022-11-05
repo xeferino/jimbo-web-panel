@@ -17,6 +17,11 @@ class Sale extends Model
         return $this->belongsTo('App\Models\Raffle');
     }
 
+    public function Country()
+    {
+        return $this->belongsTo('App\Models\Country');
+    }
+
     public function Ticket()
     {
         return $this->belongsTo('App\Models\Ticket');

@@ -3,6 +3,7 @@ const APP_URL = $('meta[name="base-url"]').attr('content');
 const JIMBO = { url : '/panel/competitors' };
 //alert(JIMBO.url)
 $(function () {
+    var id = $('#competitor_id').val();
     /*DataTables*/
     var table = $('.table-competitor').DataTable({
         processing: true,
@@ -54,6 +55,231 @@ $(function () {
             {data: 'role', name: 'role'},
             {data: 'email', name: 'email'},
             {data: 'active', name: 'active'},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+    });
+
+    var table = $('.table-competitor-shoppings').DataTable({
+        processing: true,
+        serverSide: true,
+        "language": {
+            "decimal":        "",
+            "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ compras",
+            "infoEmpty":      "Mostrando 0 para 0 de 0 compras",
+            "infoFiltered":   "(Filtrado para un total de _MAX_ compras)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Mostrar _MENU_ Registros",
+            "loadingRecords": `<div class="ball-scale">
+                                    <div class='contain'>
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <img src="${APP_URL+'/assets/images/jimbo-table.png'}" class="ring" width="48" alt="logo.png">
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <div class="ring"><div class="frame"></div></div>
+                                    </div>
+                                </div>`,
+            "processing": `<div class="ball-scale">
+                                <div class='contain'>
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <img src="${APP_URL+'/assets/images/jimbo-table.png'}" class="ring" width="48" alt="logo.png">
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <div class="ring"><div class="frame"></div></div>
+                                </div>
+                            </div>`,
+            "search":         "Buscar:",
+            "zeroRecords":    "No hay coicidencias de registros en la busqueda",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Ultimo",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": activate to sort column ascending",
+                "sortDescending": ": activate to sort column descending"
+            }
+        },
+        ajax: APP_URL+JIMBO.url+'/'+id+'?mod=shopping',
+        columns: [
+            {data: 'id', name: 'id'},
+            {data: 'number', name: 'number'},
+            {data: 'number_culqi', name: 'number_culqi'},
+            {data: 'amount', name: 'amount'},
+            {data: 'method', name: 'method'},
+            {data: 'raffle', name: 'raffle'},
+            {data: 'quantity', name: 'quantity'},
+            {data: 'ticket', name: 'ticket'},
+            {data: 'date', name: 'date'},
+            {data: 'status', name: 'status'},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+    });
+
+    var table = $('.table-competitor-payment-history').DataTable({
+        processing: true,
+        serverSide: true,
+        "language": {
+            "decimal":        "",
+            "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ compras",
+            "infoEmpty":      "Mostrando 0 para 0 de 0 compras",
+            "infoFiltered":   "(Filtrado para un total de _MAX_ compras)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Mostrar _MENU_ Registros",
+            "loadingRecords": `<div class="ball-scale">
+                                    <div class='contain'>
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <img src="${APP_URL+'/assets/images/jimbo-table.png'}" class="ring" width="48" alt="logo.png">
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <div class="ring"><div class="frame"></div></div>
+                                    </div>
+                                </div>`,
+            "processing": `<div class="ball-scale">
+                                <div class='contain'>
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <img src="${APP_URL+'/assets/images/jimbo-table.png'}" class="ring" width="48" alt="logo.png">
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <div class="ring"><div class="frame"></div></div>
+                                </div>
+                            </div>`,
+            "search":         "Buscar:",
+            "zeroRecords":    "No hay coicidencias de registros en la busqueda",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Ultimo",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": activate to sort column ascending",
+                "sortDescending": ": activate to sort column descending"
+            }
+        },
+        ajax: APP_URL+JIMBO.url+'/'+id+'?mod=paymentHistory',
+        columns: [
+            {data: 'id', name: 'id'},
+            {data: 'number', name: 'number'},
+            {data: 'method', name: 'method'},
+            {data: 'amount', name: 'amount'},
+            {data: 'description', name: 'description'},
+            {data: 'message', name: 'message'},
+            {data: 'date', name: 'date'},
+            {data: 'status', name: 'status'},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+    });
+
+    var table = $('.table-cash').DataTable({
+        processing: true,
+        serverSide: true,
+        "language": {
+            "decimal":        "",
+            "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ solicitudes",
+            "infoEmpty":      "Mostrando 0 para 0 de 0 solicitudes",
+            "infoFiltered":   "(Filtrado para un total de _MAX_ solicitudes)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Mostrar _MENU_ Registros",
+            "loadingRecords": `<div class="ball-scale">
+                                    <div class='contain'>
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <img src="${APP_URL+'/assets/images/jimbo-table.png'}" class="ring" width="48" alt="logo.png">
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <div class="ring"><div class="frame"></div></div>
+                                    </div>
+                                </div>`,
+            "processing": `<div class="ball-scale">
+                                <div class='contain'>
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <img src="${APP_URL+'/assets/images/jimbo-table.png'}" class="ring" width="48" alt="logo.png">
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <div class="ring"><div class="frame"></div></div>
+                                </div>
+                            </div>`,
+            "search":         "Buscar:",
+            "zeroRecords":    "No hay coicidencias de registros en la busqueda",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Ultimo",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": activate to sort column ascending",
+                "sortDescending": ": activate to sort column descending"
+            }
+        },
+        ajax: APP_URL+JIMBO.url+'/'+id+'?mod=cash',
+        columns: [
+            {data: 'id', name: 'id'},
+            {data: 'amount', name: 'amount'},
+            {data: 'date', name: 'date'},
+            {data: 'hour', name: 'hour'},
+            {data: 'reference', name: 'reference'},
+            {data: 'user', name: 'user'},
+            {data: 'status', name: 'status'},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+    });
+
+    var table = $('.table-balance').DataTable({
+        processing: true,
+        serverSide: true,
+        "language": {
+            "decimal":        "",
+            "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ balances",
+            "infoEmpty":      "Mostrando 0 para 0 de 0 balances",
+            "infoFiltered":   "(Filtrado para un total de _MAX_ balances)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Mostrar _MENU_ Registros",
+            "loadingRecords": `<div class="ball-scale">
+                                    <div class='contain'>
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <img src="${APP_URL+'/assets/images/jimbo-table.png'}" class="ring" width="48" alt="logo.png">
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <div class="ring"><div class="frame"></div></div>
+                                    </div>
+                                </div>`,
+            "processing": `<div class="ball-scale">
+                                <div class='contain'>
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <img src="${APP_URL+'/assets/images/jimbo-table.png'}" class="ring" width="48" alt="logo.png">
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <div class="ring"><div class="frame"></div></div>
+                                </div>
+                            </div>`,
+            "search":         "Buscar:",
+            "zeroRecords":    "No hay coicidencias de registros en la busqueda",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Ultimo",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": activate to sort column ascending",
+                "sortDescending": ": activate to sort column descending"
+            }
+        },
+        ajax: APP_URL+JIMBO.url+'/'+id+'?mod=cash',
+        columns: [
+            {data: 'id', name: 'id'},
+            {data: 'reference', name: 'reference'},
+            {data: 'description', name: 'description'},
+            {data: 'type', name: 'type'},
+            {data: 'amount', name: 'amount'},
+            {data: 'date', name: 'date'},
+            {data: 'hour', name: 'hour'},
+            {data: 'user', name: 'user'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });

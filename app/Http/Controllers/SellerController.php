@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\FormSellerRequest;
 use App\Models\Country;
+use App\Models\Sale;
 use Illuminate\Support\Facades\File;
+use App\Helpers\Helper;
 
 
 class SellerController extends Controller
@@ -47,9 +49,9 @@ class SellerController extends Controller
                                             <i class="ti-pencil"></i>
                                     </a>';
                         }
-                        if(auth()->user()->can('detail-seller')){
-                            $btn .= '<a href="'.route('panel.sellers.detail',['seller' => $seller->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$seller->id.'" id="det_'.$seller->id.'" class="btn btn-info btn-sm  mr-1 detailSeller">
-                                        <i class="ti-search"></i>
+                        if(auth()->user()->can('show-seller')){
+                            $btn .= '<a href="'.route('panel.sellers.show',['seller' => $seller->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$seller->id.'" id="det_'.$seller->id.'" class="btn btn-inverse btn-sm  mr-1 detailSeller">
+                                        <i class="ti-eye"></i>
                                     </a>';
                         }
                         if(auth()->user()->can('delete-seller')){
@@ -122,7 +124,9 @@ class SellerController extends Controller
         $seller->email            = $request->email;
         $seller->dni              = $request->dni;
         $seller->phone            = $request->phone;
-        $seller->balance_jib      = $request->balance_jib;
+        $seller->address          = $request->address;
+        $seller->address_city     = $request->address_city;
+        //$seller->balance_jib      = $request->balance_jib;
         $seller->country_id       = $request->country_id;
         $seller->active           = $request->active;
         $seller->password         = Hash::make($request->password);
@@ -149,12 +153,81 @@ class SellerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $id = Auth::user()->id;
-        $sellerRole = DB::table('model_has_roles')->select('role_id')->where('model_id',  $id)->pluck('role_id')->toArray();
-        return view('panel.sellers.show', ['title' => 'Vendedores - Perfil', 'seller' => User::find($id), 'sellerRole' => $sellerRole, 'roles' => Role::all(), 'permissions' => User::findOrFail($id)->getAllPermissions()]);
+        if ($request->ajax()) {
+            $sale = Sale::select(
+                'id',
+                'number',
+                'number_culqi',
+                'amount',
+                'quantity',
+                'status',
+                'created_at AS date',
+                DB::raw('(CASE
+                            WHEN method = "card" THEN "Tarjeta"
+                            WHEN method = "jib" THEN "Jibs"
+                            ELSE "Otro"
+                            END) AS method')
+                )->where('seller_id', $id)->get();
+                return Datatables::of($sale)
+                ->addIndexColumn()
+                ->addColumn('action', function($sale){
+                    $btn = '';
+                    $sale = Sale::find($sale->id);
+                    $btn .= '<a href="#"
+                                data-toggle="tooltip"
+                                data-placement="right"
+                                title="Detalles del comprador"
+                                data-name="'.$sale->name.'"
+                                data-dni="'.$sale->dni.'"
+                                data-email="'.$sale->email.'"
+                                data-phone="'.$sale->phone.'"
+                                data-address="'.$sale->address.'"
+                                data-country="'.$sale->country->name.'"
+                                id="det_'.$sale->id.'"
+                                class="btn btn-warning btn-sm  mr-1 detailSale">
+                                <i class="ti-eye"></i>
+                            </a>';
+                    return $btn;
+                })
+                ->addColumn('status', function($sale){
+                    $btn = '';
+                    if($sale->status=='approved'){
+                        $btn .= '<span class="badge badge-success" title="Aprobada">Aprobada</span>';
+                    }elseif($sale->status=='refused'){
+                        $btn .= '<span class="badge badge-danger" title="Rechazada">Rechazada</span>';
+                    } else{
+                        $btn .= '<span class="badge badge-warning" title="Pendiente">Pendiente</span>';
+                    }
+                    return $btn;
+                })
+                ->addColumn('raffle', function($sale){
+                    $sale = Sale::find($sale->id);
+                    return $sale->raffle->title;
+                })
+                ->addColumn('ticket', function($sale){
+                    $sale = Sale::find($sale->id);
+                    return   $sale->ticket->promotion->name;
+                })->addColumn('amount', function($sale){
+                    return   Helper::amount($sale->amount);
+                })->addColumn('date', function($sale){
+                    return   $sale->date;
+                })
+                ->rawColumns(['action', 'status', 'raffle', 'ticket', 'amount', 'date'])
+                ->make(true);
+        }
+
+        return view('panel.sellers.show', [
+            'title'              => 'Vendedores',
+            'title_header'       => 'Vendedor detalles',
+            'description_module' => 'Informacion del vendedor en el sistema.',
+            'title_nav'          => 'Detalles',
+            'seller'             => Seller::findOrFail($id),
+            'icon'               => 'icofont icofont-users'
+        ]);
     }
+
 
     /**
      * Display the specified resource.
@@ -205,7 +278,8 @@ class SellerController extends Controller
         $seller->email            = $request->email;
         $seller->dni              = $request->dni;
         $seller->phone            = $request->phone;
-        $seller->balance_jib      = $request->balance_jib;
+        $seller->address          = $request->address;
+        $seller->address_city     = $request->address_city;
         $seller->country_id       = $request->country_id;
         $seller->active           = $request->active==1 ? 1 : 0;
         if($request->password){

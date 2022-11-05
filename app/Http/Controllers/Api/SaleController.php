@@ -98,7 +98,7 @@ class SaleController extends Controller
                                 'sale_id'        => $saleUpdate->id,
                                 'user_id'        => $user->id,
                                 "description"    => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
-                                'payment_method' => 'Card',
+                                'payment_method' => 'Jib',
                                 'total_paid'     => Helper::amount($ticket->promotion->price),
                                 'response'       => ($status == 'approved') ? 'Su compra ha sido exitosa.' : 'Error: '.$type,
                                 'code_response'  => ($status == 'approved') ? $reference_code : $merchant_message,
