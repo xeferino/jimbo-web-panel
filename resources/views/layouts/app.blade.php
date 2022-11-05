@@ -37,6 +37,10 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/jquery.mCustomScrollbar.css') }}">
     <!-- select2 js -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/select2/select2.min.css') }}">
+    <!-- morris js -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/morris.js/morris.css') }}">
+    <!-- chart js -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/chart.js/Chart.min.css') }}">
     <!-- datepicker -->
     <link rel="stylesheet" href="{{ asset('assets/css/datepicker/css/bootstrap-datepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datepicker/css/bootstrap-datepicker3.min.css') }}">
@@ -192,6 +196,12 @@
     <!-- Datepicker -->
     <script src="{{ asset('assets/js/datepicker/bootstrap-datepicker.min.js') }}"></script>
     <script src="{{ asset('assets/js/datepicker/locales/bootstrap-datepicker.es.min.js') }}" charset="UTF-8"></script>
+    <!-- morris js -->
+    <script src="{{ asset('assets/js/morris.js/morris.js') }}"></script>
+    <script src="{{ asset('assets/js/raphael/raphael.min.js') }}"></script>
+    <!-- chart js -->
+    <script src="{{ asset('assets/js/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ asset('assets/js/chart.js/Chart.bundle.min.js') }}"></script>
 
     <!-- Moment -->
     <script src="{{ asset('assets/js/moment/moment.js') }}"></script>

@@ -21583,3 +21583,28 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
    }
 
 /*# sourceMappingURL=style.css.map */
+
+.donut-users > li {
+    display: inline; padding-left:3px; padding-right:3px;
+}
+
+
+.btn-user {
+    background-color: #cc7514;
+}
+
+.btn-classic {
+    background-color: #8a5112;
+}
+
+.btn-junior {
+    background-color: #eb8413;
+}
+
+.btn-middle {
+    background-color: #e69232;
+}
+
+.btn-master {
+    background-color: #eda85c;
+}
