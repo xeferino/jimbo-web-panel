@@ -188,7 +188,7 @@
                 <div class="card-header">
                     <i class="ti-money"></i>
                     <div class="d-inline-block">
-                        <h5>Solicitudes de efectivo</h5>
+                        <h5>Balances</h5>
                         <span>Informacion</span>
                     </div>
                 </div>

@@ -6,6 +6,7 @@ use DataTables;
 use App\Models\User as Seller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -186,10 +187,15 @@ class SellerController extends Controller
                                 data-address="'.$sale->address.'"
                                 data-country="'.$sale->country->name.'"
                                 id="det_'.$sale->id.'"
-                                class="btn btn-warning btn-sm  mr-1 detailSale">
-                                <i class="ti-eye"></i>
+                                class="btn btn-inverse btn-sm  mr-1 detailSale">
+                                <i class="ti-user"></i>
                             </a>';
-                    return $btn;
+                    if(auth()->user()->can('show-sale')){
+                        $btn .= '<a href="'.route('panel.sales.show',['sale' => $sale->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  class="btn btn-warning btn-sm  mr-1 detailSale">
+                                        <i class="ti-eye"></i>
+                                    </a>';
+                        return $btn;
+                    }
                 })
                 ->addColumn('status', function($sale){
                     $btn = '';
@@ -212,7 +218,8 @@ class SellerController extends Controller
                 })->addColumn('amount', function($sale){
                     return   Helper::amount($sale->amount);
                 })->addColumn('date', function($sale){
-                    return   $sale->date;
+                    $date = Carbon::parse($sale->date)->format('d/m/Y H:i:s');
+                    return   $date;
                 })
                 ->rawColumns(['action', 'status', 'raffle', 'ticket', 'amount', 'date'])
                 ->make(true);

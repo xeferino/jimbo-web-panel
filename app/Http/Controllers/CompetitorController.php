@@ -6,6 +6,7 @@ use DataTables;
 use App\Models\User as Competitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -155,7 +156,9 @@ class CompetitorController extends Controller
      */
     public function show(Request $request, $id)
     {
+        $user = Shopping::find($id);
         if ($request->ajax()) {
+
             if($request->mod == 'shopping'){
                 $shopping = Shopping::select(
                     'id',
@@ -170,7 +173,7 @@ class CompetitorController extends Controller
                                 WHEN method = "jib" THEN "Jibs"
                                 ELSE "Otro"
                                 END) AS method')
-                    )->where('user_id', $id)->get();
+                    )->where('user_id', $user->user_id)->get();
                     return Datatables::of($shopping)
                     ->addIndexColumn()
                     ->addColumn('action', function($shopping){
@@ -205,12 +208,13 @@ class CompetitorController extends Controller
                     })->addColumn('amount', function($shopping){
                         return   Helper::amount($shopping->amount);
                     })->addColumn('date', function($shopping){
-                        return   $shopping->date;
+                        $date = Carbon::parse($shopping->date)->format('d/m/Y H:i:s');
+                        return   $date;
                     })
                     ->rawColumns(['action', 'status', 'raffle', 'ticket', 'amount', 'date'])
                     ->make(true);
             } elseif($request->mod == 'paymentHistory') {
-                $shopping = PaymentHistory::select(
+                $payment = PaymentHistory::select(
                     'id',
                     'description',
                     'total_paid AS amount',
@@ -223,26 +227,29 @@ class CompetitorController extends Controller
                                 WHEN payment_method = "Jib" THEN "Jibs"
                                 ELSE "Otro"
                                 END) AS method')
-                    )->where('user_id', $id)->get();
-                    return Datatables::of($shopping)
+                    )->where('user_id', $user->user_id)->get();
+                    return Datatables::of($payment)
                     ->addIndexColumn()
-                    ->addColumn('action', function($shopping){
+                    ->addColumn('action', function($payment){
 
                     })
-                    ->addColumn('status', function($shopping){
+                    ->addColumn('status', function($payment){
                         $btn = '';
-                        if($shopping->status=='approved'){
+                        if($payment->status=='approved'){
                             $btn .= '<span class="badge badge-success" title="Aprobada">Aprobada</span>';
-                        }elseif($shopping->status=='refused'){
+                        }elseif($payment->status=='refused'){
                             $btn .= '<span class="badge badge-danger" title="Rechazada">Rechazada</span>';
                         } else{
                             $btn .= '<span class="badge badge-warning" title="Pendiente">Pendiente</span>';
                         }
                         return $btn;
-                    })->addColumn('amount', function($shopping){
-                        return   $shopping->amount;
+                    })->addColumn('amount', function($payment){
+                        return   $payment->amount;
+                    })->addColumn('date', function($payment){
+                        $date = Carbon::parse($payment->date)->format('d/m/Y H:i:s');
+                        return   $date;
                     })
-                    ->rawColumns(['action', 'status', 'amount'])
+                    ->rawColumns(['action', 'status', 'amount', 'date'])
                     ->make(true);
             }elseif($request->mod == 'cash') {
                 $cash = CashRequest::select(
@@ -254,15 +261,21 @@ class CompetitorController extends Controller
                     'description',
                     'status',
                     'user_id'
-                )->where('user_id', $id)->get();
+                )->where('user_id', $user->user_id)->get();
                 return Datatables::of($cash)
                         ->addIndexColumn()
                         ->addColumn('action', function($cash){
-                               $btn = '';
+                            $btn = '';
                             if(auth()->user()->can('show-cash-request')){
-                                $btn .= '<a href="'.route('panel.cash.request.show',['id' => $cash->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$cash->id.'" id="det_'.$cash->id.'" class="btn btn-warning btn-sm  mr-1 detailCashRequest">
+                                if($cash->status == 'approved') {
+                                    $btn .= '<a href="'.route('panel.egress.show',['id' => $cash->id]).'" data-toggle="tooltip" data-placement="right" title="Detalle de egreso"  class="btn btn-success btn-sm  mr-1">
                                             <i class="ti-eye"></i>
                                         </a>';
+                                }else{
+                                    $btn .= '<a href="'.route('panel.cash.request.show',['id' => $cash->id]).'" data-toggle="tooltip" data-placement="right" title="Detalle solicitud"  class="btn btn-warning btn-sm  mr-1">
+                                                <i class="ti-eye"></i>
+                                            </a>';
+                                }
                             }
                             return $btn;
                         })->addColumn('amount', function($cash){
@@ -272,7 +285,7 @@ class CompetitorController extends Controller
                             $date = explode('-', $cash->date);
                             return $date[2].'/'.$date[1].'/'.$date[0];
                         })->addColumn('user', function($cash){
-                            $user = User::find($cash->user_id);
+                            $user = Competitor::find($cash->user_id);
                             return $user->names .' '. $user->surnames;
                         })->addColumn('status', function($cash){
                             $btn = '';
@@ -293,7 +306,7 @@ class CompetitorController extends Controller
                         ->make(true);
 
             } elseif($request->mod == 'balance') {
-                $cash = BalanceHistory::select(
+                $balance = BalanceHistory::select(
                     'id',
                     'reference',
                     'description',
@@ -306,16 +319,16 @@ class CompetitorController extends Controller
                     'date',
                     'hour',
                     'user_id'
-                )->where('user_id', $id)->get();
-                return Datatables::of($cash)
+                )->where('user_id', $user->user_id)->get();
+                return Datatables::of($balance)
                         ->addIndexColumn()
-                        ->addColumn('action', function($cash){
-                        })->addColumn('date', function($cash){
-                            $cash = CashRequest::find($cash->id);
-                            $date = explode('-', $cash->date);
+                        ->addColumn('action', function($balance){
+                        })->addColumn('date', function($balance){
+                            $balance = BalanceHistory::find($balance->id);
+                            $date = explode('-', $balance->date);
                             return $date[2].'/'.$date[1].'/'.$date[0];
-                        })->addColumn('user', function($cash){
-                            $user = User::find($cash->user_id);
+                        })->addColumn('user', function($balance){
+                            $user = Competitor::find($balance->user_id);
                             return $user->names .' '. $user->surnames;
                         })->rawColumns(['action', 'amount', 'date', 'user', 'status'])
                         ->make(true);

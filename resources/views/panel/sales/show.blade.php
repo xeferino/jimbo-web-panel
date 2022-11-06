@@ -3,6 +3,7 @@
 @section('page-content')
     <!-- Basic card start -->
     <div class="row">
+        <input type="hidden" name="sale_id" id="sale_id" value="{{$sale->id}}">
         <div class="col-sm-12">
             <div class="card fb-card">
                 <div class="card-header">
@@ -110,6 +111,32 @@
                             <h4>{{ $sale->quantity }}</h4>
                             <p class="text-muted">Cantidad de boletos</p>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div class="card fb-card">
+                <div class="card-header">
+                    <i class="ti-layers-alt"></i>
+                    <div class="d-inline-block">
+                        <h5>Boletos</h5>
+                        <span>Informacion</span>
+                    </div>
+                </div>
+                <div class="card-block table-border-style">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sale-ticket">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Serial/Codigo</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

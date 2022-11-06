@@ -6,6 +6,7 @@ use DataTables;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -13,7 +14,7 @@ use App\Models\Country;
 use App\Models\Sale;
 use Illuminate\Support\Facades\File;
 use App\Helpers\Helper;
-
+use App\Models\TicketUser;
 
 class SaleController extends Controller
 {
@@ -82,7 +83,8 @@ class SaleController extends Controller
                     })->addColumn('amount', function($sale){
                         return   Helper::amount($sale->amount);
                     })->addColumn('date', function($sale){
-                        return   $sale->date;
+                        $date = Carbon::parse($sale->date)->format('d/m/Y H:i:s');
+                        return   $date;
                     })
                     ->rawColumns(['action', 'status', 'raffle', 'ticket', 'amount', 'date'])
                     ->make(true);
@@ -103,8 +105,22 @@ class SaleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        if ($request->ajax()) {
+            $ticket = Sale::find($id);
+            $sale = TicketUser::select(
+                'id',
+                'serial'
+                )->where('sale_id', $id)->where('raffle_id', $ticket->raffle_id)->where('ticket_id', $ticket->ticket_id)->get();
+            return Datatables::of($sale)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($sale){
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+        }
+
         return view('panel.sales.show', [
             'title'              => 'Ventas',
             'title_header'       => 'Detalles de la venta',

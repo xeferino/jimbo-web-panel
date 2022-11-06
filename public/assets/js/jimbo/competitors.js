@@ -59,7 +59,7 @@ $(function () {
         ]
     });
 
-    var table = $('.table-competitor-shoppings').DataTable({
+    var table1 = $('.table-competitor-shoppings').DataTable({
         processing: true,
         serverSide: true,
         "language": {
@@ -117,7 +117,7 @@ $(function () {
         ]
     });
 
-    var table = $('.table-competitor-payment-history').DataTable({
+    var table2 = $('.table-competitor-payment-history').DataTable({
         processing: true,
         serverSide: true,
         "language": {
@@ -173,7 +173,7 @@ $(function () {
         ]
     });
 
-    var table = $('.table-cash').DataTable({
+    var table3 = $('.table-cash').DataTable({
         processing: true,
         serverSide: true,
         "language": {
@@ -228,7 +228,7 @@ $(function () {
         ]
     });
 
-    var table = $('.table-balance').DataTable({
+    var table4 = $('.table-balance').DataTable({
         processing: true,
         serverSide: true,
         "language": {
@@ -270,7 +270,7 @@ $(function () {
                 "sortDescending": ": activate to sort column descending"
             }
         },
-        ajax: APP_URL+JIMBO.url+'/'+id+'?mod=cash',
+        ajax: APP_URL+JIMBO.url+'/'+id+'?mod=balance',
         columns: [
             {data: 'id', name: 'id'},
             {data: 'reference', name: 'reference'},
@@ -284,6 +284,8 @@ $(function () {
         ]
     });
     /*DataTables*/
+    table4.columns([8]).visible(false);
+    table2.columns([8]).visible(false);
 
     $("#image").on('change', function () {
         if(validarExtension(this)) {
