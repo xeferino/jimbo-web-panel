@@ -316,6 +316,11 @@ class CompetitorController extends Controller
                                 ELSE "Otro"
                                 END) AS type'),
                     'balance AS amount',
+                    DB::raw('(CASE
+                                WHEN currency = "jib" THEN "Jib"
+                                WHEN currency = "usd" THEN "USD"
+                                ELSE "Otro"
+                                END) AS currency'),
                     'date',
                     'hour',
                     'user_id'

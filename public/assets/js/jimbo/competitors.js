@@ -277,6 +277,7 @@ $(function () {
             {data: 'description', name: 'description'},
             {data: 'type', name: 'type'},
             {data: 'amount', name: 'amount'},
+            {data: 'currency', name: 'currency'},
             {data: 'date', name: 'date'},
             {data: 'hour', name: 'hour'},
             {data: 'user', name: 'user'},
@@ -284,7 +285,7 @@ $(function () {
         ]
     });
     /*DataTables*/
-    table4.columns([8]).visible(false);
+    table4.columns([9]).visible(false);
     table2.columns([8]).visible(false);
 
     $("#image").on('change', function () {
