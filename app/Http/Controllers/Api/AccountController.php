@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use App\Models\AccountUser as Account;
-
 class AccountController extends Controller
 {
 
@@ -97,6 +96,11 @@ class AccountController extends Controller
     {
         try {
             $account            = Account::findOrFail($Account->id);
+            $exists             = $account->CashRequest->whereIn('status', ['pending','created'])->count();
+            if($exists>0) {
+                return response()->json(['success' => false, 'message' => 'La Cuenta no se puede actualizar, tiene una solicitud abierta de retiro'], 200);
+            }
+
             $account->name      = $request->name;
             $account->email     = $request->email;
             $account->dni       = $request->dni;
@@ -127,6 +131,11 @@ class AccountController extends Controller
     {
         try {
             $account = Account::findOrFail($id);
+            $exists   = $account->CashRequest->count();
+            if($exists>0) {
+                return response()->json(['success' => false, 'message' => 'La Cuenta no se puede eliminar, tiene una solicitud abierta de retiro'], 200);
+            }
+
             $delete = $account->delete();
             if ($delete)
                 return response()->json(['success' => true, 'message' => 'Cuenta eliminada exitosamente.'], 200);

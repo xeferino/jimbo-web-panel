@@ -26,7 +26,7 @@ class SaleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function saleTicketCard(FormSaleRequest $request)
+    public function saleTicket(FormSaleRequest $request)
     {
         try {
             DB::beginTransaction();
@@ -162,6 +162,53 @@ class SaleController extends Controller
                             $user->balance_jib  =  $available_jib;
                             $user->save();
                             BalanceController::store($data['description'], 'debit', $amout_jib, 'jib', $user->id);
+                        }elseif ($request->method_type == 'cash') {
+                            if (intval($user->balance_usd)<$ticket->promotion->price) {
+                                return response()->json([
+                                    'error'    => true,
+                                    'message'  => 'Balance en usd '.$user->balance_usd.', es insuficiente',
+                                ], 422);
+                            }
+                            $saleUpdate = Sale::find($sale->id);
+                            $reference_code = substr(sha1(time()), 0, 6);
+                            $status = 'approved';
+                            $ticket->total = $ticket->total-$ticket->promotion->quantity;
+                            $saleUpdate->method = 'cash';
+                            $ticket->save();
+                            $saleUpdate->status = $status;
+                            $saleUpdate->save();
+                            TicketUser::insert($tickets);
+
+                            $payment_receipt = [
+                                'fullname'          => $saleUpdate->name,
+                                'date'              => $saleUpdate->created_at,
+                                'code_ticket'       => $ticket->serial,
+                                'tickets'           => $saleUpdate->TicketsUsers,
+                                'quantity'          => $ticket->promotion->quantity,
+                                'number_operation'  => $saleUpdate->number,
+                                'amount'            => Helper::jib($amout_jib),
+                                "description"       => 'Compra '.$ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
+                                'raffle'            => $ticket->raffle->title,
+                                'type'              => 'Efectivo'
+                            ];
+                            Mail::to($user->email)->send(new ReceiptPayment($payment_receipt));
+
+                            $data = [
+                                'sale_id'        => $saleUpdate->id,
+                                'user_id'        => $user->id,
+                                "description"    => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
+                                'payment_method' => 'Cash',
+                                'total_paid'     => Helper::jib($amout_jib),
+                                'response'       => ($status == 'approved') ? 'Su compra ha sido exitosa.' : 'Error: Su compra no ha sido exitosa',
+                                'code_response'  => ($status == 'approved') ? $reference_code : 'Error',
+                                'status'         => $status,
+                                'created_at'     => now(),
+                                'updated_at'     => now()
+                            ];
+                            $PaymentHistory     = PaymentController::paymentHistoryStore($data);
+                            $user->balance_usd  =  intval($user->balance_usd)-$ticket->promotion->price;
+                            $user->save();
+                            BalanceController::store($data['description'], 'debit', $ticket->promotion->price, 'usd', $user->id);
                         }
                     }
                     DB::commit();
@@ -177,7 +224,6 @@ class SaleController extends Controller
                                 'quantity'          => $ticket->promotion->quantity,
                                 'number_operation'  => $saleUpdate->number,
                                 'amount'            => Helper::amount($ticket->promotion->price),
-                                'jib'               => Helper::jib($amout_jib),
                             ]
                         ], 200);
                     }
@@ -222,20 +268,21 @@ class SaleController extends Controller
         $sale = null;
 
         if ($ticket) {
-            $user = isset($data->user_id) ? User::find($data->user_id) : null;
+            $user = isset($data->other) && $data->other == 1 ? null : User::find($data->user_id);
             $sale = new Sale();
             $fullnames        =   $user->names . ' ' . $user->surnames;
             $sale->name       =   $fullnames;
             $sale->dni        =   $user ? $user->dni :  $data->dni;
             $sale->phone      =   $user ? $user->phone :  $data->phone;
             $sale->email      =   $user ? $user->email :  $data->email;
+            $sale->address    =   $user ? $user->address :  $data->address;
             $sale->country_id =   $data->country_id;
             $sale->amount     =   $ticket->promotion->price;
             $sale->number     =   time();
             $sale->quantity   =   $ticket->promotion->quantity;
             $sale->ticket_id  =   $ticket->id;
-            $sale->seller_id  =   isset($data->seller_id) ? $data->seller_id : null;
-            $sale->user_id    =   isset($data->user_id) ? $data->user_id : null;
+            $sale->seller_id  =   isset($data->other) && $data->other == 1 ? $data->seller_id : null;
+            $sale->user_id    =   isset($data->other) && $data->other == 1 ? null : $data->user_id;
             $sale->raffle_id  =   $data->raffle_id;
             $sale->status     =   'pending';
             $sale->save();

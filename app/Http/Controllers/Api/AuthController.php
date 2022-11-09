@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\BalanceController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -23,7 +24,8 @@ use App\Models\User;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\DB;
+use App\Helpers\Helper;
 class AuthController extends Controller
 {
     private $asset;
@@ -78,23 +80,28 @@ class AuthController extends Controller
                     }
 
                     $accessToken = $user->createToken('AuthToken')->plainTextToken;
-                    $balance = config('jibs.bonus.to_access') + $user->balance_jib ?? 0;
+                    $balance = SettingController::bonus()['bonus']['to_access'] + $user->balance_jib ?? 0;
                     $user->save();
                     BalanceController::store('Bono de ingreso a la aplicacion', 'credit', $balance, 'jib', $user->id);
                     $user = User::find($user->id);
                     return response()->json(
                         [
                             'profile'    => [
-                                'id'           => $user->id,
-                                'names'        => $user->names,
-                                'surnames'     => $user->surnames,
-                                'email'        => $user->email,
-                                'dni'          => $user->dni,
-                                'phone'        => $user->phone,
-                                'address'      => $user->address,
-                                'address_city' => $user->address_city,
-                                'usd'          => $user->balance_usd,
-                                'jib'          => $user->balance_jib,
+                                'id'             => $user->id,
+                                'names'          => $user->names,
+                                'surnames'       => $user->surnames,
+                                'email'          => $user->email,
+                                'dni'            => $user->dni,
+                                'phone'          => $user->phone,
+                                'address'        => $user->address,
+                                'address_city'   => $user->address_city,
+                                'usd'            => Helper::amount($user->balance_usd),
+                                'jib'            => Helper::jib($user->balance_jib),
+                                'jib_rate'       => SettingController::jib()['value']['jib_usd'],
+                                'balance_jib'    => $user->balance_jib,
+                                'balance_usd'    => $user->balance_usd,
+                                'amount_shopping'   => Helper::amount($user->Shoppings->sum('amount')),
+                                'shoppings'         => $user->Shoppings->count(),
                                 'email_verified_at' => $user->email_verified_at,
                                 'role'         => $user->getRoleNames()->join(''),
                                 'image'        => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
@@ -143,7 +150,7 @@ class AuthController extends Controller
             $user->image            = 'avatar.svg';
             $user->save();
             $user->assignRole('competitor');
-            BalanceController::store('Bono de registro en la aplicacion', 'credit', config('jibs.bonus.register'), 'jib', $user->id);
+            BalanceController::store('Bono de registro en la aplicacion', 'credit', SettingController::bonus()['bonus']['register'], 'jib', $user->id);
 
             $data = [
                 'user'  => $user,
@@ -156,16 +163,21 @@ class AuthController extends Controller
             $user = User::find($user->id);
             return response()->json([
                 'profile'    => [
-                    'id'           => $user->id,
-                    'names'        => $user->names,
-                    'surnames'     => $user->surnames,
-                    'email'        => $user->email,
-                    'dni'          => $user->dni,
-                    'phone'        => $user->phone,
-                    'address'      => $user->address,
-                    'address_city' => $user->address_city,
-                    'usd'          => $user->balance_usd,
-                    'jib'          => $user->balance_jib,
+                    'id'            => $user->id,
+                    'names'         => $user->names,
+                    'surnames'      => $user->surnames,
+                    'email'         => $user->email,
+                    'dni'           => $user->dni,
+                    'phone'         => $user->phone,
+                    'address'       => $user->address,
+                    'address_city'  => $user->address_city,
+                    'usd'           => Helper::amount($user->balance_usd),
+                    'jib'           => Helper::jib($user->balance_jib),
+                    'jib_rate'      => SettingController::jib()['value']['jib_usd'],
+                    'balance_jib'   => $user->balance_jib,
+                    'balance_usd'   => $user->balance_usd,
+                    'amount_shopping'   => Helper::amount($user->Shoppings->sum('amount')),
+                    'shoppings'         => $user->Shoppings->count(),
                     'email_verified_at' => $user->email_verified_at,
                     'role'         => $user->getRoleNames()->join(''),
                     'image'        => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
@@ -203,16 +215,21 @@ class AuthController extends Controller
             if ($user) {
                 return response()->json([
                     'profile'    => [
-                        'id'           => $user->id,
-                        'names'        => $user->names,
-                        'surnames'     => $user->surnames,
-                        'email'        => $user->email,
-                        'dni'          => $user->dni,
-                        'phone'        => $user->phone,
-                        'address'      => $user->address,
-                        'address_city' => $user->address_city,
-                        'usd'          => $user->balance_usd,
-                        'jib'          => $user->balance_jib,
+                        'id'                => $user->id,
+                        'names'             => $user->names,
+                        'surnames'          => $user->surnames,
+                        'email'             => $user->email,
+                        'dni'               => $user->dni,
+                        'phone'             => $user->phone,
+                        'address'           => $user->address,
+                        'address_city'      => $user->address_city,
+                        'usd'               => Helper::amount($user->balance_usd),
+                        'jib'               => Helper::jib($user->balance_jib),
+                        'jib_rate'          => SettingController::jib()['value']['jib_usd'],
+                        'balance_jib'       => $user->balance_jib,
+                        'balance_usd'       => $user->balance_usd,
+                        'amount_shopping'   => Helper::amount($user->Shoppings->sum('amount')),
+                        'shoppings'         => $user->Shoppings->count(),
                         'email_verified_at' => $user->email_verified_at,
                         'role'         => $user->getRoleNames()->join(''),
                         'image'        => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
@@ -324,8 +341,13 @@ class AuthController extends Controller
                         'phone'        => $user->phone,
                         'address'      => $user->address,
                         'address_city' => $user->address_city,
-                        'usd'          => $user->balance_usd,
-                        'jib'          => $user->balance_jib,
+                        'usd'          => Helper::amount($user->balance_usd),
+                        'jib'          => Helper::jib($user->balance_jib),
+                        'jib_rate'      => SettingController::jib()['value']['jib_usd'],
+                        'balance_jib'   => $user->balance_jib,
+                        'balance_usd'   => $user->balance_usd,
+                        'amount_shopping'   => Helper::amount($user->Shoppings->sum('amount')),
+                        'shoppings'         => $user->Shoppings->count(),
                         'email_verified_at' => $user->email_verified_at,
                         'role'         => $user->getRoleNames()->join(''),
                         'image'        => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',

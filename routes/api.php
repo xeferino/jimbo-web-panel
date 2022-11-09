@@ -36,7 +36,7 @@ Route::get('/countries', [CountryController::class, 'index']);
 Route::get('/sliders', [SliderController::class, 'index']);
 //Route::get('/profile/{id}', [AuthController::class, 'profile'])->middleware('auth:sanctum');
 
-Route::prefix('user')->middleware('auth:sanctum')->group(function () {
+Route::prefix('user')->middleware(['auth:sanctum', 'check.user'])->group(function () {
     //informations
     Route::get('/profile/{id}', [AuthController::class, 'profile']);
     Route::post('/profile/{id}', [AuthController::class, 'settingProfile']);
@@ -57,7 +57,7 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
 
 });
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'check.user'])->group(function () {
     //raffles
     Route::post('/raffles/ticket', [RaffleController::class, 'ticket']);
     Route::get('/raffles/favorites/{user?}', [RaffleController::class, 'index']);
@@ -68,16 +68,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/payment/{user}', [PaymentController::class, 'paymentHistory']);
     Route::post('/payment/detail', [PaymentController::class, 'paymentDetail']);
     Route::get('/payment/methods/all', [PaymentController::class, 'paymentMethod']);
-
     //sales
-    Route::post('/sales/payment', [SaleController::class, 'saleTicketCard']);
+    Route::post('/sales/payment', [SaleController::class, 'saleTicket']);
     //shoppings
     Route::get('/shoppings/{user}', [ShoppingController::class, 'index']);
     Route::get('/shoppings/tickets/{shopping}', [ShoppingController::class, 'show']);
     //jibs
     Route::get('/jibs', [JibController::class, 'index']);
+    Route::post('/jibs/recharge', [JibController::class, 'recharge']);
+    Route::post('/jibs/exchange', [JibController::class, 'exchange']);
+    //cash request
+    Route::post('/cash/request', [PaymentController::class, 'cashRequest']);
 });
 
-Route::get('/foo', function () {
+/*Route::get('/foo', function () {
     return Artisan::call('storage:link');
-});
+});*/

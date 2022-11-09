@@ -17,4 +17,9 @@ class AccountUser extends Model
     {
         return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
+
+    public function CashRequest()
+    {
+        return $this->hasMany('App\Models\CashRequest', 'account_user_id', 'id');
+    }
 }

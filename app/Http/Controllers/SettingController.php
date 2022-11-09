@@ -121,4 +121,43 @@ class SettingController extends Controller
         return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Configuracion agregada exitosamente!'], 200);
     }
 
+    public static function bonus()
+    {
+        $register  = Setting::where('name', 'register')->first();
+        $referrals = Setting::where('name', 'referrals')->first();
+        $to_access = Setting::where('name', 'to_access')->first();
+
+        return [
+            /*
+            |--------------------------------------------------------------------------
+            | Jibs change app
+            |--------------------------------------------------------------------------
+            */
+            'bonus' => [
+                'register'      => $register->value,
+                'referrals'     =>  $referrals->value,
+                'to_access'     =>  $to_access->value
+            ]
+        ];
+
+    }
+
+    public static function jib()
+    {
+        $jib_usd = DB::table('settings')->where('name', 'jib_usd')->first();
+        $jib_unit_x_usd = DB::table('settings')->where('name', 'jib_unit_x_usd')->first();
+
+        return [
+            /*
+            |--------------------------------------------------------------------------
+            | Jibs set config value
+            |--------------------------------------------------------------------------
+            */
+            'value' => [
+                'jib_usd'         =>  $jib_usd->value,
+                'jib_unit_x_usd'  =>  $jib_unit_x_usd->value
+            ]
+        ];
+
+    }
 }

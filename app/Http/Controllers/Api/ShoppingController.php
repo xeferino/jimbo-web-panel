@@ -14,6 +14,7 @@ use App\Models\Ticket;
 use App\Models\Sale as Shopping;
 use App\Models\TicketUser;
 use App\Models\User;
+use App\Helpers\Helper;
 
 class ShoppingController extends Controller
 {
@@ -51,7 +52,9 @@ class ShoppingController extends Controller
             $shopping = [
                 'raffle' => [
                     'title' => $shopping->Raffle->title,
-                    'status' => $shopping->Raffle->active,
+                    'first_prize'  => Helper::amount($shopping->Raffle->cash_to_draw),
+                    'status' => $shopping->Raffle->active == 1 ? 'Activo' : 'Inactivo',
+                    'finish' => $shopping->Raffle->finish == 1 ? 'Finalizado' : 'Abierto',
                     'code_ticket' => $shopping->Ticket->serial,
                     'tickets' => $shopping->TicketsUsers,
                     'date_start' => $shopping->Raffle->date_end->format('d/m/y'),
@@ -71,7 +74,7 @@ class ShoppingController extends Controller
             ], 200);
         }catch (Exception $e) {
             return response()->json([
-                'status'   => 500,
+                'status'  => 500,
                 'message' =>  $e->getMessage()
             ]);
         }

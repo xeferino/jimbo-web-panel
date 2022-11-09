@@ -3,6 +3,7 @@ const APP_URL = $('meta[name="base-url"]').attr('content');
 const JIMBO = { url : '/panel/sellers' };
 //alert(JIMBO.url)
 $(function () {
+    $('#form-recharge').hide();
     var id = $('#seller_id').val();
     /*DataTables*/
     var table = $('.table-seller').DataTable({
@@ -101,7 +102,7 @@ $(function () {
                 "sortDescending": ": activate to sort column descending"
             }
         },
-        ajax: APP_URL+JIMBO.url+'/'+id,
+        ajax: APP_URL+JIMBO.url+'/'+id+'?mod=sales',
         columns: [
             {data: 'id', name: 'id'},
             {data: 'number', name: 'number'},
@@ -117,6 +118,64 @@ $(function () {
         ]
     });
 
+    var table_balance = $('.table-balance').DataTable({
+        processing: true,
+        serverSide: true,
+        "language": {
+            "decimal":        "",
+            "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ balances",
+            "infoEmpty":      "Mostrando 0 para 0 de 0 balances",
+            "infoFiltered":   "(Filtrado para un total de _MAX_ balances)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Mostrar _MENU_ Registros",
+            "loadingRecords": `<div class="ball-scale">
+                                    <div class='contain'>
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <img src="${APP_URL+'/assets/images/jimbo-table.png'}" class="ring" width="48" alt="logo.png">
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <div class="ring"><div class="frame"></div></div>
+                                    </div>
+                                </div>`,
+            "processing": `<div class="ball-scale">
+                                <div class='contain'>
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <img src="${APP_URL+'/assets/images/jimbo-table.png'}" class="ring" width="48" alt="logo.png">
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <div class="ring"><div class="frame"></div></div>
+                                </div>
+                            </div>`,
+            "search":         "Buscar:",
+            "zeroRecords":    "No hay coicidencias de registros en la busqueda",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Ultimo",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": activate to sort column ascending",
+                "sortDescending": ": activate to sort column descending"
+            }
+        },
+        ajax: APP_URL+JIMBO.url+'/'+id+'?mod=balance',
+        columns: [
+            {data: 'id', name: 'id'},
+            {data: 'reference', name: 'reference'},
+            {data: 'description', name: 'description'},
+            {data: 'type', name: 'type'},
+            {data: 'amount', name: 'amount'},
+            {data: 'currency', name: 'currency'},
+            {data: 'date', name: 'date'},
+            {data: 'hour', name: 'hour'},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+    });
+    /*DataTables*/
+    table_balance.columns([8]).visible(false);
+
     $('body').on('click', '.detailSale', function () {
         var name = $(this).data("name");
         var dni = $(this).data("dni");
@@ -124,7 +183,10 @@ $(function () {
         var phone = $(this).data("phone");
         var country = $(this).data("country");
         var address = $(this).data("address");
-        $('#detailUser').modal('show');
+        $('#modalContent').modal('show');
+        $('.title-modal').text('Datos del comparador');
+        $('#form-recharge').hide();
+
         $('#info-user').html(function(){
             var html = '';
                 html +=`<div class="row">
@@ -153,10 +215,66 @@ $(function () {
                             <p class="text-muted">Direcion</p>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-warning btn-sm float-right" data-dismiss="modal">Close</button>`;
+                    <button type="button" class="btn btn-warning btn-sm float-right" data-dismiss="modal">Cerrar</button>`;
             return html;
         });
     });
+
+    $('body').on('click', '.recharge', function () {
+        $('#modalContent').modal('show');
+        $('.title-modal').text('Datos de la recarga de Jibs');
+        $('#info-user').html('');
+        $('#form-recharge').show();
+        $('#form-recharge').trigger("reset");
+    });
+
+     /*seller-recharge-jib*/
+     $("#form-recharge").submit(function( event ) {
+        event.preventDefault();
+        $('.btn-recharge').prop("disabled", true).text('Enviando...');
+
+        var formData = new FormData(event.currentTarget);
+
+        axios.post($(this).attr('action'), formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(response => {
+            if(response.data.success){
+                notify(response.data.message, 'success', '3000', 'top', 'right');
+                $('#form-recharge').trigger("reset");
+                $('.btn-recharge').prop("disabled", false).text('Recargar');
+                $('div.col-form-label').text('');
+                $('#modalContent').modal('hide');
+                setTimeout(() => {location.reload()}, 3000);
+            }
+        }).catch(error => {
+            if (error.response) {
+                if(error.response.status === 422){
+                    var err = error.response.data.errors;
+                    /* $.each(err, function( key, value) {
+                        notify(value, 'danger', '5000', 'bottom', 'right');
+                    }); */
+                    if (error.response.data.errors.jib) {
+                        $('.has-danger-jib').text('' + error.response.data.errors.jib + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-jib').text('');
+                    }
+                    if (error.response.data.errors.description) {
+                        $('.has-danger-description').text('' + error.response.data.errors.description + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-description').text('');
+                    }
+                }else{
+                    notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
+                }
+            }else{
+                notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
+            }
+            $('.btn-recharge').prop("disabled", false).text('Recargar');
+        });
+    });
+    /* seller-recharge-jib*/
 
     /*DataTables*/
 

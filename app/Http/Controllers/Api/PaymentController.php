@@ -10,6 +10,10 @@ use Exception;
 use App\Services\CulqiService as Culqi;
 use App\Models\CardUser as Card;
 use App\Models\PaymentMethod;
+use App\Models\User;
+use App\Http\Requests\Api\FormCashRequest;
+use App\Helpers\Helper;
+use App\Models\CashRequest;
 
 
 class PaymentController extends Controller
@@ -45,7 +49,22 @@ class PaymentController extends Controller
 
     public function paymentHistory(Request $request)
     {
-        $payments = PaymentHistory::where('user_id', $request->user)->get();
+        $payments = PaymentHistory::select(
+            'sale_id',
+            'user_id',
+            'description',
+            'payment_method',
+            'total_paid',
+            'response',
+            'code_response',
+            DB::raw('(CASE
+                                WHEN status = "approved" THEN "Aprobado"
+                                WHEN status = "refused" THEN "Rechazado"
+                                ELSE "Otro"
+                                END) AS status'),
+            'created_at',
+            'updated_at'
+            )->where('user_id', $request->user)->get();
 
         return response()->json([
             'status'  => 200,
@@ -102,6 +121,65 @@ class PaymentController extends Controller
                 'status'   => 400,
                 'message' =>  $e->getMessage()
             ], 400);
+        }
+    }
+
+    public function cashRequest (FormCashRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            $user = isset($request->user_id) ? User::find($request->user_id) : null;
+
+            $amount = $request->amount;
+
+            if ($amount>intval($user->balance_usd)) {
+                return response()->json([
+                    'error'    => true,
+                    'message'  => 'Balance en usd '.Helper::amount($user->balance_usd).', es insuficiente.',
+                ], 422);
+            }
+
+            $data = [
+                "description_request"    => 'solicitud de retiro por '.Helper::amount($amount),
+            ];
+
+
+            $debit  = BalanceController::store($data['description_request'], 'debit', $amount, 'usd', $user->id);
+            $cash = CashRequest::insert([
+                'currency'          => 'usd',
+                'amount'            =>  $amount,
+                'date'              =>  date('Y-m-d'),
+                'hour'              =>  date('H:i:s'),
+                'reference'         => time(),
+                'description'       => $data['description_request'],
+                'status'            => 'created',
+                'user_id'           => $user->id,
+                'account_user_id'   => $request->account_user_id
+            ]);
+            $user->balance_usd = $user->balance_usd-$amount;
+            $user->save();
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'La solitud de retiro ha sido procesado exitosamente.',
+                'details' => [
+                    'fullname'          => $user->names .' '. $user->surnames,
+                    'date'              => now(),
+                    'amount'            => Helper::amount($amount),
+                ]
+            ], 200);
+
+            return response()->json([
+                'error'             => true,
+                'message'           => 'La solitud de retiro no se proceso con exito.',
+            ], 422);
+        }catch (Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'status'   => 500,
+                    'message' =>  $e->getMessage()
+                ], 500);
         }
     }
 }

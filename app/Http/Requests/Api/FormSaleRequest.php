@@ -24,14 +24,15 @@ class FormSaleRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'          => $this->has('name') ? 'required|min:3' : 'nullable',
-            'email'         => $this->has('email') ? 'required|email' : 'nullable',
-            'dni'           => $this->has('dni') ? 'required|integer' : 'nullable',
-            'phone'         => $this->has('phone') ? 'required|string' : 'nullable',
+            'name'          => $this->has('other') && $this->other == 1 ? 'required|min:3' : 'nullable',
+            'email'         => $this->has('other') && $this->other == 1 ? 'required|email' : 'nullable',
+            'dni'           => $this->has('other') && $this->other == 1 ? 'required|integer' : 'nullable',
+            'phone'         => $this->has('other') && $this->other == 1 ? 'required|string' : 'nullable',
+            'address'       => $this->has('other') && $this->other == 1 ? 'required|string' : 'nullable',
             'country_id'    => 'required|integer',
             'raffle_id'     => 'required|integer',
             'ticket_id'     => 'required|integer',
-            'seller_id'     => $this->has('seller_id') ? 'required|integer' : 'nullable',
+            'seller_id'     => $this->has('other') && $this->other == 1 ? 'required|integer' : 'nullable',
             'user_id'       => 'required|integer',
             'method_id'     => 'required|integer',
             'method_type'   => 'required',
@@ -64,6 +65,7 @@ class FormSaleRequest extends FormRequest
             'dni.integer'               =>  'El DNI debe ser entero.',
             'phone.required'            =>  'El telefono es requerido.',
             'phone.string'              =>  'El telefono debe ser entero.',
+            'address.required'          =>  'La direcion es requerida.',
         ];
     }
 }

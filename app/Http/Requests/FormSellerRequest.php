@@ -35,7 +35,8 @@ class FormSellerRequest extends FormRequest
             'address_city'  => 'required|min:3',
             'address'       => 'required|min:3',
             'country_id'    => $this->has('country_id') ? 'required|integer' : 'nullable',
-            'balance_jib'   => $this->has('balance_jib') ? 'required|integer' : 'nullable',
+            'jib'           => $this->has('jib') ? 'required|integer' : 'nullable',
+            'description'   => $this->has('description') ? 'required|min:10' : 'nullable',
             'password'      => isset($this->seller->id) ? 'nullable|min:8|max:16' : 'required|min:8|max:16',
             'cpassword'     => isset($this->seller->id) ? 'nullable|min:8|max:16|required_with:password|same:password' : 'required|min:8|max:16|required_with:password|same:password',
             'image'         => $this->hasFile('image') ? 'required|sometimes|mimes:jpeg,jpg,png,svg|max:512' : 'nullable',
@@ -75,8 +76,10 @@ class FormSellerRequest extends FormRequest
             'address_city.min'           =>  'La direccion de la ciudad debe contener un minimo de 3 caracteres.',
             'country_id.required'        =>  'El pais es requerido.',
             'country_id.integer'         =>  'El pais debe ser entero.',
-            'balance_jib.required'       =>  'El balance es requerido.',
-            'balance_jib.integer'        =>  'El balance debe ser entero.',
+            'jib.required'               =>  'El balance es requerido.',
+            'jib.integer'                =>  'El balance debe ser entero.',
+            'description.required'       =>  'La descripcion es requerida.',
+            'description.min'            =>  'La descripcion debe contener un minimo de 10 caracteres.',
         ];
     }
 }

@@ -11,8 +11,11 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\FormSellerRequest;
+use App\Http\Requests\FormRechargeRequest;
+use App\Http\Controllers\Api\BalanceController;
 use App\Models\Country;
 use App\Models\Sale;
+use App\Models\BalanceHistory;
 use Illuminate\Support\Facades\File;
 use App\Helpers\Helper;
 
@@ -157,7 +160,8 @@ class SellerController extends Controller
     public function show(Request $request, $id)
     {
         if ($request->ajax()) {
-            $sale = Sale::select(
+            if($request->mod == 'sales'){
+                $sale = Sale::select(
                 'id',
                 'number',
                 'number_culqi',
@@ -223,7 +227,40 @@ class SellerController extends Controller
                 })
                 ->rawColumns(['action', 'status', 'raffle', 'ticket', 'amount', 'date'])
                 ->make(true);
+
+            }elseif($request->mod == 'balance') {
+                $balance = BalanceHistory::select(
+                        'id',
+                        'reference',
+                        'description',
+                        DB::raw('(CASE
+                                    WHEN type = "debit" THEN "Debito"
+                                    WHEN type = "credit" THEN "Credito"
+                                    ELSE "Otro"
+                                    END) AS type'),
+                        'balance AS amount',
+                        DB::raw('(CASE
+                                    WHEN currency = "jib" THEN "Jib"
+                                    WHEN currency = "usd" THEN "USD"
+                                    ELSE "Otro"
+                                    END) AS currency'),
+                        'date',
+                        'hour',
+                        'user_id'
+                    )->where('user_id', $id)->get();
+                return Datatables::of($balance)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($balance){
+                    })->addColumn('date', function($balance){
+                        $balance = BalanceHistory::find($balance->id);
+                        $date = explode('-', $balance->date);
+                        return $date[2].'/'.$date[1].'/'.$date[0];
+                    })->rawColumns(['action', 'amount', 'date'])
+                    ->make(true);
+            }
         }
+
+
 
         return view('panel.sellers.show', [
             'title'              => 'Vendedores',
@@ -242,10 +279,17 @@ class SellerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function detail($id)
+    public function rechargeJib(FormRechargeRequest $request, $id)
     {
-        $sellerRole = DB::table('model_has_roles')->select('role_id')->where('model_id',  $id)->pluck('role_id')->toArray();
-        return view('panel.sellers.detail', ['title' => 'Vendedores - Detalle', 'seller' => User::find($id), 'sellerRole' => $sellerRole, 'roles' => Role::all(), 'permissions' => User::findOrFail($id)->getAllPermissions()]);
+        $seller = Seller::find($id);
+        $seller->balance_jib  =  $seller->balance_jib + $request->jib;
+        $seller->save();
+        $recharge = BalanceController::store($request->description, 'recharge', $request->jib, 'jib', $seller->id);
+
+        if($recharge){
+            return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Recarga de jib exitosamente.'], 200);
+        }
+        return response()->json(['success' => false, 'message' => 'Jimbo panel notifica: Recarga de jib no se proceso exitosamente.'], 200);
     }
 
     /**
@@ -331,7 +375,7 @@ class SellerController extends Controller
             if ($delete) {
                 return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Vendedor eliminado exitosamente.'], 200);
             } else {
-                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: El Vendedor no se elimino correctamente. Intente mas tarde.'], 200);
+                return response()->json(['success' => false, 'message' => 'Jimbo panel notifica: El Vendedor no se elimino correctamente. Intente mas tarde.'], 200);
             }
         }
         abort(404);

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('reference')->nullable();
             $table->string('description')->nullable();
             $table->enum('status',['approved', 'refused', 'pending', 'return', 'created']);
+            $table->text('observation')->nullable();
             $table->foreignId('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('account_user_id')->nullable();

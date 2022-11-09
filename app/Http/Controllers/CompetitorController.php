@@ -156,7 +156,6 @@ class CompetitorController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $user = Shopping::find($id);
         if ($request->ajax()) {
 
             if($request->mod == 'shopping'){
@@ -173,7 +172,7 @@ class CompetitorController extends Controller
                                 WHEN method = "jib" THEN "Jibs"
                                 ELSE "Otro"
                                 END) AS method')
-                    )->where('user_id', $user->user_id)->get();
+                    )->where('user_id', $id)->get();
                     return Datatables::of($shopping)
                     ->addIndexColumn()
                     ->addColumn('action', function($shopping){
@@ -227,7 +226,7 @@ class CompetitorController extends Controller
                                 WHEN payment_method = "Jib" THEN "Jibs"
                                 ELSE "Otro"
                                 END) AS method')
-                    )->where('user_id', $user->user_id)->get();
+                    )->where('user_id', $id)->get();
                     return Datatables::of($payment)
                     ->addIndexColumn()
                     ->addColumn('action', function($payment){
@@ -261,7 +260,7 @@ class CompetitorController extends Controller
                     'description',
                     'status',
                     'user_id'
-                )->where('user_id', $user->user_id)->get();
+                )->where('user_id', $id)->get();
                 return Datatables::of($cash)
                         ->addIndexColumn()
                         ->addColumn('action', function($cash){
@@ -324,7 +323,7 @@ class CompetitorController extends Controller
                     'date',
                     'hour',
                     'user_id'
-                )->where('user_id', $user->user_id)->get();
+                )->where('user_id', $id)->get();
                 return Datatables::of($balance)
                         ->addIndexColumn()
                         ->addColumn('action', function($balance){
@@ -332,10 +331,7 @@ class CompetitorController extends Controller
                             $balance = BalanceHistory::find($balance->id);
                             $date = explode('-', $balance->date);
                             return $date[2].'/'.$date[1].'/'.$date[0];
-                        })->addColumn('user', function($balance){
-                            $user = Competitor::find($balance->user_id);
-                            return $user->names .' '. $user->surnames;
-                        })->rawColumns(['action', 'amount', 'date', 'user', 'status'])
+                        })->rawColumns(['action', 'amount', 'date'])
                         ->make(true);
             }
         }

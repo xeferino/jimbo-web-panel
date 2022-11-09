@@ -35,7 +35,7 @@ return new class extends Migration
             $table->foreignId('raffle_id')->nullable();
             $table->foreign('raffle_id')->references('id')->on('raffles')->onDelete('set null');
             $table->enum('status',['approved', 'refused', 'pending']);
-            $table->enum('method',['jib', 'card', 'other']);
+            $table->enum('method',['jib', 'card', 'cash', 'other']);
             $table->timestamps();
         });
     }

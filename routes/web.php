@@ -38,6 +38,7 @@ Route::get('/', function () {
 Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
+    Route::post('sellers/recharge/jib/{seller}', [SellerController::class, 'rechargeJib'])->name('sellers.recharge.jib');
     Route::resource('sellers', SellerController::class);
     Route::resource('sales', SaleController::class);
     Route::get('cash-request', [CashRequestController::class, 'index'])->name('cash.request');

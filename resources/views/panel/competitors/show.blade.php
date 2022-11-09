@@ -205,7 +205,6 @@
                                     <th>Moneda</th>
                                     <th>Fecha</th>
                                     <th>Hora</th>
-                                    <th>Usuario</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>

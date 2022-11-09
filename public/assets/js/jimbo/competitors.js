@@ -280,12 +280,11 @@ $(function () {
             {data: 'currency', name: 'currency'},
             {data: 'date', name: 'date'},
             {data: 'hour', name: 'hour'},
-            {data: 'user', name: 'user'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
     /*DataTables*/
-    table4.columns([9]).visible(false);
+    table4.columns([8]).visible(false);
     table2.columns([8]).visible(false);
 
     $("#image").on('change', function () {

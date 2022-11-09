@@ -25,6 +25,7 @@
                         <div class="col-sm-4">
                             <h4>{{Helper::jib($seller->balance_jib ?? 0)}}</h4>
                             <p class="text-muted">Balance de jibs</p>
+                            <p class="text-muted"><button class="btn btn-inverse btn-sm recharge">Recargar</button></p>
                         </div>
                     </div>
                 </div>
@@ -116,24 +117,76 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="modal fade" id="detailUser" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal fade" id="modalContent" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-b">
                             <div class="col-sm-12">
                                 <div class="card fb-card">
                                     <div class="card-header">
                                         <i class="ti-user"></i>
                                         <div class="d-inline-block">
-                                            <h5>Datos del comparador</h5>
+                                            <h5 class="title-modal">Datos del comparador</h5>
                                             <span>Detalles</span>
                                         </div>
                                     </div>
                                     <div class="card-block">
+                                        <form method="POST" action="{{ route('panel.sellers.recharge.jib', ['seller' => $seller->id]) }}" name="form-recharge" id="form-recharge" enctype="multipart/form-data">
+                                            @csrf
+                                            <div class="form-group row">
+                                                <div class="col-sm-12">
+                                                    <label class="col-form-label">Jibs</label>
+                                                    <input type="number" name="jib" id="jib" class="form-control">
+                                                    <div class="col-form-label has-danger-jib"></div>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <label class="col-form-label">Descripcion</label>
+                                                    <textarea name="description" id="description" class="form-control" cols="10" rows="5"></textarea>
+                                                    <div class="col-form-label has-danger-description"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 text-right">
+                                                <button type="button" class="btn btn-inverse btn-sm float-right " data-dismiss="modal">Cerrar</button>
+                                                <button type="submit" class="btn btn-warning  btn-sm btn-recharge mr-2">Recargar</button>
+                                            </div>
+                                        </form>
                                         <div id="info-user"></div>
                                     </div>
                                 </div>
-                          </div>
+                            </div>
                         </div>
-                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12">
+            <div class="card fb-card">
+                <div class="card-header">
+                    <i class="ti-money"></i>
+                    <div class="d-inline-block">
+                        <h5>Balances</h5>
+                        <span>Informacion</span>
+                    </div>
+                </div>
+                <div class="card-block table-border-style">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-balance">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Referencia</th>
+                                    <th>Descripcion</th>
+                                    <th>Tipo</th>
+                                    <th>Monto</th>
+                                    <th>Moneda</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
