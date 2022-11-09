@@ -11,6 +11,8 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Mail\ResetPassword;
 use Illuminate\Support\Facades\Mail;
+use App\Models\LevelUser;
+use App\Helpers\Helper;
 
 
 class User extends Authenticatable
@@ -37,6 +39,7 @@ class User extends Authenticatable
         'country_id',
         'image',
         'code',
+        'code_referall',
         'balance_usd',
         'balance_jib',
     ];
@@ -90,7 +93,37 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Sale', 'user_id', 'id');
     }
 
+    public function Referals()
+    {
+        return $this->hasMany('App\Models\LevelUser', 'referral_id', 'id');
+    }
 
+    public static function Guests($id)
+    {
+        $guests = [];
+        foreach (LevelUser::where('referral_id', $id)->get() as $key => $referral) {
+            array_push($guests, [
+                'id'                => $referral->id,
+                'user_id'           => $referral->seller_id,
+                'fullnames'         => $referral->User->names. ' ' .$referral->User->surnames,
+                'email'             => $referral->User->email,
+                'phone'             => $referral->User->phone,
+                'address_city'      => $referral->User->address_city,
+                'address'           => $referral->User->address,
+                'level'             => $referral->Level->name ?? '----',
+                'sales'             => $referral->User->sales->count(),
+                'amount_sale'       => Helper::amount($referral->User->sales->sum('amount')),
+                'country'      => [
+                    'id'    => $referral->User->country->id,
+                    'name'  => $referral->User->country->name,
+                    'iso'   => $referral->User->country->iso,
+                    'code'  => $referral->User->country->code,
+                    'icon'  => $referral->User->country->img != 'flag.png' ? config('app.url').'/assets/images/flags/'.$referral->User->country->img : config('app.url').'/assets/images/flags/flag.png'
+                ]
+            ]);
+        }
+        return $guests;
+    }
 
     public function Accounts()
     {

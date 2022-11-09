@@ -14,4 +14,14 @@ class LevelUser extends Model
     {
         return $this->belongsTo('App\Models\Level');
     }
+
+    public function Referral()
+    {
+        return $this->belongsTo('App\Models\User', 'referral_id', 'id');
+    }
+
+    public function User()
+    {
+        return $this->belongsTo('App\Models\User', 'seller_id', 'id');
+    }
 }

@@ -64,7 +64,7 @@ class BalanceController extends Controller
             $data = [
                 'reference'     => $user_id.time(),
                 'description'   => $description,
-                'type'          => ($type == 'recharge' or $type == 'exchange' or $type == 'request') ? 'credit' : 'debit',
+                'type'          => ($type == 'recharge' or $type == 'exchange' or $type == 'request' or $type == 'credit') ? 'credit' : 'debit',
                 'balance'       => $amount,
                 'currency'      => $currency,
                 'date'          => date('Y-m-d'),
@@ -78,7 +78,7 @@ class BalanceController extends Controller
 
             if ($balanceHitory && $type == 'credit' && $currency == 'jib') {
                 $user               =  User::find($data['user_id']);
-                $user->balance_jib  =  $data['balance'];
+                $user->balance_jib  =  $user->balance_jib+$data['balance'];
                 $user->save();
                 return true;
             }

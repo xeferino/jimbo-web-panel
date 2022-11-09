@@ -269,6 +269,10 @@ class SaleController extends Controller
 
         if ($ticket) {
             $user = isset($data->other) && $data->other == 1 ? null : User::find($data->user_id);
+            if(isset($data->other) && $data->other == 1) {
+                if(!$user->hasRole('seller'))
+                    $user->assignRole('seller');
+            }
             $sale = new Sale();
             $fullnames        =   $user->names . ' ' . $user->surnames;
             $sale->name       =   $fullnames;

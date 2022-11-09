@@ -25,14 +25,15 @@ class FormRequestSignup extends FormRequest
     public function rules()
     {
         return [
-            'names'         => 'required|regex:/^[a-zA-Z\s]+$/u|min:3',
-            'surnames'      => 'required|regex:/^[a-zA-Z\s]+$/u|min:3',
-            'email'         => 'required|email|unique:users,email',
-            'dni'           => 'required|integer|unique:users,dni',
-            'phone'         => 'required|string',
-            'country_id'    => 'required',
-            'password'      => 'required|min:8|max:16',
-            'cpassword'     => 'required|required_with:password|same:password',
+            'names'                 => 'required|regex:/^[a-zA-Z\s]+$/u|min:3',
+            'surnames'              => 'required|regex:/^[a-zA-Z\s]+$/u|min:3',
+            'email'                 => 'required|email|unique:users,email',
+            'dni'                   => 'required|integer|unique:users,dni',
+            'phone'                 => 'required|string',
+            'country_id'            => 'required',
+            'password'              => 'required|min:8|max:16',
+            'cpassword'             => 'required|required_with:password|same:password',
+            'code_referral'         => $this->has('code_referral') ? 'exists:users,code_referral' : 'nullable',
         ];
     }
 
@@ -59,6 +60,7 @@ class FormRequestSignup extends FormRequest
             'password.min'                  =>  'La contraseña debe contener un minimo de 8 caracteres.',
             'password.max'                  =>  'La contraseña debe contener un maximo de 16 caracteres.',
             'cpassword.same'                =>  'La contraseña y confirmar contraseña deben coincidir.',
+            'code_referral.exists'          =>  'El codigo ingresado no existe.',
         ];
     }
 }
