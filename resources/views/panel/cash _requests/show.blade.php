@@ -35,6 +35,7 @@
                         <div class="col-sm-4 b-r-default">
                             {!!$btn!!}
                             <p class="text-muted">Estatus</p>
+                            <p class="text-muted"><button class="btn btn-inverse btn-sm changeStatu">Cambiar</button></p>
                         </div>
                         <div class="col-sm-4">
                             <h4>{{$cash->reference}}</h4>
@@ -156,6 +157,46 @@
         </div>
     </div>
     <!-- Basic card end -->
+    <div class="modal fade" id="modalContent" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-b">
+            <div class="col-sm-12">
+                <div class="card fb-card">
+                    <div class="card-header">
+                        <i class="ti-user"></i>
+                        <div class="d-inline-block">
+                            <h5 class="title-modal">Datos del comparador</h5>
+                            <span>Detalles</span>
+                        </div>
+                    </div>
+                    <div class="card-block">
+                        <form method="POST" action="{{ route('panel.cash.request.change.statu', ['id' => $cash->id]) }}" name="form-changeStatu" id="form-changeStatu" enctype="multipart/form-data">
+                            @csrf
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <label class="col-form-label">Estado de la solicitud</label>
+                                    <select name="status" id="status" class="form-control">
+                                        @foreach ($status as $key => $data)
+                                            <option value="{{ $key }}" {{$cash->status == $key ? 'selected' : null}}>{{ $data }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="col-form-label has-danger-status"></div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <label class="col-form-label">Observacion</label>
+                                    <textarea name="observation" id="observation" class="form-control" cols="10" rows="5"></textarea>
+                                    <div class="col-form-label has-danger-observation"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 text-right">
+                                <button type="button" class="btn btn-inverse btn-sm float-right " data-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-warning  btn-sm btn-changeStatu mr-2">Actualizar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script-content')

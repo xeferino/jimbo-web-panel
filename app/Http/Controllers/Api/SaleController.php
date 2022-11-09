@@ -272,6 +272,9 @@ class SaleController extends Controller
             if(isset($data->other) && $data->other == 1) {
                 if(!$user->hasRole('seller'))
                     $user->assignRole('seller');
+            } else {
+                if(!$user->hasRole('competitor'))
+                    $user->assignRole('competitor');
             }
             $sale = new Sale();
             $fullnames        =   $user->names . ' ' . $user->surnames;

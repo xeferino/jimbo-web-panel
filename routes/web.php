@@ -43,6 +43,7 @@ Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     Route::resource('sales', SaleController::class);
     Route::get('cash-request', [CashRequestController::class, 'index'])->name('cash.request');
     Route::get('cash-request/{id}', [CashRequestController::class, 'show'])->name('cash.request.show');
+    Route::post('cash-request/status/change/{id}', [CashRequestController::class, 'changeStatu'])->name('cash.request.change.statu');
     Route::get('egress', [EgressController::class, 'index'])->name('egress.index');
     Route::get('egress/cash', [EgressController::class, 'cash'])->name('egress.cash');
     Route::get('egress/jib', [EgressController::class, 'jib'])->name('egress.jib');

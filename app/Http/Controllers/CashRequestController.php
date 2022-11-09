@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\CashRequest;
 use App\Helpers\Helper;
 use App\Models\User;
+use App\Http\Requests\FormChangeStatuRequest;
 
 class CashRequestController extends Controller
 {
@@ -96,13 +97,38 @@ class CashRequestController extends Controller
      */
     public function show($id)
     {
+        $status = [
+                'approved'  => 'Aprobada',
+                'refused'   => 'Rechazada',
+                'pending'   => 'Pendiente',
+                'return'    => 'Regresada',
+                'created'   => 'Creada',
+        ];
         return view('panel.cash _requests.show', [
             'title'              => 'Solicitudes de Efectivo',
             'title_header'       => 'Detalles de la solicitud',
             'description_module' => 'Informacion de la solicitud de efectivo en el sistema.',
             'title_nav'          => 'Detalles',
             'cash'               => CashRequest::findOrFail($id),
-            'icon'               => 'icofont icofont-bill-alt'
+            'icon'               => 'icofont icofont-bill-alt',
+            'status'             => $status
         ]);
+    }
+
+    /**
+     * Change status
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function changeStatu(FormChangeStatuRequest $request, $id)
+    {
+        $cash = CashRequest::find($id);
+        $cash->status       =  $request->status;
+        $cash->observation  =  $request->observation;
+        if($cash->save()){
+            return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Estado de la solicitud actualizada exitosamente.'], 200);
+        }
+        return response()->json(['success' => false, 'message' => 'Jimbo panel notifica: Estado de la solicitud no se procactualizo exitosamente.'], 200);
     }
 }
