@@ -30,6 +30,7 @@ return new class extends Migration
             $table->float('balance_jib', 10, 2)->default(0)->nullable();
             $table->string('code')->nullable();
             $table->string('code_referral')->nullable();
+            $table->enum('type',['1','2','3'])->nullable();
             $table->string('token')->nullable();
             $table->rememberToken();
             $table->timestamps();

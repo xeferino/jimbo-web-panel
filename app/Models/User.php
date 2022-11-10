@@ -40,6 +40,7 @@ class User extends Authenticatable
         'image',
         'code',
         'code_referall',
+        'type',
         'balance_usd',
         'balance_jib',
     ];

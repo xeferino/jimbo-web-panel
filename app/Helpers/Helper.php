@@ -3,6 +3,7 @@ namespace App\Helpers;
 
 use Carbon\Carbon;
 use NumberFormatter;
+use App\Models\Action;
 
 class Helper
 {
@@ -39,4 +40,17 @@ class Helper
         return $value.' jib';
 	}
 
+    /**
+     * Return list resource notifications
+     *
+     * @param float $jib
+     * @return string
+     */
+    public static function notifications()
+	{
+       return  Action::select('id', 'title', 'description', 'created_at AS date')
+                ->offset(0)->limit(4)
+                ->orderBy('actions.id','DESC')
+                ->get();
+	}
 }

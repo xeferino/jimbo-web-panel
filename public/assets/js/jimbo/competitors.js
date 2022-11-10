@@ -516,10 +516,10 @@ $(function () {
     /*competitor-edit*/
 
     /*alert-competitor-delete*/
-    $('body').on('click', '.deleteSeller', function () {
+    $('body').on('click', '.deleteCompetitor', function () {
         var url = $(this).data("url");
         swal({
-                title: '¿Desea eliminar el vendedor?',
+                title: '¿Desea eliminar el participante?',
                 text: "Recuerde que esta acción no tiene revera.",
                 type: 'error',
                 icon : APP_URL+"/assets/images/jimbo-logo.png",

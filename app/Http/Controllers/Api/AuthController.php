@@ -155,6 +155,7 @@ class AuthController extends Controller
             $user->code_referral    = substr(sha1(time()), 0, 8);
             $user->password         = Hash::make($request->password);
             $user->image            = 'avatar.svg';
+            $user->type             = 1;
             $user->save();
             $user->assignRole('competitor');
             BalanceController::store('Bono de registro en la aplicacion', 'credit', SettingController::bonus()['bonus']['register'], 'jib', $user->id);

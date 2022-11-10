@@ -105,8 +105,7 @@
     <div id="pcoded" class="pcoded">
         <div class="pcoded-overlay-box"></div>
         <div class="pcoded-container navbar-wrapper">
-
-           @include('layouts.nav-bar')
+           @include('layouts.nav-bar', ['notifications' => Helper::notifications()])
             <div class="pcoded-main-container">
                 <div class="pcoded-wrapper">
                     @include('layouts.menu')

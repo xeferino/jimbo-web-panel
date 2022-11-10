@@ -17,7 +17,6 @@
                 <i class="ti-more"></i>
             </a>
         </div>
-
         <div class="navbar-container container-fluid">
             <ul class="nav-left">
                 <li>
@@ -26,57 +25,44 @@
 
             </ul>
             <ul class="nav-right">
-                <li class="header-notification">
-                    <a href="#!">
-                        <i class="ti-bell"></i>
-                        <span class="badge bg-c-green"></span>
-                    </a>
-                    <ul class="show-notification">
-                        <li>
-                            <h6>Notificaciones</h6>
-                            <a href="">
-                                <label class="label label-warning" style="cursor: pointer !important;">Ver Todas</label>
-                            </a>
-                        </li>
-                        <li>
-                            <div class="media">
-                                <div class="media-body">
-                                    <h5 class="notification-user text-warning">Nuevo usuario en la plataforma</h5>
-                                    <p class="notification-msg">oh! Jose Lozada, se acaba de registrar en jimbo sorteos, desde Ecuador</p>
-                                    <span class="notification-time">17 de septiembre de 2022</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="media">
-                                <div class="media-body">
-                                    <h5 class="notification-user text-warning">Nuevo usuario en la plataforma</h5>
-                                    <p class="notification-msg">oh! Miguel Lopez, se acaba de registrar en jimbo sorteos, desde Peru</p>
-                                    <span class="notification-time">17 de septiembre de 2022</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="media">
-                                <div class="media-body">
-                                    <h5 class="notification-user text-warning">Nuevo usuario en la plataforma</h5>
-                                    <p class="notification-msg">oh! Daniel Rios, se acaba de registrar en jimbo sorteos, desde Peru</p>
-                                    <span class="notification-time">17 de septiembre de 2022</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="media">
-                                <div class="media-body">
-                                    <h5 class="notification-user text-warning">Nuevo usuario en la plataforma</h5>
-                                    <p class="notification-msg">oh! Luisa Espinoza, se acaba de registrar en jimbo sorteos, desde Ecuador</p>
-                                    <span class="notification-time">17 de septiembre de 2022</span>
-                                </div>
-                            </div>
-                        </li>
-
-                    </ul>
-                </li>
+                {{-- @can('actions-menu')
+                    <li class="header-notification">
+                        <a href="#!">
+                            <i class="ti-bell"></i>
+                            @if (count($notifications)>0)
+                                <span class="badge bg-c-green"></span>
+                            @endif
+                        </a>
+                        <ul class="show-notification">
+                            @if (count($notifications)>0)
+                                <li>
+                                    <h6>Acciones en el panel y app</h6>
+                                    <a href="{{route('panel.actions.index')}}">
+                                        <label class="label label-warning" style="cursor: pointer !important;">Ver Todas</label>
+                                    </a>
+                                </li>
+                                @foreach ($notifications as $data)
+                                    <li>
+                                        <div class="media">
+                                            <div class="media-body">
+                                                <h5 class="notification-user text-warning">{{$data->title}}</h5>
+                                                <p class="notification-msg">{{$data->description}}</p>
+                                                <span class="notification-time">{{\Carbon\Carbon::parse($data->date)->format('d/m/Y H:i:s');}}</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            @else
+                                <li>
+                                    <h6>Acciones en el panel y app</h6>
+                                    <a href="{{route('panel.actions.index')}}">
+                                        <label class="label label-warning" style="cursor: pointer !important;">No hay registros</label>
+                                    </a>
+                                </li>
+                            @endif
+                        </ul>
+                    </li>
+                @endcan --}}
                 <li class="user-profile header-notification">
                     <a href="#!">
                         <img src="{{ Auth::user()->image != 'avatar.svg' ? asset('assets/images/users/'.Auth::user()->image): asset('assets/images/avatar.svg') }}" class="img-radius" alt="User-Profile-Image">
@@ -84,7 +70,7 @@
                         <i class="ti-angle-down"></i>
                     </a>
                     <ul class="show-notification profile-notification">
-                       {{--  <li>
+                    {{--  <li>
                             <a href="#!">
                                 <i class="ti-settings"></i> Configuracion
                             </a>

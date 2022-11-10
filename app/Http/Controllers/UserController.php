@@ -120,6 +120,7 @@ class UserController extends Controller
         $user->email            = $request->email;
         $user->active           = $request->active;
         $user->password         = Hash::make($request->password);
+        $user->type             = 3;
 
         if($request->file('image')){
             $file           = $request->file('image');

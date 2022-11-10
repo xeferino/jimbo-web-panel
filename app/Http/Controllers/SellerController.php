@@ -130,7 +130,8 @@ class SellerController extends Controller
         $seller->phone            = $request->phone;
         $seller->address          = $request->address;
         $seller->address_city     = $request->address_city;
-        //$seller->balance_jib      = $request->balance_jib;
+        $seller->code_referral    = substr(sha1(time()), 0, 8);
+        $seller->type             = 2;
         $seller->country_id       = $request->country_id;
         $seller->active           = $request->active;
         $seller->password         = Hash::make($request->password);

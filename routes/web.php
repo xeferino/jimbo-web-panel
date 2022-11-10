@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ActionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\CompetitorController;
@@ -37,6 +38,7 @@ Route::get('/', function () {
 
 Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('actions', [ActionController::class, 'index'])->name('actions.index');
     Route::resource('users', UserController::class);
     Route::post('sellers/recharge/jib/{seller}', [SellerController::class, 'rechargeJib'])->name('sellers.recharge.jib');
     Route::resource('sellers', SellerController::class);

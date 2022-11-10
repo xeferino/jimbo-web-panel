@@ -177,6 +177,16 @@
                         </a>
                     </li>
                 @endcan
+                @can('actions-menu')
+                    <li class="{{(\Request::segment(2)=='actions')?'active':''}}">
+                        <a href="{{route('panel.actions.index')}}">
+                            <span class="pcoded-micon"><i class="icofont icofont-listing-number"></i><b>AT</b></span>
+                            <span class="pcoded-mtext" data-i18n="nav.form-components.main">Acciones en el panel</span>
+                            <span class="pcoded-mcaret"></span>
+                            <span class="badge badge-info">{{count(Helper::notifications())}}</span>
+                        </a>
+                    </li>
+                @endcan
                 {{-- <li class="pcoded-hasmenu">
                     <a href="javascript:void(0)">
                         <span class="pcoded-micon"><i class="icofont icofont-options"></i><b>CF</b></span>
