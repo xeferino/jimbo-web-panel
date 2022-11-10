@@ -156,6 +156,87 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="modal fade" id="modalContentUser" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-b">
+                                <div class="col-sm-12">
+                                    <div class="card fb-card">
+                                        <div class="card-header">
+                                            <i class="ti-user"></i>
+                                            <div class="d-inline-block">
+                                                <h5 class="title-modal">Datos del usuario</h5>
+                                                <span>Detalles</span>
+                                            </div>
+                                        </div>
+                                        <div class="card-block">
+                                            @php
+                                                $btn = '';
+                                                if(Helper::user(Auth::user()->id)->active==1){
+                                                    $btn .= '<strong class="text-success text-uppercase">Activo</strong>';
+                                                }else{
+                                                    $btn .= '<strong class="text-danger text-uppercase">Inactivo</strong>';
+                                                }
+                                            @endphp
+                                            <form method="POST" action="{{ route('panel.users.update', ['user' => Helper::user(Auth::user()->id)->id]) }}" name="form-user-profile" id="form-user-profile" enctype="multipart/form-data">
+                                                @csrf
+                                                @method('PUT')
+                                                <input type="hidden" name="active" id="active" value="{{Helper::user(Auth::user()->id)->active}}">
+                                                <input type="hidden" name="role" id="role" value="{{Auth::user()->roles[0]->id}}">
+                                                <div class="form-group row">
+                                                    <div class="col-sm-12 text-center">
+                                                        <img src="{{ Helper::user(Auth::user()->id)->image != 'avatar.svg' ? asset('assets/images/users/'.Helper::user(Auth::user()->id)->image): asset('assets/images/avatar.svg') }}" style= "margin: 0px 0 5px 0;" width="100px" height="100px" alt="avatar" id="avatar" class="img-radius">
+
+                                                        <br>
+                                                        <label for="exampleFormControlFile1"><b>Imagen <i class="ti ti-info-alt" data-toggle="tooltip" data-placement="top" title="El formato de imagen debe ser (jpg, jpeg, png o svg). El peso maximo de la imagen es de 512 KB"></i></b></label>
+                                                        <input type="file" name="image" id="image" file="true" class="form-control-file" id="exampleFormControlFile1">
+                                                        <div class="col-form-label has-danger-image"></div>
+                                                    </div>
+
+                                                    <div class="col-sm-6 b-r-default text-center">
+                                                        <strong>{{ Helper::user(Auth::user()->id)->getRoleNames()->join('') }}</strong>
+                                                        <p class="text-muted">Role</p>
+                                                    </div>
+
+                                                    <div class="col-sm-6 text-center">
+                                                        {!!$btn!!}
+                                                        <p class="text-muted">Estatus</p>
+                                                    </div>
+
+                                                    <div class="col-sm-6">
+                                                        <label class="col-form-label">Nombres</label>
+                                                        <input type="text" name="names" id="names" value="{{ Helper::user(Auth::user()->id)->names }}" class="form-control">
+                                                        <div class="col-form-label has-danger-names"></div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label class="col-form-label">Apellidos</label>
+                                                        <input type="text" name="surnames" id="surnames" value="{{ Helper::user(Auth::user()->id)->surnames }}" class="form-control">
+                                                        <div class="col-form-label has-danger-surnames"></div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label class="col-form-label">Email</label>
+                                                        <input type="text" name="email" id="email" value="{{ Helper::user(Auth::user()->id)->email }}" class="form-control">
+                                                        <div class="col-form-label has-danger-email"></div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label class="col-form-label">Contrase&ntilde;a</label>
+                                                        <input type="password" name="password" id="password" class="form-control">
+                                                        <div class="col-form-label has-danger-password"></div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label class="col-form-label">Confirmar Contrase&ntilde;a</label>
+                                                        <input type="password" name="cpassword" id="cpassword" class="form-control">
+                                                        <div class="col-form-label has-danger-cpassword"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 text-right">
+                                                    <button type="button" class="btn btn-inverse btn-sm float-right" data-dismiss="modal">Cerrar</button>
+                                                    <button type="submit" class="btn btn-warning  btn-sm btn-user-fom mr-2">Actualizar</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <footer class="main-footer">
                             <div class="row">
                                 <div class="col-12 text-center text-inverse">
@@ -274,7 +355,7 @@
 
                 $('.alert_logout').click(function(e) {
                     swal({
-                        title: '{{ Auth::user()->name." ".Auth::user()->surname }}',
+                        title: '{{ Helper::user(Auth::user()->id)->name." ".Helper::user(Auth::user()->id)->surname }}',
                         text: "Desea salir del panel administrativo de Jimbo!",
                         type: 'info',
                         icon : "{{ asset('assets/images/jimbo-logo.png') }}",
@@ -331,6 +412,94 @@
         jQuery(document).ready(function() {
             SweetAlert2Polls.init();
         });
+
+        $('body').on('click', '.user_profile', function () {
+            $('#modalContentUser').modal('show');
+        });
+
+        /*user-edit*/
+        $("#form-user-profile").submit(function( event ) {
+            event.preventDefault();
+            $('.btn-user-fom').prop("disabled", true).text('Enviando...');
+
+            var formData = new FormData(event.currentTarget);
+            formData.append('_method', 'PUT');
+
+            axios.post($(this).attr('action'), formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(response => {
+                if(response.data.success){
+                    notify(response.data.message, 'success', '3000', 'top', 'right');
+                    $('.btn-user-fom').prop("disabled", false).text('Actualizar');
+                    $('div.col-form-label').text('');
+                    $('#modalContentUser').modal('hide');
+                    setTimeout(() => {location.reload()}, 3000);
+                }
+            }).catch(error => {
+                if (error.response) {
+                        if(error.response.status === 422){
+                            var err = error.response.data.errors;
+                            /* $.each(err, function( key, value) {
+                                notify(value, 'danger', '5000', 'top', 'right');
+                            }); */
+                            if (error.response.data.errors.names) {
+                                $('.has-danger-names').text('' + error.response.data.errors.names + '').css("color", "#dc3545e3");
+                            }else{
+                                $('.has-danger-names').text('');
+                            }
+                            if (error.response.data.errors.surnames) {
+                                $('.has-danger-surnames').text('' + error.response.data.errors.surnames + '').css("color", "#dc3545e3");
+                            }else{
+                                $('.has-danger-surnames').text('');
+                            }
+                            if (error.response.data.errors.surname) {
+                                $('.has-danger-surname').text('' + error.response.data.errors.surname + '').css("color", "#dc3545e3");
+                            }else{
+                                $('.has-danger-surname').text('');
+                            }
+                            if (error.response.data.errors.email) {
+                                $('.has-danger-email').text('' + error.response.data.errors.email + '').css("color", "#dc3545e3");
+                            }else{
+                                $('.has-danger-email').text('');
+                            }
+                            if (error.response.data.errors.role) {
+                                $('.has-danger-role').text('' + error.response.data.errors.role + '').css("color", "#dc3545e3");
+                            }else{
+                                $('.has-danger-role').text('');
+                            }
+                            if (error.response.data.errors.active) {
+                                $('.has-danger-active').text('' + error.response.data.errors.active + '').css("color", "#dc3545e3");
+                            }else{
+                                $('.has-danger-active').text('');
+                            }
+                            if (error.response.data.errors.image) {
+                                $('.has-danger-image').text('' + error.response.data.errors.image + '').css("color", "#dc3545e3");
+                            }else{
+                                $('.has-danger-image').text('');
+                            }
+                            if (error.response.data.errors.password) {
+                                $('.has-danger-password').text('' + error.response.data.errors.password + '').css("color", "#dc3545e3");
+                            }else{
+                                $('.has-danger-password').text('');
+                            }
+                            if (error.response.data.errors.cpassword) {
+                                $('.has-danger-cpassword').text('' + error.response.data.errors.cpassword + '').css("color", "#dc3545e3");
+                            }else{
+                                $('.has-danger-cpassword').text('');
+                            }
+                        }else{
+                            notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
+                        }
+                    }else{
+                        notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
+                    }
+                    $('.btn-user-fom').prop("disabled", false).text('Actualizar');
+                    setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+            });
+        });
+        /*user-edit*/
     </script>
     @yield('script-content')
 </body>

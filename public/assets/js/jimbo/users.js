@@ -75,7 +75,7 @@ $(function () {
         event.preventDefault();
         $('.jimbo-loader').show();
         $('.load-text').text('Enviando...');
-        $('.btn-user').prop("disabled", true).text('Enviando...');
+        $('.btn-user-fom').prop("disabled", true).text('Enviando...');
 
         var formData = new FormData(event.currentTarget);
 
@@ -87,7 +87,7 @@ $(function () {
             if(response.data.success){
                 notify(response.data.message, 'success', '3000', 'top', 'right');
                 $('#form-user-create').trigger("reset");
-                $('.btn-user').prop("disabled", false).text('Registrar');
+                $('.btn-user-fom').prop("disabled", false).text('Registrar');
                 $('div.col-form-label').text('');
                 setTimeout(() => {$('.jimbo-loader').hide();}, 500);
                 setTimeout(() => {location.href = APP_URL+JIMBO.url;}, 3000);
@@ -150,7 +150,7 @@ $(function () {
             }else{
                 notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
             }
-            $('.btn-user').prop("disabled", false).text('Registrar');
+            $('.btn-user-fom').prop("disabled", false).text('Registrar');
             setTimeout(() => {$('.jimbo-loader').hide();}, 500);
         });
     });
@@ -163,7 +163,7 @@ $(function () {
         $('.load-text').text('Enviando...');
         $('.jimbo-loader').show();
         $('.load-text').text('Enviando...');
-        $('.btn-user').prop("disabled", true).text('Enviando...');
+        $('.btn-user-fom').prop("disabled", true).text('Enviando...');
 
         var formData = new FormData(event.currentTarget);
         formData.append('_method', 'PUT');
@@ -177,7 +177,7 @@ $(function () {
                 notify(response.data.message, 'success', '3000', 'top', 'right');
                 setTimeout(() => {$('.jimbo-loader').hide();}, 500);
                 $('#form-user-edit').trigger("reset");
-                $('.btn-user').prop("disabled", false).text('Actualizar');
+                $('.btn-user-fom').prop("disabled", false).text('Actualizar');
                 $('div.col-form-label').text('');
                 setTimeout(() => {location.href = APP_URL+JIMBO.url;}, 3000);
             }
@@ -239,7 +239,7 @@ $(function () {
                 }else{
                     notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'top', 'right');
                 }
-                $('.btn-user').prop("disabled", false).text('Actualizar');
+                $('.btn-user-fom').prop("disabled", false).text('Actualizar');
                 setTimeout(() => {$('.jimbo-loader').hide();}, 500);
         });
     });
@@ -265,35 +265,35 @@ $(function () {
                         className : 'btn btn-inverse',
                     }
                 },
-            }).then((confirm) => {
-                if (confirm) {
-                    $('.jimbo-loader').show();
-                    axios.delete(url, {
-                    }).then(response => {
-                        if(response.data.success){
-                            setTimeout(() => {$('.jimbo-loader').hide();}, 500);
-                            notify(response.data.message, 'success', '3000', 'top', 'right');
-                            table.ajax.reload();
-                        }else {
-                            setTimeout(() => {$('.jimbo-loader').hide();}, 500);
-                            notify(response.data.message, 'success', '3000', 'top', 'right');
-                        }
-                    }).catch(error => {
-                        if (error.response) {
-                            if(error.response.status === 403){
-                                notify(error.response.data.message, 'success', '3000', 'top', 'right');
-                            }else{
-                                notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
-                            }
+        }).then((confirm) => {
+            if (confirm) {
+                $('.jimbo-loader').show();
+                axios.delete(url, {
+                }).then(response => {
+                    if(response.data.success){
+                        setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+                        notify(response.data.message, 'success', '3000', 'top', 'right');
+                        table.ajax.reload();
+                    }else {
+                        setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+                        notify(response.data.message, 'success', '3000', 'top', 'right');
+                    }
+                }).catch(error => {
+                    if (error.response) {
+                        if(error.response.status === 403){
+                            notify(error.response.data.message, 'success', '3000', 'top', 'right');
                         }else{
                             notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
                         }
-                        setTimeout(() => {$('.jimbo-loader').hide();}, 500);
-                    });
-                } else {
-                    swal.close();
-                }
-            });
+                    }else{
+                        notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
+                    }
+                    setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+                });
+            } else {
+                swal.close();
+            }
+        });
     });
     /*alert-user-delete*/
 });

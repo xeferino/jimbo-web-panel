@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\FormUserRequest;
 use Illuminate\Support\Facades\File;
+use Spatie\Permission\Models\Permission;
 
 
 class UserController extends Controller
@@ -46,9 +47,9 @@ class UserController extends Controller
                                             <i class="ti-pencil"></i>
                                     </a>';
                         }
-                        if(auth()->user()->can('detail-user')){
-                            $btn .= '<a href="'.route('panel.users.detail',['user' => $user->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$user->id.'" id="det_'.$user->id.'" class="btn btn-info btn-sm  mr-1 detailUser">
-                                        <i class="ti-search"></i>
+                        if(auth()->user()->can('show-user')){
+                            $btn .= '<a href="'.route('panel.users.show',['user' => $user->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$user->id.'" id="det_'.$user->id.'" class="btn btn-inverse btn-sm  mr-1 detailUser">
+                                        <i class="ti-eye"></i>
                                     </a>';
                         }
                         if(auth()->user()->can('delete-user')){
@@ -146,21 +147,16 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $id = Auth::user()->id;
-        $userRole = DB::table('model_has_roles')->select('role_id')->where('model_id',  $id)->pluck('role_id')->toArray();
-        return view('panel.users.show', ['title' => 'Usuarios - Perfil', 'user' => User::find($id), 'userRole' => $userRole, 'roles' => Role::all(), 'permissions' => User::findOrFail($id)->getAllPermissions()]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function detail($id)
-    {
-        $userRole = DB::table('model_has_roles')->select('role_id')->where('model_id',  $id)->pluck('role_id')->toArray();
-        return view('panel.users.detail', ['title' => 'Usuarios - Detalle', 'user' => User::find($id), 'userRole' => $userRole, 'roles' => Role::all(), 'permissions' => User::findOrFail($id)->getAllPermissions()]);
+        return view('panel.users.show', [
+            'title'              => 'Usuarios',
+            'title_header'       => 'Detalles usuarios',
+            'description_module' => 'Detalles de usuario en el sistema.',
+            'title_nav'          => 'Detalles',
+            'icon'               => 'icofont-users',
+            'user'               => User::find($id),
+            'permissions'        => Permission::all(),
+            'permissions_users'  => User::findOrFail($id)->getAllPermissions()->pluck('id')->toArray()
+        ]);
     }
 
     /**
@@ -216,10 +212,10 @@ class UserController extends Controller
             $file->move(public_path('assets/images/users/'), $fileName);
         }
         $saved = $user->save();
-        if($saved)
-            $user->syncRoles($request->role);
-            return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Usuario actualizado exitosamente.'], 200);
-    }
+            if($saved){
+                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Usuario actualizado exitosamente.'], 200);
+            }
+        }
 
     /**
      * Remove the specified resource from storage.

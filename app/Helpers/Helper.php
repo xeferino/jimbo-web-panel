@@ -4,7 +4,7 @@ namespace App\Helpers;
 use Carbon\Carbon;
 use NumberFormatter;
 use App\Models\Action;
-
+use App\Models\User;
 class Helper
 {
     /**
@@ -52,5 +52,16 @@ class Helper
                 ->offset(0)->limit(4)
                 ->orderBy('actions.id','DESC')
                 ->get();
+	}
+
+     /**
+     * Return object user
+     *
+     * @param float $jib
+     * @return string
+     */
+    public static function user($id)
+	{
+        return User::find($id);
 	}
 }

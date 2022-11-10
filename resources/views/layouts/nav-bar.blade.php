@@ -65,8 +65,8 @@
                 @endcan --}}
                 <li class="user-profile header-notification">
                     <a href="#!">
-                        <img src="{{ Auth::user()->image != 'avatar.svg' ? asset('assets/images/users/'.Auth::user()->image): asset('assets/images/avatar.svg') }}" class="img-radius" alt="User-Profile-Image">
-                        <span>{{ Auth::user()->name." ".Auth::user()->surname }}</span>
+                        <img src="{{  Helper::user(Auth::user()->id)->image != 'avatar.svg' ? asset('assets/images/users/'. Helper::user(Auth::user()->id)->image): asset('assets/images/avatar.svg') }}" class="img-radius" alt="User-Profile-Image">
+                        <span>{{  Helper::user(Auth::user()->id)->names." ". Helper::user(Auth::user()->id)->surnames }}</span>
                         <i class="ti-angle-down"></i>
                     </a>
                     <ul class="show-notification profile-notification">
@@ -76,10 +76,10 @@
                             </a>
                         </li> --}}
                         <li>
-                            <a href="#"><i class="ti-bookmark"></i>Role - {{ Auth::user()->getRoleNames()->join('')  }}</a>
+                            <a href="#"><i class="ti-bookmark"></i>Role - {{  Helper::user(Auth::user()->id)->getRoleNames()->join('')  }}</a>
                         </li>
-                        <li>
-                            <a href="">
+                        <li class="user_profile">
+                            <a href="#">
                                 <i class="ti-user"></i> Perfil
                             </a>
                         </li>

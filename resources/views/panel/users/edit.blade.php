@@ -73,7 +73,7 @@
                 <div class="col-md-12 text-right">
                     <a href="{{route('panel.users.index')}}" type="submit" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="cancelar"><i class="ti-back-left"></i></a>
                     {{-- <button type="reset" class="btn btn-inverse" data-toggle="tooltip" data-placement="top" title="Limpiar"><i class="ti-reload"></i></button> --}}
-                    <button type="submit" class="btn btn-warning  btn-user">Actualizar</button>
+                    <button type="submit" class="btn btn-warning  btn-user-fom">Actualizar</button>
                 </div>
             </form>
         </div>

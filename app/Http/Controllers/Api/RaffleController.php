@@ -31,6 +31,56 @@ class RaffleController extends Controller
         $this->data = [];
     }
 
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    private function favorites ()
+    {
+        $raffles = Raffle::select(
+            'raffles.id',
+            'raffles.title',
+            'raffles.cash_to_draw',
+            'raffles.date_start',
+            'raffles.date_end',
+            'raffles.date_release',
+            DB::raw("TIMESTAMPDIFF(DAY, now(), raffles.date_end) AS remaining_days"),
+            DB::raw("CONCAT('".$this->asset."',raffles.image) AS logo"))
+            ->where('raffles.active', 1)
+            ->where('raffles.public', 1)
+            ->where('raffles.finish', 0)
+            ->whereNull('raffles.deleted_at')
+            ->orderBy('raffles.id', 'DESC')
+            ->get();
+
+        $data = [];
+        $raffle_favorite = false;
+        foreach ($raffles as $key => $value) {
+            $favorite = FavoriteDraw::whereNull('deleted_at')
+                        ->where('user_id', Auth::user()->id)
+                        ->where('raffle_id', $value->id)
+                        ->first();
+
+            if($favorite) {
+                $raffle_favorite = true;
+            }
+            # code...
+            array_push($data, [
+                'id'                => $value->id,
+                'title'             => $value->title,
+                'cash_to_draw'      => $value->cash_to_draw,
+                'date_start'        => $value->date_start,
+                'date_end'          => $value->date_end,
+                'date_release'      => $value->date_release,
+                'remaining_days'    => $value->remaining_days,
+                'logo'              => $value->logo,
+                'favorite'          => $raffle_favorite
+            ]);
+        }
+        return $data;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -39,68 +89,9 @@ class RaffleController extends Controller
     public function index(Request $request)
     {
         try {
-            $raffles = Raffle::select(
-                'raffles.id',
-                'raffles.title',
-                'raffles.cash_to_draw',
-                'raffles.date_start',
-                'raffles.date_end',
-                'raffles.date_release',
-                DB::raw("TIMESTAMPDIFF(DAY, now(), raffles.date_end) AS remaining_days"),
-                DB::raw("CONCAT('".$this->asset."',raffles.image) AS logo"))
-                ->where('raffles.active', 1)
-                ->where('raffles.public', 1)
-                ->where('raffles.finish', 0)
-                ->whereNull('raffles.deleted_at')
-                ->orderBy('raffles.id', 'DESC')
-                ->get();
-
-           /*  if($request->user) {
-                $raffles = Raffle::select(
-                    'raffles.id',
-                    'raffles.title',
-                    'raffles.cash_to_draw',
-                    'raffles.date_start',
-                    'raffles.date_end',
-                    'raffles.date_release',
-                    DB::raw("TIMESTAMPDIFF(DAY, now(), raffles.date_end) AS remaining_days"),
-                    DB::raw("CONCAT('".$this->asset."',raffles.image) AS logo"))
-                    ->leftjoin('favorite_draws', 'raffles.id', '=', 'favorite_draws.raffle_id')
-                    ->leftjoin('users', 'users.id', '=', 'favorite_draws.user_id')
-                    ->where('users.id', $request->user)
-                    ->whereNull('favorite_draws.deleted_at')
-                    ->orderBy('raffles.id', 'DESC')
-                    ->get();
-            } */
-
-            $data = [];
-            $raffle_favorite = false;
-            foreach ($raffles as $key => $value) {
-                $favorite = FavoriteDraw::whereNull('deleted_at')
-                            ->where('user_id', Auth::user()->id)
-                            ->where('raffle_id', $value->id)
-                            ->first();
-
-                if($favorite) {
-                    $raffle_favorite = true;
-                }
-                # code...
-                array_push($data, [
-                    'id'                => $value->id,
-                    'title'             => $value->title,
-                    'cash_to_draw'      => $value->cash_to_draw,
-                    'date_start'        => $value->date_start,
-                    'date_end'          => $value->date_end,
-                    'date_release'      => $value->date_release,
-                    'remaining_days'    => $value->remaining_days,
-                    'logo'              => $value->logo,
-                    'favorite'          => $raffle_favorite
-                ]);
-            }
 
 
-
-            return response()->json(['raffles' => $data], 200);
+            return response()->json(['raffles' => $this->favorites()], 200);
 
         } catch (Exception $e) {
 
@@ -305,6 +296,7 @@ class RaffleController extends Controller
                         return response()->json([
                             'status'    => 200,
                             'success'   => true,
+                            'raffles' => $this->favorites(),
                             'message'   =>  'Sorteo eliminado de favoritos',
                         ], 200);
             }
@@ -320,6 +312,7 @@ class RaffleController extends Controller
                 return response()->json([
                     'status'    => 200,
                     'success'   => true,
+                    'raffles' => $this->favorites(),
                     'message'   =>  'Sorteo agregado como favorito',
                 ], 200);
         }catch (Exception $e) {
