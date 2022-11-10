@@ -20,7 +20,7 @@ class PromotionObserver
     {
         $action = Action::insert([
             'title'         => 'Nueva Promocion',
-            'description'   => 'se ha creado una promocion '.$promotion->title,
+            'description'   => 'se ha creado una promocion '.$promotion->name,
             'user_id'       => Auth::user()->id,
             'created_at'    => now()
         ]);
@@ -36,7 +36,7 @@ class PromotionObserver
     {
         $action = Action::insert([
             'title'         => 'Promocion Eliminada',
-            'description'   => 'se ha eliminado la promocion '.$promotion->title,
+            'description'   => 'se ha eliminado la promocion '.$promotion->name,
             'user_id'       => Auth::user()->id,
             'created_at'    => now()
         ]);

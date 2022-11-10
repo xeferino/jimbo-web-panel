@@ -41,6 +41,8 @@ class FormAccountRequest extends FormRequest
         return [
             'bank.required'             => 'El nombre del banco es requerido.',
             'bank.min'                  => 'El nombre del banco al menos debe tener min: caracteres.',
+            'type.required'             => 'El tipo de cuenta es requerido.',
+            'type.min'                  => 'El tipo de cuenta al menos debe tener min: caracteres.',
             'number.required'           => 'El numero de cuenta es requerido.',
             'number.numeric'            => 'El numero de cuenta debe ser entero.',
             'number.digits_between'     => 'El numero de cuenta debe contener contener entre 6 y 20 digitos.',

@@ -12,6 +12,7 @@ use App\Models\FavoriteDraw;
 use App\Helpers\Helper;
 use App\Models\Ticket;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class RaffleController extends Controller
 {
@@ -49,11 +50,12 @@ class RaffleController extends Controller
                 DB::raw("CONCAT('".$this->asset."',raffles.image) AS logo"))
                 ->where('raffles.active', 1)
                 ->where('raffles.public', 1)
+                ->where('raffles.finish', 0)
                 ->whereNull('raffles.deleted_at')
                 ->orderBy('raffles.id', 'DESC')
                 ->get();
 
-            if($request->user) {
+           /*  if($request->user) {
                 $raffles = Raffle::select(
                     'raffles.id',
                     'raffles.title',
@@ -69,9 +71,36 @@ class RaffleController extends Controller
                     ->whereNull('favorite_draws.deleted_at')
                     ->orderBy('raffles.id', 'DESC')
                     ->get();
+            } */
+
+            $data = [];
+            $raffle_favorite = false;
+            foreach ($raffles as $key => $value) {
+                $favorite = FavoriteDraw::whereNull('deleted_at')
+                            ->where('user_id', Auth::user()->id)
+                            ->where('raffle_id', $value->id)
+                            ->first();
+
+                if($favorite) {
+                    $raffle_favorite = true;
+                }
+                # code...
+                array_push($data, [
+                    'id'                => $value->id,
+                    'title'             => $value->title,
+                    'cash_to_draw'      => $value->cash_to_draw,
+                    'date_start'        => $value->date_start,
+                    'date_end'          => $value->date_end,
+                    'date_release'      => $value->date_release,
+                    'remaining_days'    => $value->remaining_days,
+                    'logo'              => $value->logo,
+                    'favorite'          => $raffle_favorite
+                ]);
             }
 
-            return response()->json(['raffles' => $raffles], 200);
+
+
+            return response()->json(['raffles' => $data], 200);
 
         } catch (Exception $e) {
 

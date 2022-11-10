@@ -18,7 +18,7 @@ use App\Models\TicketUser;
 use App\Models\User;
 use App\Helpers\Helper;
 use App\Models\Setting;
-
+use Illuminate\Support\Carbon;
 class SaleController extends Controller
 {
     /**
@@ -218,7 +218,7 @@ class SaleController extends Controller
                             'message' => 'Pago procesado exitosamente.',
                             'details' => [
                                 'fullname'          => $saleUpdate->name,
-                                'date'              => $saleUpdate->created_at,
+                                'date'              =>  Carbon::parse($saleUpdate->created_at)->format('d/m/Y H:i:s'),
                                 'code_ticket'       => $ticket->serial,
                                 'tickets'           => $saleUpdate->TicketsUsers,
                                 'quantity'          => $ticket->promotion->quantity,
