@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\ShoppingController;
 use App\Http\Controllers\Api\CardController;
 use App\Http\Controllers\Api\AccountController;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\Api\LegalityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,8 @@ Route::post('/resend-code-verified-email', [AuthController::class, 'sendCodeVeri
 Route::post('/verified-email', [AuthController::class, 'verifiedEmail']);
 Route::get('/countries', [CountryController::class, 'index']);
 Route::get('/sliders', [SliderController::class, 'index']);
+Route::get('/terms-conditions', [LegalityController::class, 'legality']);
+
 //Route::get('/profile/{id}', [AuthController::class, 'profile'])->middleware('auth:sanctum');
 
 Route::prefix('user')->middleware(['auth:sanctum', 'check.user'])->group(function () {

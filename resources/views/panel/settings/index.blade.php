@@ -301,6 +301,34 @@
         </div>
     </div>
 
+    <div class="col-sm-12">
+        <div class="card fb-card">
+            <div class="card-header">
+                <i class="ti-eye"></i>
+                <div class="d-inline-block">
+                    <h5>Terminos y Condiciones</h5>
+                    <span>Legalidad</span>
+                </div>
+            </div>
+            <div class="card-block">
+                <form method="POST" class="form-setting" action="{{ route('panel.settings.update') }}" name="form-setting" id="form-setting">
+                    @csrf
+                    <input type="hidden" name="type" value="terms_and_conditions">
+                    <input type="hidden" name="terms_and_conditions" id="terms_and_conditions" value="{{$settings['terms_and_conditions']}}">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="col-form-label">Terminos y Condiciones</label>
+                            <textarea id="editor" autofocus></textarea>
+                            <div class="col-form-label has-danger-terms_and_conditions"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-right">
+                        <button type="submit" class="btn btn-warning btn-sm  btn-setting-term">Configurar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 

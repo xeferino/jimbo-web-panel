@@ -34,10 +34,10 @@ class JibController extends Controller
             $jib_unit_x_usd = SettingController::jib()['value']['jib_unit_x_usd'];
 
             return response()->json(['jibs' => [
-                [
+                /* [
                     'jib' => 10,
                     'usd' => (10/$jib_unit_x_usd)*$jib_usd // 1 usd
-                ],
+                ], */
                 [
                     'jib' => 50,
                     'usd' => (50/$jib_unit_x_usd)*$jib_usd // 5 usd
@@ -49,6 +49,14 @@ class JibController extends Controller
                 [
                     'jib' => 150,
                     'usd' => (150/$jib_unit_x_usd)*$jib_usd // 15 usd
+                ],
+                [
+                    'jib' => 200,
+                    'usd' => (200/$jib_unit_x_usd)*$jib_usd // 20 usd
+                ],
+                [
+                    'jib' => 500,
+                    'usd' => (500/$jib_unit_x_usd)*$jib_usd // 50 usd
                 ]
             ]], 200);
 

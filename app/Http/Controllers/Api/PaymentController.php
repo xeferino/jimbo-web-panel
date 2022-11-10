@@ -64,7 +64,9 @@ class PaymentController extends Controller
                                 END) AS status'),
             'created_at',
             'updated_at'
-            )->where('user_id', $request->user)->get();
+            )
+            ->orderBy('created_at','DESC')
+            ->where('user_id', $request->user)->get();
 
         return response()->json([
             'status'  => 200,

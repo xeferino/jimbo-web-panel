@@ -35,6 +35,8 @@ class BalanceController extends Controller
                 )
                 ->join('users', 'users.id', '=', 'balance_histories.user_id')
                 ->where('users.id', $request->user)
+                ->orderBy('balance_histories.date','DESC')
+                ->orderBy('balance_histories.hour','DESC')
                 ->get();
 
             return response()->json([

@@ -162,12 +162,14 @@ class AuthController extends Controller
 
             if ($request->has('code_referral')) {
                 $referral = User::where('code_referral', $request->code_referral)->first();
-                LevelUser::insert([
-                    'seller_id'     => $user->id,
-                    'referral_id'   => $referral->id,
-                    'created_at'    =>now(),
-                ]);
-                BalanceController::store('Bono de referido en la aplicacion', 'credit', SettingController::bonus()['bonus']['referrals'], 'jib', $referral->id);
+                if ($referral) {
+                    LevelUser::insert([
+                        'seller_id'     => $user->id,
+                        'referral_id'   => $referral->id,
+                        'created_at'    =>now(),
+                    ]);
+                    BalanceController::store('Bono de referido en la aplicacion', 'credit', SettingController::bonus()['bonus']['referrals'], 'jib', $referral->id);
+                }
             }
 
             $data = [

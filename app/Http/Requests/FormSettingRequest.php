@@ -48,7 +48,7 @@ class FormSettingRequest extends FormRequest
             'level_ascent_bonus_single_junior'   => $this->type == 'bonus_ascent' ? 'required|integer' : 'nullable',
             'level_ascent_bonus_single_middle'   => $this->type == 'bonus_ascent' ? 'required|integer' : 'nullable',
             'level_ascent_bonus_single_master'   => $this->type == 'bonus_ascent' ? 'required|integer' : 'nullable',
-
+            'terms_and_conditions'               => $this->type == 'terms_and_conditions' ? 'required' : 'nullable',
         ];
     }
 
@@ -102,6 +102,7 @@ class FormSettingRequest extends FormRequest
             'level_ascent_bonus_single_middle.integer' => 'El valor debe ser numerico.',
             'level_ascent_bonus_single_master.required' => 'El valor es requerido',
             'level_ascent_bonus_single_master.integer' => 'El valor debe ser numerico.',
+            'terms_and_conditions.required' => 'El texto es requerido',
         ];
     }
 }

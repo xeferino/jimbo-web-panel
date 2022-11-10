@@ -48,6 +48,10 @@
     <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}"/>
     <!-- datatables -->
     <link rel="stylesheet" href="{{ asset('assets/css/dataTable/buttons.dataTables.min.css')}}">
+
+    <!--line-control-->
+    <link rel="stylesheet" href="{{ asset('assets/css/line-control/editor.min.css')}}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <style>
     .swal-modal{
         border: 3px solid #f4893f  !important;
@@ -195,13 +199,15 @@
     <!-- Datepicker -->
     <script src="{{ asset('assets/js/datepicker/bootstrap-datepicker.min.js') }}"></script>
     <script src="{{ asset('assets/js/datepicker/locales/bootstrap-datepicker.es.min.js') }}" charset="UTF-8"></script>
+    <!--line-control-->
+    <script src="{{ asset('assets/js/line-control/editor.min.js') }}"></script>
+
     <!-- morris js -->
     <script src="{{ asset('assets/js/morris.js/morris.js') }}"></script>
     <script src="{{ asset('assets/js/raphael/raphael.min.js') }}"></script>
     <!-- chart js -->
     <script src="{{ asset('assets/js/chart.js/Chart.min.js') }}"></script>
     <script src="{{ asset('assets/js/chart.js/Chart.bundle.min.js') }}"></script>
-
     <!-- Moment -->
     <script src="{{ asset('assets/js/moment/moment.js') }}"></script>
     <script src="{{ asset('assets/js/moment/moment-with-locales.js') }}"></script>

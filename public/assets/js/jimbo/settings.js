@@ -1,10 +1,15 @@
 'use strict';
 const APP_URL = $('meta[name="base-url"]').attr('content');
 const JIMBO = { url : '/panel/settings' };
-
 $(function () {
+    $( document ).ready(function() {
+        $("#editor").Editor();
+        $("#editor").Editor("setText", $('#terms_and_conditions').val());
+    });
+
     /*setting-register*/
     $(".form-setting").submit(function( event ) {
+        $("#terms_and_conditions").val($("#editor").Editor("getText"));
         event.preventDefault();
         $('.jimbo-loader').show();
         $('.load-text').text('Enviando...');
@@ -16,6 +21,7 @@ $(function () {
         $('.btn-setting-seller-group').prop("disabled", true).text('Enviando...');
         $('.btn-setting-bonu-unique').prop("disabled", true).text('Enviando...');
         $('.btn-setting-bonu-ascent').prop("disabled", true).text('Enviando...');
+        $('.btn-setting-term').prop("disabled", true).text('Enviando...');
 
         var formData = new FormData(event.currentTarget);
 
@@ -34,6 +40,8 @@ $(function () {
                 $('.btn-setting-seller-pencent-group').prop("disabled", false).text('Configurar');
                 $('.btn-setting-bonu-unique').prop("disabled", false).text('Configurar');
                 $('.btn-setting-bonu-ascent').prop("disabled", false).text('Configurar');
+                $('.btn-setting-term').prop("disabled", false).text('Configurar');
+
                 $('div.col-form-label').text('');
                 setTimeout(() => {$('.jimbo-loader').hide();}, 500);
                 setTimeout(() => {location.href = APP_URL+JIMBO.url;}, 3000);
@@ -182,6 +190,12 @@ $(function () {
                     }else{
                         $('.has-danger-level_ascent_bonus_single_master').text('');
                     }
+
+                    if (error.response.data.errors.terms_and_conditions) {
+                        $('.has-danger-terms_and_conditions').text('' + error.response.data.errors.terms_and_conditions + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-terms_and_conditions').text('');
+                    }
                 }else{
                     notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
                 }
@@ -196,9 +210,8 @@ $(function () {
             $('.btn-setting-seller-percent-group').prop("disabled", false).text('Configurar');
             $('.btn-setting-bonu-unique').prop("disabled", false).text('Configurar');
             $('.btn-setting-bonu-ascent').prop("disabled", false).text('Configurar');
-
+            $('.btn-setting-term').prop("disabled", false).text('Configurar');
             setTimeout(() => {$('.jimbo-loader').hide();}, 500);
         });
     });
-    /* setting-register*/
 });

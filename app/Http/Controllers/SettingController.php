@@ -117,7 +117,11 @@ class SettingController extends Controller
             $level_ascent_bonus_single_master = Setting::where('name', 'level_ascent_bonus_single_master')->first();
             $level_ascent_bonus_single_master->value = $request->level_ascent_bonus_single_master;
             $level_ascent_bonus_single_master->save();
-        }
+        } elseif($type == 'terms_and_conditions') {
+            $terms_and_conditions = Setting::where('name', 'terms_and_conditions')->first();
+            $terms_and_conditions->value = $request->terms_and_conditions;
+            $terms_and_conditions->save();
+    }
         return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Configuracion agregada exitosamente!'], 200);
     }
 
