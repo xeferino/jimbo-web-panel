@@ -32,9 +32,6 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/pages/notification/notification.css') }}">
     <!-- Animate.css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/animate.css/css/animate.css') }}">
-    <!-- Style.css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/jquery.mCustomScrollbar.css') }}">
     <!-- select2 js -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/select2/select2.min.css') }}">
     <!-- morris js -->
@@ -52,6 +49,10 @@
     <!--line-control-->
     <link rel="stylesheet" href="{{ asset('assets/css/line-control/editor.min.css')}}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    @yield('css-content')
+    <!-- Style.css -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/jquery.mCustomScrollbar.css') }}">
     <style>
     .swal-modal{
         border: 3px solid #f4893f  !important;
@@ -282,7 +283,6 @@
     <script src="{{ asset('assets/js/datepicker/locales/bootstrap-datepicker.es.min.js') }}" charset="UTF-8"></script>
     <!--line-control-->
     <script src="{{ asset('assets/js/line-control/editor.min.js') }}"></script>
-
     <!-- morris js -->
     <script src="{{ asset('assets/js/morris.js/morris.js') }}"></script>
     <script src="{{ asset('assets/js/raphael/raphael.min.js') }}"></script>

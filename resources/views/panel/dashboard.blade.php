@@ -1,7 +1,124 @@
 @extends('layouts.app', ['title' => $title ?? 'Dashboard'])
 
+@section('css-content')
+    <!-- metroui.css -->
+   {{--  <link rel="stylesheet" href="{{ asset('assets/css/metroui/metro-all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/metroui/metro.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/metroui/metro-colors.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/metroui/metro-icons.min.css') }}"> --}}
+@endsection
+
 @section('page-content')
 <div class="row">
+    @if (count($raffles["raffle_to_end"])>0)
+        <div class="col-md-6 col-sm-6 col-xl-6">
+            <div class="card fb-card">
+                <div class="card-header">
+                    <i class="icofont icofont-calendar"></i>
+                    <div class="d-inline-block">
+                        <h5>Sorteos aputos de finalizar</h5>
+                        <span>Cantidad {{count($raffles["raffle_to_end"])}}</span>
+                    </div>
+                </div>
+                <div class="card-block text-center">
+                    <div class="row">
+                        <div id="carouselExampleControls" class="carousel slide col-md-12 col-sm-12 col-xl-12" data-interval="false" data-ride="carousel">
+                            <div class="carousel-inner">
+                                @foreach ($raffles["raffle_to_end"] as $key => $data )
+                                        @if ($key == 0)
+                                            <div class="carousel-item active">
+                                                <div class="row ">
+                                                    <div class="col-sm-12">
+                                                        <div class="text-left ml-5">
+                                                            <h5>{{$data['title']}}</h5>
+                                                            <p class="text-muted">ID - {{$data['id']}}</p>
+                                                            <h5 class="text-warning">{{$data['cash_to_draw']}}</h5>
+                                                        </div>
+                                                        <div
+                                                            style="
+                                                                float:right !important;
+                                                                margin-top:-50px !important;
+                                                                margin-right:50px !important;
+                                                            "
+                                                            id="donut1"
+                                                            data-size="100"
+                                                            data-fill="#ff9800"
+                                                            data-role="donut"
+                                                            data-show-value="true"
+                                                            data-total="100"
+                                                            data-value="{{$data['percent']}}">
+                                                        </div>
+                                                        <div class="text-left ml-5">
+                                                            <p class="text-muted">Inicio - {{$data['date_start']}}</p>
+                                                            <p class="text-muted">Fin - {{$data['date_end']}}</p>
+                                                            <p class="text-muted">Lanzamiento - {{$data['date_release']}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        @else
+                                            <div class="carousel-item">
+                                                <div class="row ">
+                                                    <div class="col-sm-12">
+                                                        <div class="float-left text-left ml-5">
+                                                            <h5>{{$data['title']}}</h5>
+                                                            <p class="text-muted">ID - {{$data['id']}}</p>
+                                                            <h5 class="text-warning">{{$data['cash_to_draw']}}</h5>
+                                                        </div>
+                                                        <div
+                                                            style="float:right !important;"
+                                                            id="donut1"
+                                                            data-fill="#ff9800"
+                                                            data-role="donut"
+                                                            data-show-value="true"
+                                                            data-total="100"
+                                                            data-value="{{$data['percent']}}">
+                                                        </div>
+                                                        <div class="float-left text-left ml-1">
+                                                            <p class="text-muted">Inicio - {{$data['date_start']}}</p>
+                                                            <p class="text-muted">Fin - {{$data['date_end']}}</p>
+                                                            <p class="text-muted">Lanzamiento - {{$data['date_release']}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                @endforeach
+                            </div>
+                            @if (count($raffles["raffle_to_end"])>0)
+                                <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"><i class="ti-angle-left"></i></span>
+                                    <span class="sr-only">Anterior</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"><i class="ti-angle-right"></i></span>
+                                    <span class="sr-only">Siguiente</span>
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <div class="col-md-6 col-sm-6 col-xl-6">
+        <div class="card fb-card">
+            <div class="card-header">
+                <i class="icofont icofont-calendar"></i>
+                <div class="d-inline-block">
+                    <h5>Analisis rapido - {{date('M')}}</h5>
+                    <span>Informacion</span>
+                </div>
+            </div>
+            <div class="card-block text-center">
+                <div class="row">
+
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="col-md-6 col-sm-12 col-xl-6">
         <div class="card fb-card">
@@ -255,9 +372,11 @@
 </div>
 @endsection
 @section('script-content')
+<!--metroui-->
+<script src="{{ asset('assets/js/metroui/metro.min.js') }}"></script>
 <script src="{{ asset('assets/js/jimbo/dashboard.js') }}"></script>
-
 <script>
+    var donut = Metro.getPlugin('#donut','donut');
     Morris.Donut({
         element: 'graph-donut',
         data: [

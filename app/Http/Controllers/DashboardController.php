@@ -152,6 +152,45 @@ class DashboardController extends Controller
         $raffle_p           = Raffle::where('type', 'product')->whereNull('deleted_at')->count();
         $raffle_r           = Raffle::where('type','raffle')->whereNull('deleted_at')->count();
 
+        $raffles_to_ends = Raffle::select(
+            'raffles.*',
+            DB::raw("TIMESTAMPDIFF(DAY, now(), raffles.date_end) AS remaining_days"),
+            DB::raw("TIMESTAMPDIFF(DAY, now(), raffles.date_release) AS date_release_end"))
+            ->where('raffles.active', 1)
+            ->where('raffles.public', 1)
+            ->where('raffles.finish', 0)
+            ->whereNull('raffles.deleted_at')
+            ->orderBy('raffles.id', 'DESC')
+            ->get();
+
+        $raffle_to_ends = [];
+
+        foreach ($raffles_to_ends as $key => $value) {
+            $amount = ((($value->cash_to_draw*$value->prize_1)/100) +
+                                          (($value->cash_to_draw*$value->prize_2)/100) +
+                                          (($value->cash_to_draw*$value->prize_3)/100) +
+                                          (($value->cash_to_draw*$value->prize_4)/100) +
+                                          (($value->cash_to_draw*$value->prize_5)/100) +
+                                          (($value->cash_to_draw*$value->prize_6)/100) +
+                                          (($value->cash_to_draw*$value->prize_7)/100) +
+                                          (($value->cash_to_draw*$value->prize_8)/100) +
+                                          (($value->cash_to_draw*$value->prize_9)/100) +
+                                          (($value->cash_to_draw*$value->prize_10)/100));
+            $percent = (($value->totalSale->sum('amount')*100)/($value->cash_to_collect-$amount));
+            if ($value->remaining_days <=5) {
+                array_push($raffle_to_ends, [
+                    'id'                => substr(sha1( $value->id), 0, 8),
+                    'title'             => $value->title,
+                    'cash_to_draw'      => Helper::amount($value->cash_to_draw),
+                    'date_start'        => $value->date_start->format('d/m/Y'),
+                    'date_end'          => $value->date_end->format('d/m/Y'),
+                    'date_release'      => $value->date_release->format('d/m/Y'),
+                    'percent'           => $percent == 100 ?  100 : $percent,
+                    'remaining_days'    => $value->remaining_days
+                ]);
+            }
+        }
+
         return [
             'raffles'           => $raffles,
             'raffle_open'       => $raffle_open,
@@ -161,7 +200,8 @@ class DashboardController extends Controller
             'raffle_active'     => $raffle_active,
             'raffle_inactive'   => $raffle_inactive,
             'raffle_p'          => $raffle_p,
-            'raffle_r'          => $raffle_r
+            'raffle_r'          => $raffle_r,
+            'raffle_to_end'     => $raffle_to_ends
         ];
     }
 

@@ -21608,3 +21608,12 @@ table.footable-paging-center>tfoot>tr.footable-paging>td {
 .btn-master {
     background-color: #eda85c;
 }
+
+.carousel-control-next, .carousel-control-prev {
+    opacity: 1 !important;
+}
+
+.carousel-control-next-icon, .carousel-control-prev-icon {
+    background: #ff9800 no-repeat center center !important;
+    border-radius: 100px !important;
+}
