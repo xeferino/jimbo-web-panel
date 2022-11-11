@@ -33,7 +33,7 @@ class FormRequestSignup extends FormRequest
             'country_id'            => 'required',
             'password'              => 'required|min:8|max:16',
             'cpassword'             => 'required|required_with:password|same:password',
-            'code_referral'         => $this->has('code_referral') ? 'exists:users,code_referral' : 'nullable',
+            'code_referral'         => ($this->has('code_referral') && $this->code_referral !="") ? 'exists:users,code_referral' : 'nullable',
         ];
     }
 

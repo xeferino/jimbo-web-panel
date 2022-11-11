@@ -160,7 +160,7 @@ class AuthController extends Controller
             $user->assignRole('competitor');
             BalanceController::store('Bono de registro en la aplicacion', 'credit', SettingController::bonus()['bonus']['register'], 'jib', $user->id);
 
-            if ($request->has('code_referral')) {
+            if ($request->has('code_referral') && $request->has('code_referral') != '') {
                 $referral = User::where('code_referral', $request->code_referral)->first();
                 if ($referral) {
                     LevelUser::insert([

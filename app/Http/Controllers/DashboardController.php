@@ -75,6 +75,15 @@ class DashboardController extends Controller
             $q->whereIn('name', ['seller']);
         })->whereNull('deleted_at')->where('active', 0)->count();
 
+        $seller_month     = User::whereHas("roles", function ($q) {
+                                $q->whereIn('name', ['seller']);
+                            })->whereNull('deleted_at')->where('active', 1)->whereMonth('created_at', date('m'))->count();
+
+        $competitor_month = User::whereHas("roles", function ($q) {
+                                $q->whereIn('name', ['competitor']);
+                            })->whereNull('deleted_at')->where('active', 1)->whereMonth('created_at', date('m'))->count();
+
+
         return [
             'users'               => $users,
             'user_active'         => $user_active,
@@ -84,7 +93,9 @@ class DashboardController extends Controller
             'competitor_inactive' => $competitor_inactive,
             'sellers'             => $sellers,
             'seller_active'       => $seller_active,
-            'seller_inactive'     => $seller_inactive
+            'seller_inactive'     => $seller_inactive,
+            'seller_month'        => $seller_month,
+            'competitor_month'    => $competitor_month
         ];
     }
 
@@ -118,26 +129,143 @@ class DashboardController extends Controller
 
     private function sales()
     {
-        $sale_approved = Sale::where('status', 'approved')->sum('amount');
-        $sale_pending = Sale::select('amount')->where('status', 'pending')->sum('amount');
+        $sale_approved  = Sale::where('status', 'approved')->sum('amount');
+        $sale_pending   = Sale::select('amount')->where('status', 'pending')->sum('amount');
+        $sale_month     = Sale::select('amount')->where('status', 'approved')->whereMonth('created_at', date('m'))->sum('amount');
+        $sale_total     = Sale::where('status', 'approved')->whereMonth('created_at', date('m'))->count();
+
+        $competitor_sale_month = User::whereHas("roles", function ($q) {
+            $q->whereIn('name', ['competitor']);
+        })
+        ->join('sales', 'sales.seller_id', '=', 'users.id' )
+        ->whereNull('users.deleted_at')->where('users.active', 1)
+        ->whereMonth('sales.created_at', date('m'))
+        ->where('sales.status', 'approved')
+        ->sum('sales.amount');
+
+        $seller_sale_month = User::whereHas("roles", function ($q) {
+            $q->whereIn('name', ['seller']);
+        })
+        ->join('sales', 'sales.seller_id', '=', 'users.id' )
+        ->whereNull('users.deleted_at')->where('users.active', 1)
+        ->whereMonth('sales.created_at', date('m'))
+        ->where('sales.status', 'approved')
+        ->sum('sales.amount');
+
+        $seller_classic_sale_year = User::join('sales', 'sales.seller_id', '=', 'users.id' )
+        ->join('level_users', 'level_users.seller_id', '=', 'users.id' )
+        ->join('levels', 'levels.id', '=', 'level_users.level_id' )
+        ->whereNull('users.deleted_at')->where('users.active', 1)
+        ->whereYear('sales.created_at', date('Y'))
+        ->where('sales.status', 'approved')
+        ->where('levels.name', 'classic')
+        ->count();
+
+        $seller_junior_sale_year = User::join('sales', 'sales.seller_id', '=', 'users.id' )
+        ->join('level_users', 'level_users.seller_id', '=', 'users.id' )
+        ->join('levels', 'levels.id', '=', 'level_users.level_id' )
+        ->whereNull('users.deleted_at')->where('users.active', 1)
+        ->whereYear('sales.created_at', date('Y'))
+        ->where('sales.status', 'approved')
+        ->where('levels.name', 'junior')
+        ->count();
+
+        $seller_middle_sale_year = User::join('sales', 'sales.seller_id', '=', 'users.id' )
+        ->join('level_users', 'level_users.seller_id', '=', 'users.id' )
+        ->join('levels', 'levels.id', '=', 'level_users.level_id' )
+        ->whereNull('users.deleted_at')->where('users.active', 1)
+        ->whereYear('sales.created_at', date('Y'))
+        ->where('sales.status', 'approved')
+        ->where('levels.name', 'middle')
+        ->count();
+
+        $seller_master_sale_year = User::join('sales', 'sales.seller_id', '=', 'users.id' )
+        ->join('level_users', 'level_users.seller_id', '=', 'users.id' )
+        ->join('levels', 'levels.id', '=', 'level_users.level_id' )
+        ->whereNull('users.deleted_at')->where('users.active', 1)
+        ->whereYear('sales.created_at', date('Y'))
+        ->where('sales.status', 'approved')
+        ->where('levels.name', 'master')
+        ->count();
+
+
+        $seller_classic_sale_year_amount = User::join('sales', 'sales.seller_id', '=', 'users.id' )
+        ->join('level_users', 'level_users.seller_id', '=', 'users.id' )
+        ->join('levels', 'levels.id', '=', 'level_users.level_id' )
+        ->whereNull('users.deleted_at')->where('users.active', 1)
+        ->whereYear('sales.created_at', date('Y'))
+        ->where('sales.status', 'approved')
+        ->where('levels.name', 'classic')
+        ->sum('sales.amount');
+
+        $seller_junior_sale_year_amount = User::join('sales', 'sales.seller_id', '=', 'users.id' )
+        ->join('level_users', 'level_users.seller_id', '=', 'users.id' )
+        ->join('levels', 'levels.id', '=', 'level_users.level_id' )
+        ->whereNull('users.deleted_at')->where('users.active', 1)
+        ->whereYear('sales.created_at', date('Y'))
+        ->where('sales.status', 'approved')
+        ->where('levels.name', 'junior')
+        ->sum('sales.amount');
+
+        $seller_middle_sale_year_amount = User::join('sales', 'sales.seller_id', '=', 'users.id' )
+        ->join('level_users', 'level_users.seller_id', '=', 'users.id' )
+        ->join('levels', 'levels.id', '=', 'level_users.level_id' )
+        ->whereNull('users.deleted_at')->where('users.active', 1)
+        ->whereYear('sales.created_at', date('Y'))
+        ->where('sales.status', 'approved')
+        ->where('levels.name', 'middle')
+        ->sum('sales.amount');
+
+        $seller_master_sale_year_amount = User::join('sales', 'sales.seller_id', '=', 'users.id' )
+        ->join('level_users', 'level_users.seller_id', '=', 'users.id' )
+        ->join('levels', 'levels.id', '=', 'level_users.level_id' )
+        ->whereNull('users.deleted_at')->where('users.active', 1)
+        ->whereYear('sales.created_at', date('Y'))
+        ->where('sales.status', 'approved')
+        ->where('levels.name', 'master')
+        ->sum('sales.amount');
+
 
         return  [
-            'sale_approved' =>  $sale_approved,
-            'sale_pending'  =>  $sale_pending,
-            'sale_total'    =>  $sale_approved+$sale_pending
+            'sale_approved'                     =>  $sale_approved,
+            'sale_pending'                      =>  $sale_pending,
+            'sale_total'                        =>  $sale_approved+$sale_pending,
+            'sale_month'                        =>  $sale_month,
+            'sale_total'                        =>  $sale_total,
+            'competitor_sale_month'             =>  $competitor_sale_month,
+            'seller_sale_month'                 =>  $seller_sale_month,
+            'seller_sale_month'                 =>  $seller_sale_month,
+            'seller_classic_sale_year'          =>  $seller_classic_sale_year,
+            'seller_junior_sale_year'           =>  $seller_junior_sale_year,
+            'seller_middle_sale_year'           =>  $seller_middle_sale_year,
+            'seller_master_sale_year'           =>  $seller_master_sale_year,
+            'seller_classic_sale_year_amount'   =>  $seller_classic_sale_year_amount,
+            'seller_junior_sale_year_amount'    =>  $seller_junior_sale_year_amount,
+            'seller_middle_sale_year_amount'    =>  $seller_middle_sale_year_amount,
+            'seller_master_sale_year_amount'    =>  $seller_master_sale_year_amount,
         ];
     }
 
     private function egress()
     {
-        $cash_approved = CashRequest::where('status', 'approved')->sum('amount');
-        return $cash_approved;
+        $cash_month     = CashRequest::select('amount')->where('status', 'approved')->whereMonth('created_at', date('m'))->sum('amount');
+        $cash_approved  = CashRequest::where('status', 'approved')->sum('amount');
+
+        return [
+            'cash_month'    => $cash_month,
+            'cash_approved' => $cash_approved
+        ];
     }
 
     private function requestCash()
     {
+        $cash_month     = CashRequest::select('amount')->where('status', 'pending')->whereMonth('created_at', date('m'))->sum('amount');
         $cash_pending = CashRequest::where('status', 'pending')->sum('amount');
-        return $cash_pending;
+
+        return [
+            'cash_month'    => $cash_month,
+            'cash_pending'  => $cash_pending
+        ];
     }
 
     private function raffles()

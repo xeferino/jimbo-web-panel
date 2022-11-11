@@ -14,7 +14,7 @@
         <div class="col-md-6 col-sm-6 col-xl-6">
             <div class="card fb-card">
                 <div class="card-header">
-                    <i class="icofont icofont-calendar"></i>
+                    <i class="icofont icofont-listing-number"></i>
                     <div class="d-inline-block">
                         <h5>Sorteos aputos de finalizar</h5>
                         <span>Cantidad {{count($raffles["raffle_to_end"])}}</span>
@@ -30,7 +30,7 @@
                                                 <div class="row ">
                                                     <div class="col-sm-12">
                                                         <div class="text-left ml-5">
-                                                            <h5>{{$data['title']}}</h5>
+                                                            <h5 class="text-warning">{{$data['title']}}</h5>
                                                             <p class="text-muted">ID - {{$data['id']}}</p>
                                                             <h5 class="text-warning">{{$data['cash_to_draw']}}</h5>
                                                         </div>
@@ -52,6 +52,7 @@
                                                             <p class="text-muted">Inicio - {{$data['date_start']}}</p>
                                                             <p class="text-muted">Fin - {{$data['date_end']}}</p>
                                                             <p class="text-muted">Lanzamiento - {{$data['date_release']}}</p>
+                                                            <p class="text-muted">Dias restantes - {{$data['remaining_days']}}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -62,7 +63,7 @@
                                                 <div class="row ">
                                                     <div class="col-sm-12">
                                                         <div class="float-left text-left ml-5">
-                                                            <h5>{{$data['title']}}</h5>
+                                                            <h5 class="text-warning">{{$data['title']}}</h5>
                                                             <p class="text-muted">ID - {{$data['id']}}</p>
                                                             <h5 class="text-warning">{{$data['cash_to_draw']}}</h5>
                                                         </div>
@@ -86,7 +87,7 @@
                                         @endif
                                 @endforeach
                             </div>
-                            @if (count($raffles["raffle_to_end"])>0)
+                            @if (count($raffles["raffle_to_end"])>=2)
                                 <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"><i class="ti-angle-left"></i></span>
                                     <span class="sr-only">Anterior</span>
@@ -108,13 +109,28 @@
             <div class="card-header">
                 <i class="icofont icofont-calendar"></i>
                 <div class="d-inline-block">
-                    <h5>Analisis rapido - {{date('M')}}</h5>
+                    <h5>Analisis rapido - {{\Carbon\Carbon::now()->locale('es')->translatedFormat('F Y')}}</h5>
                     <span>Informacion</span>
                 </div>
             </div>
             <div class="card-block text-center">
                 <div class="row">
+                    <div class="col-sm-4 ">
+                        <h5 class="text-warning">{{$users['competitor_month']}}</h5>
+                        <p class="text-muted">Competidores</p>
+                        <h5 class="text-warning">{{Helper::amount($sales['competitor_sale_month'])}}</h5>
+                    </div>
+                    <div class="col-sm-4 ">
+                        <h5 class="text-warning">{{$users['seller_month']}}</h5>
+                        <p class="text-muted">Vendedores</p>
+                        <h5 class="text-warning">{{Helper::amount($sales['seller_sale_month'])}}</h5>
+                    </div>
+                    <div class="col-sm-4 ">
+                        <h5 class="text-warning">{{$sales['sale_total']}}</h5>
+                        <p class="text-muted">Ventas</p>
+                        <h5 class="text-warning">{{Helper::amount($sales['sale_month'])}}</h5>
 
+                    </div>
                 </div>
             </div>
         </div>
@@ -129,19 +145,23 @@
                     <span>Balances</span>
                 </div>
             </div>
-            <div class="card-block text-center">
+            <div class="card-block text-center text-capitalize">
                 <div class="row">
-                    <div class="col-sm-4 b-r-default">
-                        <h4>{{Helper::amount($sales['sale_pending'])}}</h4>
-                        <p class="text-muted">Ventas pendientes</p>
+                    <div class="col-sm-3">
+                        <h5 class="text-warning">{{Helper::amount($sales['sale_pending'])}}</h5>
+                        <p class="text-muted">Pendientes</p>
                     </div>
-                    <div class="col-sm-4 b-r-default">
-                        <h4>{{Helper::amount($sales['sale_approved'])}}</h4>
-                        <p class="text-muted">Ventas completadas</p>
+                    <div class="col-sm-3 b-r-default">
+                        <h5 class="text-warning">{{Helper::amount($sales['sale_approved'])}}</h5>
+                        <p class="text-muted">Aprobadas</p>
                     </div>
-                    <div class="col-sm-4">
-                        <h4>{{Helper::amount($sales['sale_total'])}}</h4>
-                        <p class="text-muted">Ventas totales</p>
+                    <div class="col-sm-3">
+                        <h5 class="text-warning">{{Helper::amount($sales['sale_total'])}}</h5>
+                        <p class="text-muted">Totales</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <h5 class="text-warning">{{Helper::amount($sales['sale_month'])}}</h5>
+                        <p class="text-muted">{{\Carbon\Carbon::now()->locale('es')->translatedFormat('F')}}</p>
                     </div>
                 </div>
             </div>
@@ -157,15 +177,23 @@
                     <span>Balances</span>
                 </div>
             </div>
-            <div class="card-block text-center">
+            <div class="card-block text-center text-capitalize">
                 <div class="row">
-                    <div class="col-sm-6 b-r-default">
-                        <h4>{{Helper::amount($egress)}}</h4>
+                    <div class="col-sm-3 ">
+                        <h5 class="text-warning">{{Helper::amount($egress['cash_approved'])}}</h5>
                         <p class="text-muted">Egresos</p>
                     </div>
-                    <div class="col-sm-6">
-                        <h4>{{Helper::amount($cash)}}</h4>
-                        <p class="text-muted">Solicitude de Retiros</p>
+                    <div class="col-sm-3 b-r-default">
+                        <h5 class="text-warning">{{Helper::amount($egress['cash_month'])}}</h5>
+                        <p class="text-muted">{{\Carbon\Carbon::now()->locale('es')->translatedFormat('F')}}</p>
+                    </div>
+                    <div class="col-sm-3 ">
+                        <h5 class="text-warning">{{Helper::amount($cash['cash_pending'])}}</h5>
+                        <p class="text-muted">Retiros</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <h5 class="text-warning">{{Helper::amount($cash['cash_month'])}}</h5>
+                        <p class="text-muted">{{\Carbon\Carbon::now()->locale('es')->translatedFormat('F')}}</p>
                     </div>
                 </div>
             </div>
@@ -181,19 +209,19 @@
                     <span>Sistema</span>
                 </div>
             </div>
-            <div class="card-block text-center">
+            <div class="card-block text-center text-capitalize">
                 <div class="row">
-                    <div class="col-sm-4 b-r-default">
-                        <h4>{{$users['users']}}</h4>
+                    <div class="col-sm-4 ">
+                        <h5 class="text-warning">{{$users['users']}}</h5>
                         <p class="text-muted">Colaboradores</p>
                     </div>
-                    <div class="col-sm-4 b-r-default">
-                        <h4>{{$users['user_active']}}</h4>
-                        <p class="text-muted">Colaboradores Activos</p>
+                    <div class="col-sm-4 ">
+                        <h5 class="text-warning">{{$users['user_active']}}</h5>
+                        <p class="text-success">Activos</p>
                     </div>
                     <div class="col-sm-4">
-                        <h4>{{$users['user_inactive']}}</h4>
-                        <p class="text-muted">Colaboradores Inactivos</p>
+                        <h5 class="text-warning">{{$users['user_inactive']}}</h5>
+                        <p class="text-danger">Inactivos</p>
                     </div>
                 </div>
             </div>
@@ -209,19 +237,19 @@
                     <span>Sistema</span>
                 </div>
             </div>
-            <div class="card-block text-center">
+            <div class="card-block text-center text-capitalize">
                 <div class="row">
-                    <div class="col-sm-4 b-r-default">
-                        <h4>{{$users['sellers']}}</h4>
+                    <div class="col-sm-4 ">
+                        <h5 class="text-warning">{{$users['sellers']}}</h5>
                         <p class="text-muted">Vendedores</p>
                     </div>
-                    <div class="col-sm-4 b-r-default">
-                        <h4>{{$users['seller_active']}}</h4>
-                        <p class="text-muted">Vendedores Activos</p>
+                    <div class="col-sm-4 ">
+                        <h5 class="text-warning">{{$users['seller_active']}}</h5>
+                        <p class="text-success">Activos</p>
                     </div>
-                    <div class="col-sm-4 b-r-default">
-                        <h4>{{$users['seller_inactive']}}</h4>
-                        <p class="text-muted">Vendedores Inactivos</p>
+                    <div class="col-sm-4 ">
+                        <h5 class="text-warning">{{$users['seller_inactive']}}</h5>
+                        <p class="text-danger">Inactivos</p>
                     </div>
                 </div>
             </div>
@@ -239,17 +267,17 @@
             </div>
             <div class="card-block text-center">
                 <div class="row">
-                    <div class="col-sm-4 b-r-default">
-                        <h4>{{$users['competitors']}}</h4>
+                    <div class="col-sm-4 ">
+                        <h5 class="text-warning">{{$users['competitors']}}</h5>
                         <p class="text-muted">Competidores</p>
                     </div>
-                    <div class="col-sm-4 b-r-default">
-                        <h4>{{$users['competitor_active']}}</h4>
-                        <p class="text-muted">Competidores Activos</p>
+                    <div class="col-sm-4 ">
+                        <h5 class="text-warning">{{$users['competitor_active']}}</h5>
+                        <p class="text-success">Activos</p>
                     </div>
                     <div class="col-sm-4">
-                        <h4>{{$users['user_active']}}</h4>
-                        <p class="text-muted">Colaboradores Inactivos</p>
+                        <h5 class="text-warning">{{$users['competitor_inactive']}}</h5>
+                        <p class="text-danger">Inactivos</p>
                     </div>
                 </div>
             </div>
@@ -267,17 +295,17 @@
             </div>
             <div class="card-block text-center">
                 <div class="row">
-                    <div class="col-sm-4 b-r-default">
-                        <h4>{{$promotions['promotions']}}</h4>
-                        <p class="text-muted">Todas</p>
+                    <div class="col-sm-4 ">
+                        <h5 class="text-warning">{{$promotions['promotions']}}</h5>
+                        <p class="text-muted">Promociones</p>
                     </div>
-                    <div class="col-sm-4 b-r-default">
-                        <h4>{{$promotions['promotion_active']}}</h4>
-                        <p class="text-muted">Promociones Activas</p>
+                    <div class="col-sm-4 ">
+                        <h5 class="text-warning">{{$promotions['promotion_active']}}</h5>
+                        <p class="text-success">Activas</p>
                     </div>
                     <div class="col-sm-4">
-                        <h4>{{$promotions['promotion_inactive']}}</h4>
-                        <p class="text-muted">Promociones Inactivas</p>
+                        <h5 class="text-warning">{{$promotions['promotion_inactive']}}</h5>
+                        <p class="text-danger">Inactivas</p>
                     </div>
                 </div>
             </div>
@@ -356,12 +384,13 @@
             </div>
             <div class="card-block">
                 <div class="table-responsive">
-                    <ul class="">
-                        <li> <button class="btn btn-user btn-sm"></button> Usuario </li>
-                        <li> <button class="btn btn-classic btn-sm"></button> Clasico </li>
-                        <li> <button class="btn btn-junior btn-sm"></button> Junior </li>
-                        <li> <button class="btn btn-middle btn-sm"></button> Semi Senior </li>
-                        <li> <button class="btn btn-master btn-sm"></button> Senior </li>
+                    <ul style="">
+                        <li style="display:inline;"> <button class="btn btn-classic btn-sm"></button> Clasico  {{Helper::amount($sales["seller_classic_sale_year_amount"])}}</li>
+                        <li style="display:inline;"> <button class="btn btn-junior btn-sm"></button> Junior  {{Helper::amount($sales["seller_junior_sale_year_amount"])}}</li>
+                    </ul>
+                    <ul class="mt-3">
+                        <li style="display:inline;"> <button class="btn btn-middle btn-sm"></button> Semi Senior {{Helper::amount($sales["seller_middle_sale_year_amount"])}}</li>
+                        <li style="display:inline;"> <button class="btn btn-master btn-sm"></button> Senior {{Helper::amount($sales["seller_master_sale_year_amount"])}}</li>
                     </ul>
                     <div id="graph-donut"></div>
                 </div>
@@ -376,15 +405,20 @@
 <script src="{{ asset('assets/js/metroui/metro.min.js') }}"></script>
 <script src="{{ asset('assets/js/jimbo/dashboard.js') }}"></script>
 <script>
+
+    var    seller_classic_sale_year =  '{{$sales["seller_classic_sale_year"]}}';
+    var    seller_junior_sale_year  =  '{{$sales["seller_junior_sale_year"]}}';
+    var    seller_middle_sale_year  =  '{{$sales["seller_middle_sale_year"]}}';
+    var    seller_master_sale_year  =  '{{$sales["seller_master_sale_year"]}}';
+
     var donut = Metro.getPlugin('#donut','donut');
     Morris.Donut({
         element: 'graph-donut',
         data: [
-          {value: 70, label: 'Usuario'},
-          {value: 15, label: 'Clasico'},
-          {value: 10, label: 'Junior'},
-          {value: 5, label: 'Semi Senior'},
-          {value: 5, label: 'Senior'}
+          {value: seller_classic_sale_year, label: 'Clasico'},
+          {value: seller_junior_sale_year, label: 'Junior'},
+          {value: seller_middle_sale_year, label: 'Semi Senior'},
+          {value: seller_master_sale_year, label: 'Senior'}
         ],
         backgroundColor: '#ccc',
         labelColor: '#000',

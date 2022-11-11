@@ -96,7 +96,7 @@ class SettingController extends Controller
             $level_percent_group_master->save();
         } elseif($type == 'bonus_classic') {
             $level_classic_ascent_unique_bonus = Setting::where('name', 'level_classic_ascent_unique_bonus')->first();
-            $level_classic_ascent_unique_bonus->value = $request->level_classic_ascent_unique_bonus;
+            $level_classic_ascent_unique_bonus->value = (($request->level_classic_ascent_unique_bonus*9.20)/100)+$request->level_classic_ascent_unique_bonus;
             $level_classic_ascent_unique_bonus->save();
             $level_classic_seller_percent = Setting::where('name', 'level_classic_seller_percent')->first();
             $level_classic_seller_percent->value = $request->level_classic_seller_percent;
