@@ -66,7 +66,10 @@ Route::middleware(['auth:sanctum', 'check.user'])->group(function () {
     Route::get('/raffles/favorites/{user?}', [RaffleController::class, 'index']);
     Route::get('/raffles', [RaffleController::class, 'index']);
     Route::get('/raffles/detail/{raffle}', [RaffleController::class, 'show']);
-    Route::post('/raflles/favorites', [RaffleController::class, 'store']);
+    Route::post('/raffles/favorites', [RaffleController::class, 'store']);
+    Route::get('/raffles/winners', [RaffleController::class, 'winners']);
+    Route::get('/raffles/winner/show/{id}', [RaffleController::class, 'showWinner']);
+
     //payments
     Route::get('/payment/{user}', [PaymentController::class, 'paymentHistory']);
     Route::post('/payment/detail', [PaymentController::class, 'paymentDetail']);
@@ -75,6 +78,8 @@ Route::middleware(['auth:sanctum', 'check.user'])->group(function () {
     Route::post('/sales/payment', [SaleController::class, 'saleTicket']);
     Route::get('/sales/{user}', [SaleController::class, 'index']);
     Route::get('/sales/tickets/{sale}', [SaleController::class, 'show']);
+    Route::get('/sales/sellers/rankings', [SaleController::class, 'topSellers']);
+
     //shoppings
     Route::get('/shoppings/{user}', [ShoppingController::class, 'index']);
     Route::get('/shoppings/tickets/{shopping}', [ShoppingController::class, 'show']);

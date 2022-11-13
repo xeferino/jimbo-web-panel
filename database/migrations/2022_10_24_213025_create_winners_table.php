@@ -25,6 +25,8 @@ return new class extends Migration
             $table->float('amount', 10,2)->nullable();
             $table->foreignId('ticket_id')->nullable();
             $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('set null');
+            $table->foreignId('ticket_user_id')->nullable();
+            $table->foreign('ticket_user_id')->references('id')->on('ticket_users')->onDelete('set null');
             $table->foreignId('seller_id')->nullable();
             $table->foreign('seller_id')->references('id')->on('users')->onDelete('set null');
             $table->foreignId('user_id')->nullable();

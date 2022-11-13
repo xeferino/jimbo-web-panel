@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use App\Models\Winner;
+use App\Helpers\Helper;
 
 class Raffle extends Model
 {
@@ -31,6 +33,47 @@ class Raffle extends Model
     public function TicketUser()
     {
         return $this->hasMany('App\Models\TicketUser', 'raffle_id', 'id');
+    }
+
+    public static function Winners($id)
+    {
+        $winners = [];
+        foreach (Winner::where('raffle_id', $id)->orderBy('amount','DESC')->get() as $key => $value) {
+
+            $country = Country::find($value->country_id);
+
+            $image = config('app.url').'/assets/images/avatar.svg';
+
+            if($value->user_id != null){
+                $image = $value->User->image != 'avatar.svg' ? config('app.url').'/assets/images/competitors/'.$value->User->image : config('app.url').'/assets/images/avatar.svg';
+            }
+
+            array_push($winners, [
+                    'id'                   => $value->id,
+                    'name'                 => $value->name,
+                    'dni'                  => $value->dni,
+                    'phone'                => $value->phone,
+                    'email'                => $value->email,
+                    'address'              => $value->address,
+                    'country_id'           => $value->country_id,
+                    'amount'               => Helper::amount($value->amount),
+                    'ticket_id_parent'     => $value->Ticket->serial,
+                    'ticket_id_winner'     => $value->TicketWinner->serial,
+                    'seller_id'            => $value->seller_id,
+                    'user_id'              => $value->user_id,
+                    'raffle_id'            => $value->raffle_id,
+                    'created_at'           => $value->created_at,
+                    'image'                => $image,
+                'country'   => [
+                    'id'    => $country->id,
+                    'name'  => $country->name,
+                    'iso'   => $country->iso,
+                    'code'  => $country->code,
+                    'icon'  => $country->img != 'flag.png' ? config('app.url').'/assets/images/flags/'.$country->img : config('app.url').'/assets/images/flags/flag.png'
+                ]
+            ]);
+        }
+        return $winners;
     }
 
     public function setDateStartAttribute($value):void

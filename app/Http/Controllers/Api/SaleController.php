@@ -355,4 +355,62 @@ class SaleController extends Controller
             ]);
         }
     }
+
+
+    /**
+     * Display a single of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function topSellers(Request $request)
+    {
+
+        try {
+            $level_single_junior  = Setting::where('name', 'level_single_junior')->first();
+            $level_single_middle  = Setting::where('name', 'level_single_middle')->first();
+            $level_single_master  = Setting::where('name', 'level_single_master')->first();
+
+            $top = Sale::select(
+                DB::raw("CONCAT(users.names,' ',users.surnames) AS fullnames"),
+                DB::raw('SUM(sales.amount) as amount'),
+                DB::raw('(CASE
+                                WHEN levels.name = "classic" and SUM(sales.amount)>=500 THEN "Clasico"
+                                WHEN levels.name = "junior" and SUM(sales.amount)>='.$level_single_junior->value.' THEN "Junior"
+                                WHEN levels.name = "middle" and SUM(sales.amount)>='.$level_single_middle->value.' THEN "Semi Senior"
+                                WHEN levels.name = "master" and SUM(sales.amount)>='.$level_single_master->value.' THEN "Senior"
+                                ELSE "Usuario"
+                                END) AS level'),
+                'users.image'
+                )
+                ->join('users', 'users.id', '=', 'sales.seller_id')
+                ->join('level_users', 'level_users.seller_id', '=', 'sales.seller_id')
+                ->join('levels', 'levels.id', '=', 'level_users.level_id')
+                ->groupBy('sales.seller_id')
+                ->whereNotNull('sales.seller_id')
+                ->offset(0)->limit(10)
+                ->orderBy('sales.id','DESC')
+                ->get();
+
+            $data = [];
+
+            foreach ($top as $key => $value) {
+
+               array_push($data, [
+                'fullnames'     => $value->fullnames,
+                'amount'        => Helper::amount($value->amount),
+                'level'         => $value->level,
+                'image'         => $value->image != 'avatar.svg' ? config('app.url').'/assets/images/sellers/'.$value->Seller->image : config('app.url').'/assets/images/avatar.svg',
+               ]);
+            }
+            return response()->json([
+                'sellers' => $data,
+                'status'   => 200
+            ], 200);
+        }catch (Exception $e) {
+            return response()->json([
+                'status'  => 500,
+                'message' =>  $e->getMessage()
+            ]);
+        }
+    }
 }

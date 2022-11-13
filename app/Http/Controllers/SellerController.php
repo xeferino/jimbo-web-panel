@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use Spatie\Permission\Models\Role;
+use App\Services\CulqiService as Culqi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\FormSellerRequest;
@@ -15,6 +16,7 @@ use App\Http\Requests\FormRechargeRequest;
 use App\Http\Controllers\Api\BalanceController;
 use App\Models\Country;
 use App\Models\Sale;
+use App\Models\Customer;
 use App\Models\BalanceHistory;
 use Illuminate\Support\Facades\File;
 use App\Helpers\Helper;
@@ -122,19 +124,33 @@ class SellerController extends Controller
      */
     public function store(FormSellerRequest $request, Seller $seller)
     {
-        $seller                   = new Seller();
-        $seller->names            = $request->names;
-        $seller->surnames         = $request->surnames;
-        $seller->email            = $request->email;
-        $seller->dni              = $request->dni;
-        $seller->phone            = $request->phone;
-        $seller->address          = $request->address;
-        $seller->address_city     = $request->address_city;
-        $seller->code_referral    = substr(sha1(time()), 0, 8);
-        $seller->type             = 2;
-        $seller->country_id       = $request->country_id;
-        $seller->active           = $request->active;
-        $seller->password         = Hash::make($request->password);
+        $seller                     = new Seller();
+        $seller->names              = $request->names;
+        $seller->surnames           = $request->surnames;
+        $seller->email              = $request->email;
+        $seller->dni                = $request->dni;
+        $seller->phone              = $request->phone;
+        $seller->address            = $request->address;
+        $seller->address_city       = $request->address_city;
+        $seller->code_referral      = substr(sha1(time()), 0, 8);
+        $seller->type               = 2;
+        $seller->country_id         = $request->country_id;
+        $seller->active             = $request->active;
+        $seller->password           = Hash::make($request->password);
+        $seller->email_verified_at  = now();
+
+        $data =    [
+            "address"       => $request->address,
+            "address_city"  => $request->address_city,
+            "country_code"  => $seller->country->iso,
+            "email"         => $request->email,
+            "first_name"    => $request->names,
+            "last_name"     => $request->surnames,
+            "metadata"      => [
+                "DNI"  => $request->dni
+            ],
+            "phone_number" => $request->phone
+        ];
 
         if($request->file('image')){
             $file           = $request->file('image');
@@ -147,9 +163,28 @@ class SellerController extends Controller
         }
 
         $saved = $seller->save();
-        if($saved)
-        $seller->assignRole($request->role);
-            return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Vendedor registrado exitosamente.'], 200);
+        if($saved) {
+
+            $message_culqi = null;
+            $culqi_customer_id = isset($seller->Customer->culqi_customer_id) ? $seller->Customer->culqi_customer_id : null;
+            if($culqi_customer_id == null) {
+                $culqi = new Culqi();
+                $customer =  $culqi->customer($data);
+                $object = $customer->object ?? 'error';
+
+                if($object =='customer') {
+                    $customer =  Customer::updateOrCreate(
+                        ['culqi_customer_id' => $customer->id, 'user_id' => $seller->id],
+                    );
+                } else {
+                    $customer = json_decode($customer, true);
+                    $message_culqi = "Culqi informa:".$customer['merchant_message'];
+                }
+            }
+
+            $seller->assignRole($request->role);
+            return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Vendedor registrado exitosamente.' .$message_culqi], 200);
+        }
     }
 
     /**
@@ -196,7 +231,7 @@ class SellerController extends Controller
                                 <i class="ti-user"></i>
                             </a>';
                     if(auth()->user()->can('show-sale')){
-                        $btn .= '<a href="'.route('panel.sales.show',['sale' => $sale->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  class="btn btn-warning btn-sm  mr-1 detailSale">
+                        $btn .= '<a href="'.route('panel.sales.show',['sale' => $sale->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  class="btn btn-warning btn-sm  mr-1">
                                         <i class="ti-eye"></i>
                                     </a>';
                         return $btn;

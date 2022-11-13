@@ -151,41 +151,70 @@
                     </div>
                 </div>
                 <div class="card-block">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <strong class="text-uppercase">{{$sale->user->names}}</strong>
-                            <p class="text-muted">Nombres</p>
-                        </div>
-                        <div class="col-sm-4">
-                            <strong class="text-uppercase">{{$sale->user->surnames}}</strong>
-                            <p class="text-muted">Apellidos</p>
-                        </div>
-                        <div class="col-sm-4">
-                            <strong class="text-uppercase">{{$sale->user->dni}}</strong>
-                            <p class="text-muted">Dni</p>
-                        </div>
-                        <div class="col-sm-4">
-                            <strong class="text-uppercase">{{$sale->user->email}}</strong>
-                            <p class="text-muted">Email</p>
-                        </div>
-                        <div class="col-sm-4">
-                            <strong class="text-uppercase">{{$sale->user->phone}}</strong>
-                            <p class="text-muted">Telefono</p>
-                        </div>
-                        <div class="col-sm-4">
-                            <strong class="text-uppercase">{{$sale->user->country->name}}</strong>
-                            <p class="text-muted">Pais</p>
-                        </div>
-                        <div class="col-sm-4">
-                            <strong class="text-uppercase">{{$sale->user->address_city}}</strong>
-                            <p class="text-muted">Ciudad</p>
-                        </div>
-                        <div class="col-sm-4">
-                            <strong class="text-uppercase">{{$sale->user->address}}</strong>
-                            <p class="text-muted">Direcion</p>
-                        </div>
+                    @if($sale->user_id !=null)
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <strong class="text-uppercase">{{$sale->user->names}}</strong>
+                                <p class="text-muted">Nombres</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <strong class="text-uppercase">{{$sale->user->surnames}}</strong>
+                                <p class="text-muted">Apellidos</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <strong class="text-uppercase">{{$sale->user->dni}}</strong>
+                                <p class="text-muted">Dni</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <strong class="text-uppercase">{{$sale->user->email}}</strong>
+                                <p class="text-muted">Email</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <strong class="text-uppercase">{{$sale->user->phone}}</strong>
+                                <p class="text-muted">Telefono</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <strong class="text-uppercase">{{$sale->user->country->name}}</strong>
+                                <p class="text-muted">Pais</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <strong class="text-uppercase">{{$sale->user->address_city}}</strong>
+                                <p class="text-muted">Ciudad</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <strong class="text-uppercase">{{$sale->user->address}}</strong>
+                                <p class="text-muted">Direcion</p>
+                            </div>
 
-                    </div>
+                        </div>
+                    @else
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <strong class="text-uppercase">{{$sale->name}}</strong>
+                                <p class="text-muted">Nombres y Apellidos</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <strong class="text-uppercase">{{$sale->dni}}</strong>
+                                <p class="text-muted">Dni</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <strong class="text-uppercase">{{$sale->email}}</strong>
+                                <p class="text-muted">Email</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <strong class="text-uppercase">{{$sale->phone}}</strong>
+                                <p class="text-muted">Telefono</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <strong class="text-uppercase">{{$sale->Country->name}}</strong>
+                                <p class="text-muted">Pais</p>
+                            </div>
+                            <div class="col-sm-4">
+                                <strong class="text-uppercase">{{$sale->address}}</strong>
+                                <p class="text-muted">Direcion</p>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

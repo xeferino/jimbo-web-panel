@@ -102,6 +102,115 @@ class RaffleController extends Controller
         }
     }
 
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function winners(Request $request)
+    {
+        try {
+            $raffles = Raffle::select(
+                'raffles.id',
+                'raffles.title',
+                'raffles.cash_to_draw',
+                'raffles.date_start',
+                'raffles.date_end',
+                'raffles.date_release',
+                DB::raw("TIMESTAMPDIFF(DAY, raffles.date_release, now()) AS days_ago"),
+                DB::raw("CONCAT('".$this->asset."',raffles.image) AS logo"))
+                ->where('raffles.active', 0)
+                ->where('raffles.public', 1)
+                ->where('raffles.finish', 1)
+                ->whereNull('raffles.deleted_at')
+                ->orderBy('raffles.id', 'DESC')
+                ->get();
+
+            $data = [];
+
+            foreach ($raffles as $key => $value) {
+                # code...
+                array_push($data, [
+                    'id'                => $value->id,
+                    'title'             => $value->title,
+                    'cash_to_draw'      => Helper::amount($value->cash_to_draw),
+                    'date_start'        => $value->date_start,
+                    'date_end'          => $value->date_end,
+                    'date_release'      => $value->date_release,
+                    'days_ago'          => $value->days_ago,
+                    'logo'              => $value->logo,
+                    'winners'           => Raffle::Winners($value->id)
+                ]);
+            }
+
+            return response()->json(['raffles' => $data], 200);
+
+        } catch (Exception $e) {
+
+            return response()->json([
+                'status'   => 500,
+                'message' =>  $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showWinner($id)
+    {
+        try {
+            $raffle = Raffle::findOrFail($id);
+
+            $amount = ((($raffle->cash_to_draw*$raffle->prize_1)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_2)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_3)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_4)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_5)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_6)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_7)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_8)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_9)/100) +
+            (($raffle->cash_to_draw*$raffle->prize_10)/100));
+            $percent = (($raffle->totalSale->sum('amount')*100)/($raffle->cash_to_collect-$amount));
+
+            $start =  Carbon::now();
+            $end   = Carbon::parse($raffle->date_end);
+            $days  = $end->diffInDays($start);
+
+            return response()->json([
+                'raflle' => [
+                    'id'            => $raffle->id,
+                    'title'         => $raffle->title,
+                    'description'   => $raffle->description,
+                    'brand'         => $raffle->brand,
+                    'promoter'      => $raffle->promoter,
+                    'place'         => $raffle->place,
+                    'provider'      => $raffle->provider,
+                    'cash_to_draw'  => Helper::amount($raffle->cash_to_draw),
+                    'logo'          => $raffle->image != 'raffle.jpg' ? $this->asset.$raffle->image : $this->asset.'raffle.jpg',
+                    'date_start'    => $raffle->date_start->format('d/m/Y'),
+                    'date_end'      => $raffle->date_end->format('d/m/Y'),
+                    'date_release'  => $raffle->date_release->format('d/m/Y'),
+                    'active'        => $raffle->active == 1 ? 'Activo' : 'Inactivo',
+                    'public'        => $raffle->public == 1 ? 'Publico' : null,
+                    'finish'        => $raffle->finish == 1 ? 'Finalizado' : 'Abierto',
+                    'type'          => ($raffle->type == 'raffle') ? 'Sorteo' : 'Producto',
+                    'days_ago'      => $days,
+                    'winners' =>    Raffle::Winners($raffle->id)
+                ]
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'status'   => 500,
+                'message' =>  $e->getMessage()
+            ], 500);
+        }
+    }
+
     /**
      * Display the specified resource.
      *
@@ -147,7 +256,7 @@ class RaffleController extends Controller
             (($raffle->cash_to_draw*$raffle->prize_10)/100));
             $percent = (($raffle->totalSale->sum('amount')*100)/($raffle->cash_to_collect-$amount));
 
-            $start =  Carbon::now();;
+            $start =  Carbon::now();
             $end   = Carbon::parse($raffle->date_end);
             $days  = $end->diffInDays($start);
 
