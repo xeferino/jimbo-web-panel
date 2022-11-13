@@ -13,7 +13,7 @@ use App\Http\Controllers\Api\SaleController;
 use App\Http\Controllers\Api\ShoppingController;
 use App\Http\Controllers\Api\CardController;
 use App\Http\Controllers\Api\AccountController;
-use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\LegalityController;
 
 /*
@@ -57,7 +57,11 @@ Route::prefix('user')->middleware(['auth:sanctum', 'check.user'])->group(functio
     Route::post('/accounts', [AccountController::class, 'store']);
     Route::put('/accounts/{account}', [AccountController::class, 'update']);
     Route::delete('accounts/{account}', [AccountController::class, 'destroy']);
-
+    //notifications
+    Route::get('/notifications/all/{user}', [NotificationController::class, 'index']);
+    //graphics
+    Route::get('/shoppings/graphics/{user}', [ShoppingController::class, 'graphics']);
+    Route::get('/sales/graphics/{user}', [SaleController::class, 'graphics']);
 });
 
 Route::middleware(['auth:sanctum', 'check.user'])->group(function () {

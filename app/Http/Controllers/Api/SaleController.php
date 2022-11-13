@@ -413,4 +413,55 @@ class SaleController extends Controller
             ]);
         }
     }
+
+    /**
+     * Display a single graphics of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function graphics(Request $request)
+    {
+        try {
+            $jib = User::whereHas("roles", function ($q) {
+                $q->whereIn('name', ['seller']);
+            })
+            ->join('sales', 'sales.seller_id', '=', 'users.id' )
+            ->whereNull('users.deleted_at')->where('users.active', 1)
+            ->whereMonth('sales.created_at', date('m'))
+            ->where('sales.status', 'approved')
+            ->where('sales.method', 'jib')
+            ->where('sales.seller_id', $request->user)
+            ->count();
+
+            $card = User::whereHas("roles", function ($q) {
+                $q->whereIn('name', ['seller']);
+            })
+            ->join('sales', 'sales.seller_id', '=', 'users.id' )
+            ->whereNull('users.deleted_at')->where('users.active', 1)
+            ->whereMonth('sales.created_at', date('m'))
+            ->where('sales.status', 'approved')
+            ->where('sales.method', 'card')
+            ->where('sales.seller_id', $request->user)
+            ->count();
+
+            $labels  = ['Jib', 'Tarjeta', 'Plin', 'Yape'];
+            $data   = [$jib, $card, 0, 0];
+
+            return response()->json([
+                'grafics' => [
+                    'sales' => [
+                        'labels' => $labels,
+                        'data'   => $data,
+                    ]
+                ],
+                'status'   => 200
+            ], 200);
+
+        }catch (Exception $e) {
+            return response()->json([
+                'status'  => 500,
+                'message' =>  $e->getMessage()
+            ]);
+        }
+    }
 }
