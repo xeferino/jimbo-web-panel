@@ -35,7 +35,7 @@ class CardController extends Controller
     {
         try {
             $cards = [];
-            foreach (Card::where('user_id', $request->user)->get() as $key => $value) {
+            foreach (Card::where('user_id', $request->user)->orderBy('created_at','DESC')->get() as $key => $value) {
                 # code...
                 array_push($cards, [
                     'id'=> $value->id,

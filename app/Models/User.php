@@ -111,6 +111,7 @@ class User extends Authenticatable
                 'phone'             => $referral->User->phone,
                 'address_city'      => $referral->User->address_city,
                 'address'           => $referral->User->address,
+                'image'             => $referral->User->image != 'avatar.svg' ? config('app.url').'/assets/images/competitors/'.$referral->User->image : config('app.url').'/assets/images/avatar.svg',
                 'level'             => $referral->Level->name ?? '----',
                 'sales'             => $referral->User->sales->count(),
                 'amount_sale'       => Helper::amount($referral->User->sales->sum('amount')),

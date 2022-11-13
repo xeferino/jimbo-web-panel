@@ -30,7 +30,7 @@ class FormCountryRequest extends FormRequest
             'currency'       => 'required',
             'exchange_rate'  => 'required|numeric|between:0.0,100',
             'active'         => 'required',
-            'img'            => $this->hasFile('img') ? 'required|sometimes|mimes:jpeg,jpg,png,svg|max:512|dimensions:width=20,height=20' : 'nullable',
+            'img'            => $this->hasFile('img') ? 'required|sometimes|mimes:jpeg,jpg,png,svg|max:512' : 'nullable',
         ];
     }
 

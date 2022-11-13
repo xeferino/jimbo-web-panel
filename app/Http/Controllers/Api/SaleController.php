@@ -245,6 +245,8 @@ class SaleController extends Controller
 
     private function generateTickets($data, $sale_id) {
         $ticket = Ticket::where('id', $data->ticket_id)->where('raffle_id', $data->raffle_id)->first();
+        $user = User::find($data->user_id);
+
         $tickets = [];
         if ($ticket) {
             for ($i = 1; $i <= $ticket->promotion->quantity; $i++) {
@@ -252,7 +254,7 @@ class SaleController extends Controller
                     'serial'        =>  $ticket->id.$i.time(),
                     'ticket_id'     =>  $ticket->id,
                     'raffle_id'     =>  $ticket->raffle_id,
-                    'user_id'       =>  isset($data->user_id) ? $data->user_id : null,
+                    'user_id'       =>  $user->type == 1 ? $user->id : null,
                     'sale_id'       =>  $sale_id,
                     'created_at'    =>  now(),
                     'updated_at'    =>  now(),
@@ -268,33 +270,89 @@ class SaleController extends Controller
         $sale = null;
 
         if ($ticket) {
-            $user = isset($data->other) && $data->other == 1 ? null : User::find($data->user_id);
-            if(isset($data->other) && $data->other == 1) {
-                if(!$user->hasRole('seller'))
-                    $user->assignRole('seller');
-            } else {
-                if(!$user->hasRole('competitor'))
-                    $user->assignRole('competitor');
-            }
+            $user = User::find($data->user_id);
             $sale = new Sale();
-            $fullnames        =   $user->names . ' ' . $user->surnames;
+            $fullnames        =   $user->type == 1 ? $user->names . ' ' . $user->surnames : $data->name;
             $sale->name       =   $fullnames;
-            $sale->dni        =   $user ? $user->dni :  $data->dni;
-            $sale->phone      =   $user ? $user->phone :  $data->phone;
-            $sale->email      =   $user ? $user->email :  $data->email;
-            $sale->address    =   $user ? $user->address :  $data->address;
+            $sale->dni        =   $user->type == 1 ? $user->dni :  $data->dni;
+            $sale->phone      =   $user->type == 1 ? $user->phone :  $data->phone;
+            $sale->email      =   $user->type == 1 ? $user->email :  $data->email;
+            $sale->address    =   $user->type == 1 ? $user->address :  $data->address;
             $sale->country_id =   $data->country_id;
             $sale->amount     =   $ticket->promotion->price;
             $sale->number     =   time();
             $sale->quantity   =   $ticket->promotion->quantity;
             $sale->ticket_id  =   $ticket->id;
-            $sale->seller_id  =   isset($data->other) && $data->other == 1 ? $data->seller_id : null;
-            $sale->user_id    =   isset($data->other) && $data->other == 1 ? null : $data->user_id;
+            $sale->seller_id  =   $user->type == 1 ? null: $user->id;
+            $sale->user_id    =   $user->type == 1 ? $user->id :null;
             $sale->raffle_id  =   $data->raffle_id;
             $sale->status     =   'pending';
             $sale->save();
             return $sale;
         }
         return $sale;
+    }
+
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        try {
+            $sales = Sale::where('seller_id', $request->user)->where('status', 'approved')->orderBy('created_at','DESC')->get();
+
+            return response()->json([
+                'status'  => 200,
+                'sales'   =>  $sales
+            ], 200);
+        }catch (Exception $e) {
+            return response()->json([
+                'status'   => 500,
+                'message' =>  $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Display a single of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request)
+    {
+        try {
+            $sale = Sale::findOrFail($request->sale);
+            $sale = [
+                'raffle' => [
+                    'title' => $sale->Raffle->title,
+                    'first_prize'  => Helper::amount($sale->Raffle->cash_to_draw),
+                    'status' => $sale->Raffle->active == 1 ? 'Activo' : 'Inactivo',
+                    'finish' => $sale->Raffle->finish == 1 ? 'Finalizado' : 'Abierto',
+                    'code_ticket' => $sale->Ticket->serial,
+                    'tickets' => $sale->TicketsUsers,
+                    'date_start' => $sale->Raffle->date_end->format('d/m/y'),
+                    'date_end' => $sale->Raffle->date_end->format('d/m/y'),
+                    'date_release' => $sale->Raffle->date_release != null ? $sale->Raffle->date_release->format('d/m/y') : null,
+                    'date_extend' => $sale->Raffle->date_extend,
+                ],
+                'quantity' => $sale->quantity,
+                'amount' => $sale->amount,
+                'number_operation' => $sale->number,
+                'date'  => $sale->created_at->format('d/m/y'),
+                'hour'  => $sale->created_at->format('H:i:s')
+            ];
+            return response()->json([
+                'status'   => 200,
+                'sale' => $sale
+            ], 200);
+        }catch (Exception $e) {
+            return response()->json([
+                'status'  => 500,
+                'message' =>  $e->getMessage()
+            ]);
+        }
     }
 }

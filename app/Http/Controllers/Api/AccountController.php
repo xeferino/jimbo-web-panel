@@ -19,7 +19,7 @@ class AccountController extends Controller
     public function index(Request $request)
     {
         try {
-            $accounts = Account::where('user_id', $request->user)->get();
+            $accounts = Account::where('user_id', $request->user)->orderBy('created_at','DESC')->get();
 
             return response()->json([
                 'status'  => 200,

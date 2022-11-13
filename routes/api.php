@@ -73,6 +73,8 @@ Route::middleware(['auth:sanctum', 'check.user'])->group(function () {
     Route::get('/payment/methods/all', [PaymentController::class, 'paymentMethod']);
     //sales
     Route::post('/sales/payment', [SaleController::class, 'saleTicket']);
+    Route::get('/sales/{user}', [SaleController::class, 'index']);
+    Route::get('/sales/tickets/{sale}', [SaleController::class, 'show']);
     //shoppings
     Route::get('/shoppings/{user}', [ShoppingController::class, 'index']);
     Route::get('/shoppings/tickets/{shopping}', [ShoppingController::class, 'show']);

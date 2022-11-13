@@ -116,17 +116,17 @@
             <div class="card-block text-center">
                 <div class="row">
                     <div class="col-sm-4 ">
-                        <h5 class="text-warning">{{$users['competitor_month']}}</h5>
+                        <h5>{{$users['competitor_month']}}</h5>
                         <p class="text-muted">Competidores</p>
                         <h5 class="text-warning">{{Helper::amount($sales['competitor_sale_month'])}}</h5>
                     </div>
                     <div class="col-sm-4 ">
-                        <h5 class="text-warning">{{$users['seller_month']}}</h5>
+                        <h5>{{$users['seller_month']}}</h5>
                         <p class="text-muted">Vendedores</p>
                         <h5 class="text-warning">{{Helper::amount($sales['seller_sale_month'])}}</h5>
                     </div>
                     <div class="col-sm-4 ">
-                        <h5 class="text-warning">{{$sales['sale_total']}}</h5>
+                        <h5>{{$sales['sale_total']}}</h5>
                         <p class="text-muted">Ventas</p>
                         <h5 class="text-warning">{{Helper::amount($sales['sale_month'])}}</h5>
 
@@ -149,11 +149,11 @@
                 <div class="row">
                     <div class="col-sm-3">
                         <h5 class="text-warning">{{Helper::amount($sales['sale_pending'])}}</h5>
-                        <p class="text-muted">Pendientes</p>
+                        <p class="text-danger">Pendientes</p>
                     </div>
                     <div class="col-sm-3 b-r-default">
                         <h5 class="text-warning">{{Helper::amount($sales['sale_approved'])}}</h5>
-                        <p class="text-muted">Aprobadas</p>
+                        <p class="text-success">Aprobadas</p>
                     </div>
                     <div class="col-sm-3">
                         <h5 class="text-warning">{{Helper::amount($sales['sale_total'])}}</h5>
@@ -212,15 +212,15 @@
             <div class="card-block text-center text-capitalize">
                 <div class="row">
                     <div class="col-sm-4 ">
-                        <h5 class="text-warning">{{$users['users']}}</h5>
+                        <h5>{{$users['users']}}</h5>
                         <p class="text-muted">Colaboradores</p>
                     </div>
                     <div class="col-sm-4 ">
-                        <h5 class="text-warning">{{$users['user_active']}}</h5>
+                        <h5>{{$users['user_active']}}</h5>
                         <p class="text-success">Activos</p>
                     </div>
                     <div class="col-sm-4">
-                        <h5 class="text-warning">{{$users['user_inactive']}}</h5>
+                        <h5>{{$users['user_inactive']}}</h5>
                         <p class="text-danger">Inactivos</p>
                     </div>
                 </div>
@@ -240,15 +240,15 @@
             <div class="card-block text-center text-capitalize">
                 <div class="row">
                     <div class="col-sm-4 ">
-                        <h5 class="text-warning">{{$users['sellers']}}</h5>
+                        <h5>{{$users['sellers']}}</h5>
                         <p class="text-muted">Vendedores</p>
                     </div>
                     <div class="col-sm-4 ">
-                        <h5 class="text-warning">{{$users['seller_active']}}</h5>
+                        <h5>{{$users['seller_active']}}</h5>
                         <p class="text-success">Activos</p>
                     </div>
                     <div class="col-sm-4 ">
-                        <h5 class="text-warning">{{$users['seller_inactive']}}</h5>
+                        <h5>{{$users['seller_inactive']}}</h5>
                         <p class="text-danger">Inactivos</p>
                     </div>
                 </div>
@@ -268,15 +268,15 @@
             <div class="card-block text-center">
                 <div class="row">
                     <div class="col-sm-4 ">
-                        <h5 class="text-warning">{{$users['competitors']}}</h5>
+                        <h5>{{$users['competitors']}}</h5>
                         <p class="text-muted">Competidores</p>
                     </div>
                     <div class="col-sm-4 ">
-                        <h5 class="text-warning">{{$users['competitor_active']}}</h5>
+                        <h5>{{$users['competitor_active']}}</h5>
                         <p class="text-success">Activos</p>
                     </div>
                     <div class="col-sm-4">
-                        <h5 class="text-warning">{{$users['competitor_inactive']}}</h5>
+                        <h5>{{$users['competitor_inactive']}}</h5>
                         <p class="text-danger">Inactivos</p>
                     </div>
                 </div>
@@ -296,15 +296,15 @@
             <div class="card-block text-center">
                 <div class="row">
                     <div class="col-sm-4 ">
-                        <h5 class="text-warning">{{$promotions['promotions']}}</h5>
+                        <h5>{{$promotions['promotions']}}</h5>
                         <p class="text-muted">Promociones</p>
                     </div>
                     <div class="col-sm-4 ">
-                        <h5 class="text-warning">{{$promotions['promotion_active']}}</h5>
+                        <h5>{{$promotions['promotion_active']}}</h5>
                         <p class="text-success">Activas</p>
                     </div>
                     <div class="col-sm-4">
-                        <h5 class="text-warning">{{$promotions['promotion_inactive']}}</h5>
+                        <h5>{{$promotions['promotion_inactive']}}</h5>
                         <p class="text-danger">Inactivas</p>
                     </div>
                 </div>
@@ -415,10 +415,10 @@
     Morris.Donut({
         element: 'graph-donut',
         data: [
-          {value: seller_classic_sale_year, label: 'Clasico'},
-          {value: seller_junior_sale_year, label: 'Junior'},
-          {value: seller_middle_sale_year, label: 'Semi Senior'},
-          {value: seller_master_sale_year, label: 'Senior'}
+          {value: 3, label: 'Clasico'},
+          {value: 23, label: 'Junior'},
+          {value: 45, label: 'Semi Senior'},
+          {value: 56, label: 'Senior'}
         ],
         backgroundColor: '#ccc',
         labelColor: '#000',

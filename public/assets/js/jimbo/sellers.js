@@ -9,6 +9,7 @@ $(function () {
     var table = $('.table-seller').DataTable({
         processing: true,
         serverSide: true,
+        order: [[0, 'desc']],
         "language": {
             "decimal":        "",
             "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ vendedores",
@@ -63,6 +64,7 @@ $(function () {
     var table = $('.table-seller-sales').DataTable({
         processing: true,
         serverSide: true,
+        order: [[0, 'desc']],
         "language": {
             "decimal":        "",
             "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ ventas",
@@ -121,6 +123,7 @@ $(function () {
     var table_balance = $('.table-balance').DataTable({
         processing: true,
         serverSide: true,
+        order: [[0, 'desc']],
         "language": {
             "decimal":        "",
             "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ balances",

@@ -81,10 +81,29 @@ class AuthController extends Controller
                     }
 
                     $accessToken = $user->createToken('AuthToken')->plainTextToken;
-                    $balance = SettingController::bonus()['bonus']['to_access'] + $user->balance_jib ?? 0;
+                    $balance = SettingController::bonus()['bonus']['to_access'] ?? 0;
                     $user->save();
                     BalanceController::store('Bono de ingreso a la aplicacion', 'credit', $balance, 'jib', $user->id);
                     $user = User::find($user->id);
+
+                    $level = "Usuario";
+                    if(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'classic') {
+                        $level = 'Clasico';
+                    }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'junior') {
+                        $level = 'Junior';
+                    }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'middle') {
+                        $level = 'Semi Senior';
+                    }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'master') {
+                        $level = 'Senior';
+                    }
+
+                    $image = $this->asset.'avatar.svg';
+                    if ($user->image != 'avatar.svg' && $user->type == 2) {
+                        $image = $this->asset.'sellers/'.$user->image;
+                    } elseif ($user->image != 'avatar.svg' && $user->type == 1) {
+                        $image = $this->asset.'competitors/'.$user->image;
+                    }
+
                     return response()->json(
                         [
                             'profile'    => [
@@ -110,7 +129,10 @@ class AuthController extends Controller
                                 'email_verified_at' => $user->email_verified_at,
                                 'code_referral'     => $user->code_referral,
                                 'role'              => count($user->getRoleNames()) > 1 ? $user->getRoleNames()->join(',') : $user->getRoleNames()->join(''),
-                                'image'             => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
+                                'seller'            => $user->type == 2 ? true : false,
+                                'level'             => $level,
+                                'status'            => 'Activo',
+                                'image'             => $image,
                                 'country'      => [
                                     'id'    => $user->country->id,
                                     'name'  => $user->country->name,
@@ -158,7 +180,10 @@ class AuthController extends Controller
             $user->type             = 1;
             $user->save();
             $user->assignRole('competitor');
-            BalanceController::store('Bono de registro en la aplicacion', 'credit', SettingController::bonus()['bonus']['register'], 'jib', $user->id);
+
+            $balance = SettingController::bonus()['bonus']['to_access'] ?? 0;
+
+            BalanceController::store('Bono de registro en la aplicacion', 'credit', $balance, 'jib', $user->id);
 
             if ($request->has('code_referral') && $request->has('code_referral') != '') {
                 $referral = User::where('code_referral', $request->code_referral)->first();
@@ -181,6 +206,26 @@ class AuthController extends Controller
 
             $accessToken = $user->createToken('AuthToken')->plainTextToken;
             $user = User::find($user->id);
+
+            $level = "Usuario";
+            if(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'classic') {
+                $level = 'Clasico';
+            }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'junior') {
+                $level = 'Junior';
+            }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'middle') {
+                $level = 'Semi Senior';
+            }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'master') {
+                $level = 'Senior';
+            }
+
+
+            $image = $this->asset.'avatar.svg';
+            if ($user->image != 'avatar.svg' && $user->type == 2) {
+                $image = $this->asset.'sellers/'.$user->image;
+            } elseif ($user->image != 'avatar.svg' && $user->type == 1) {
+                $image = $this->asset.'competitors/'.$user->image;
+            }
+
             return response()->json([
                 'profile'    => [
                     'id'                => $user->id,
@@ -205,7 +250,10 @@ class AuthController extends Controller
                     'email_verified_at' => $user->email_verified_at,
                     'code_referral'     => $user->code_referral,
                     'role'              => count($user->getRoleNames()) > 1 ? $user->getRoleNames()->join(',') : $user->getRoleNames()->join(''),
-                    'image'             => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
+                    'seller'            => $user->type == 2 ? true : false,
+                    'level'             => $level,
+                    'status'            => 'Activo',
+                    'image'             => $image,
                     'country'      => [
                         'id'    => $user->country->id,
                         'name'  => $user->country->name,
@@ -238,6 +286,24 @@ class AuthController extends Controller
         try {
             $user = User::find($id);
             if ($user) {
+                $level = "Usuario";
+                if(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'classic') {
+                    $level = 'Clasico';
+                }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'junior') {
+                    $level = 'Junior';
+                }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'middle') {
+                    $level = 'Semi Senior';
+                }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'master') {
+                    $level = 'Senior';
+                }
+
+                $image = $this->asset.'avatar.svg';
+                if ($user->image != 'avatar.svg' && $user->type == 2) {
+                    $image = $this->asset.'sellers/'.$user->image;
+                } elseif ($user->image != 'avatar.svg' && $user->type == 1) {
+                    $image = $this->asset.'competitors/'.$user->image;
+                }
+
                 return response()->json([
                     'profile'    => [
                         'id'                => $user->id,
@@ -262,8 +328,11 @@ class AuthController extends Controller
                         'email_verified_at' => $user->email_verified_at,
                         'code_referral'     => $user->code_referral,
                         'role'              => count($user->getRoleNames()) > 1 ? $user->getRoleNames()->join(',') : $user->getRoleNames()->join(''),
-                        'image'             => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
-                        'country'      => [
+                        'seller'            => $user->type == 2 ? true : false,
+                        'level'             => $level,
+                        'status'            => 'Activo',
+                        'image'             => $image,
+                        'country'   => [
                             'id'    => $user->country->id,
                             'name'  => $user->country->name,
                             'iso'   => $user->country->iso,
@@ -294,6 +363,7 @@ class AuthController extends Controller
     public function settingProfile(FormRequestProfile $request, User $User, $id)
     {
         try {
+
             $user                    = User::find($id);
             $user->names             = $request->names;
             $user->surnames          = $request->surnames;
@@ -302,6 +372,7 @@ class AuthController extends Controller
             $user->phone             = $request->phone;
             $user->address           = $request->address;
             $user->address_city      = $request->address_city;
+
             if ($request->has('code') && $request->code && $user->code == $request->code) {
                 $user->email_verified_at = now();
             }
@@ -310,24 +381,46 @@ class AuthController extends Controller
                 $user->password     = Hash::make($request->password);
             }
 
-            if ($request->has('image') && isset($request->image)) {
-                if ($user->image != "avatar.svg") {
-                    if (Storage::disk('public')->exists('users/'.$user->image))
-                    {
-                        Storage::disk('public')->delete('users/'.$user->image);
-                    }
-                }
-
-                $image_64 = $request->image;
-                $replace = substr($image_64, 0, strpos($image_64, ',')+1);
-                $image = str_replace($replace, '', $image_64);
-                $image = str_replace(' ', '+', $image);
-                $imageName = Str::random(10).'.png';
-                Storage::disk('public')->put('users/'.$imageName, base64_decode($image));
-                $user->image = $imageName;
+            if ($user->type == 2) {
+                $image = 'assets/images/sellers/';
+            } elseif ($user->type == 1) {
+                $image = 'assets/images/competitors/';
             }
 
-            $data =    [
+            if ($user->image != "avatar.svg") {
+
+                if ($user->type == 2) {
+                    $folder = 'assets/images/sellers/';
+                } elseif ($user->type == 1) {
+                    $folder = 'assets/images/competitors/';
+                }
+
+                if (File::exists(public_path($folder . $user->image))) {
+                    File::delete(public_path($folder . $user->image));
+                }
+
+                $user->image = $this->saveBase64($request->image, $folder, $user->id.time().'.'.'jpeg');
+            }
+
+            $level = "Usuario";
+            if(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'classic') {
+                $level = 'Clasico';
+            }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'junior') {
+                $level = 'Junior';
+            }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'middle') {
+                $level = 'Semi Senior';
+            }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'master') {
+                $level = 'Senior';
+            }
+
+            $image = $this->asset.'avatar.svg';
+            if ($user->image != 'avatar.svg' && $user->type == 2) {
+                $image = $this->asset.'sellers/'.$user->image;
+            } elseif ($user->image != 'avatar.svg' && $user->type == 1) {
+                $image = $this->asset.'competitors/'.$user->image;
+            }
+
+             $data =    [
                 "address"       => $request->address,
                 "address_city"  => $request->address_city,
                 "country_code"  => $user->country->iso,
@@ -340,25 +433,23 @@ class AuthController extends Controller
                 "phone_number" => $request->phone
             ];
 
-            $culqi = new Culqi();
-            $customer =  $culqi->customer($data);
-            $object = $customer->object ?? 'error';
-            $culqi_customer_id = null;
-            if($object =='customer') {
-                $culqi_customer_id = $customer->id;
-            } else {
-                $customer = json_decode($customer, true);
-                return response()->json([
-                    'error'     => true,
-                    'type'      => $customer['type'],
-                    'message'   =>  $customer['merchant_message']]);
-            }
-
             if ($user->save()) {
-                if($culqi_customer_id) {
-                    $customer =  Customer::updateOrCreate(
-                        ['culqi_customer_id' => $culqi_customer_id, 'user_id' => $user->id],
-                    );
+
+                $message_culqi = null;
+                $culqi_customer_id = isset($user->Customer->culqi_customer_id) ? $user->Customer->culqi_customer_id : null;
+                if($culqi_customer_id == null) {
+                    $culqi = new Culqi();
+                    $customer =  $culqi->customer($data);
+                    $object = $customer->object ?? 'error';
+
+                    if($object =='customer') {
+                        $customer =  Customer::updateOrCreate(
+                            ['culqi_customer_id' => $customer->id, 'user_id' => $user->id],
+                        );
+                    } else {
+                        $customer = json_decode($customer, true);
+                        $message_culqi = "Culqi informa:".$customer['merchant_message'];
+                    }
                 }
 
                 return response()->json([
@@ -385,7 +476,10 @@ class AuthController extends Controller
                         'email_verified_at' => $user->email_verified_at,
                         'code_referral'     => $user->code_referral,
                         'role'              => count($user->getRoleNames()) > 1 ? $user->getRoleNames()->join(',') : $user->getRoleNames()->join(''),
-                        'image'             => $user->image != 'avatar.svg' ? $this->avatar.'users/'.$user->image : $this->avatar.'users/avatar.svg',
+                        'seller'            => $user->type == 2 ? true : false,
+                        'level'             => $level,
+                        'status'            => 'Activo',
+                        'image'             => $image,
                         'country'      => [
                             'id'    => $user->country->id,
                             'name'  => $user->country->name,
@@ -394,8 +488,8 @@ class AuthController extends Controller
                             'icon'  => $user->country->img != 'flag.png' ? $this->asset.'flags/'.$user->country->img : $this->asset.'flags/flag.png'
                         ]
                     ],
-                    'status' => 200,
-                    'message' => $user->names.'!, Perfil actualizado',
+                    'status'        => 200,
+                    'message'       => $user->names.'!, Perfil actualizado. '.$message_culqi,
                 ], 200);
             }
         } catch (Exception $e) {

@@ -75,7 +75,7 @@ class CompetitorController extends Controller
                         return $btn;
                     })
                     ->addColumn('image', function($competitor){
-                        $img = $competitor->image != 'avatar.svg' ? asset('assets/images/competitors/'.$competitor->image): asset('assets/images/avatar.svg');
+                        $img = $competitor->image != 'avatar.svg' ? asset('assets/images/users/'.$competitor->image): asset('assets/images/avatar.svg');
                         return '<img src="'.$img.'" class="img-50 img-radius" alt="User-Profile-Image">';
                     })
                     ->addColumn('role', function($competitor){

@@ -8,6 +8,7 @@ $(function () {
     var table = $('.table-competitor').DataTable({
         processing: true,
         serverSide: true,
+        order: [[0, 'desc']],
         "language": {
             "decimal":        "",
             "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ participantes",
@@ -62,6 +63,7 @@ $(function () {
     var table1 = $('.table-competitor-shoppings').DataTable({
         processing: true,
         serverSide: true,
+        order: [[0, 'desc']],
         "language": {
             "decimal":        "",
             "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ compras",
@@ -120,6 +122,7 @@ $(function () {
     var table2 = $('.table-competitor-payment-history').DataTable({
         processing: true,
         serverSide: true,
+        order: [[0, 'desc']],
         "language": {
             "decimal":        "",
             "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ compras",
@@ -176,6 +179,7 @@ $(function () {
     var table3 = $('.table-cash').DataTable({
         processing: true,
         serverSide: true,
+        order: [[0, 'desc']],
         "language": {
             "decimal":        "",
             "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ solicitudes",
@@ -231,6 +235,7 @@ $(function () {
     var table4 = $('.table-balance').DataTable({
         processing: true,
         serverSide: true,
+        order: [[0, 'desc']],
         "language": {
             "decimal":        "",
             "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ balances",

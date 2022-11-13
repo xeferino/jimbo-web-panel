@@ -35,7 +35,15 @@ class CountryController extends Controller
     {
         try {
 
-            $countries = Country::select('id', 'name', 'code', 'iso', DB::raw("CONCAT('".$this->asset."',img) AS icon"), 'currency', 'exchange_rate')->where('active', 1)->whereNull('deleted_at')->get();
+            $countries = Country::select(
+                'id',
+                'name',
+                'code',
+                'iso',
+                DB::raw("CONCAT('".$this->asset."',img) AS icon"),
+                'currency',
+                'exchange_rate'
+            )->where('active', 1)->whereNull('deleted_at')->orderBy('created_at','DESC')->get();
             return response()->json(['countries' => $countries], 200);
 
         } catch (Exception $e) {

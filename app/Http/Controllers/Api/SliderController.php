@@ -35,7 +35,7 @@ class SliderController extends Controller
     {
         try {
 
-            $sliders = Slider::select('id', 'name', DB::raw("CONCAT('".$this->asset."',image) AS slider"))->where('active', 1)->whereNull('deleted_at')->get();
+            $sliders = Slider::select('id', 'name', DB::raw("CONCAT('".$this->asset."',image) AS slider"))->where('active', 1)->whereNull('deleted_at')->orderBy('created_at','DESC')->get();
             return response()->json(['sliders' => $sliders], 200);
 
         } catch (Exception $e) {

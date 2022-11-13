@@ -38,6 +38,7 @@ jQuery(document).ready(function() {
         scrollX: true,
         scrollY: "50vh",
         scrollCollapse: true,
+        order: [[0, 'desc']],
         "language": {
             "decimal":        "",
             "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ sorteos",

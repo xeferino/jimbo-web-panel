@@ -26,7 +26,7 @@ class ShoppingController extends Controller
     public function index(Request $request)
     {
         try {
-            $shoppings = Shopping::where('user_id', $request->user)->where('status', 'approved')->get();
+            $shoppings = Shopping::where('user_id', $request->user)->where('status', 'approved')->orderBy('created_at','DESC')->get();
 
             return response()->json([
                 'status'  => 200,

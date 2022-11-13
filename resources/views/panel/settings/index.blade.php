@@ -60,7 +60,7 @@
                             <label class="col-form-label">Jib al acceder al App</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="to_access" name="to_access" value="{{$settings['to_access']}}" placeholder="1">
-                                <span class="input-group-addon">3</span>
+                                <span class="input-group-addon">#</span>
                             </div>
                             <div class="col-form-label has-danger-to_access"></div>
                         </div>

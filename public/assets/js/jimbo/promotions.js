@@ -7,6 +7,7 @@ $(function () {
     var table = $('.table-promotion').DataTable({
         processing: true,
         serverSide: true,
+        order: [[0, 'desc']],
         "language": {
             "decimal":        "",
             "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ promociones",

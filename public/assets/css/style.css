@@ -12924,8 +12924,8 @@ div.dt-button:active:not(.disabled),
 div.dt-button.active:not(.disabled),
 a.dt-button:active:not(.disabled),
 a.dt-button.active:not(.disabled) {
-    background-color: #4680ff;
-    border-color: #4680ff;
+    background-color: #f58735;
+    border-color: #f58735;
     border-radius: 2px;
     color: #fff;
     background-image: none;
@@ -12966,8 +12966,8 @@ button.dt-button:hover:not(.disabled),
 div.dt-button:hover:not(.disabled),
 a.dt-button:hover:not(.disabled) {
     background-image: none;
-    background-color: #5f92ff;
-    border-color: #4680ff;
+    background-color: #ff9800;
+    border-color: #ff9800;
 }
 
 button.dt-button.btn-warning:hover:not(.disabled),
