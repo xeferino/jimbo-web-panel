@@ -81,6 +81,15 @@
                             <strong class="text-uppercase">{{$competitor->code_referral}}</strong>
                             <p class="text-muted">Codigo de referido</p>
                         </div>
+                        @if ($competitor->become_seller == 1)
+                            <div class="col-sm-4">
+                                <strong class="text-uppercase">
+                                    <span class="badge badge-warning" style="float: left !important;">
+                                        Este participante, ha solicitado convertirse en vendedor
+                                    </span>
+                                </strong>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

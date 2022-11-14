@@ -140,6 +140,7 @@ class AuthController extends Controller
                                 'seller'            => $user->type == 2 ? true : false,
                                 'level'             => $level,
                                 'status'            => 'Activo',
+                                'become_seller'     => $user->become_seller == 1 ? true : false,
                                 'image'             => $image,
                                 'country'      => [
                                     'id'    => $user->country->id,
@@ -347,6 +348,7 @@ class AuthController extends Controller
                         'seller'            => $user->type == 2 ? true : false,
                         'level'             => $level,
                         'status'            => 'Activo',
+                        'become_seller'     => $user->become_seller == 1 ? true : false,
                         'image'             => $image,
                         'country'   => [
                             'id'    => $user->country->id,
@@ -387,6 +389,7 @@ class AuthController extends Controller
             $user->phone             = $request->phone;
             $user->address           = $request->address;
             $user->address_city      = $request->address_city;
+            $user->become_seller     = $request->become_seller == 1 ? 1 : 0;
 
             if ($request->has('code') && $request->code && $user->code == $request->code) {
                 $user->email_verified_at = now();
@@ -496,6 +499,7 @@ class AuthController extends Controller
                         'seller'            => $user->type == 2 ? true : false,
                         'level'             => $level,
                         'status'            => 'Activo',
+                        'become_seller'     => $user->become_seller == 1 ? true : false,
                         'image'             => $image,
                         'country'      => [
                             'id'    => $user->country->id,

@@ -22,6 +22,7 @@ use App\Models\BalanceHistory;
 use Illuminate\Support\Facades\File;
 use App\Helpers\Helper;
 use App\Models\User;
+use App\Models\LevelUser;
 
 class SellerController extends Controller
 {
@@ -167,10 +168,18 @@ class SellerController extends Controller
         if($saved) {
 
             $user = User::where('code_referral', $request->code_referral_user)->first();
-            if ($user) {
+            if ($user && $user->type == 1) {
                 $balance = SettingController::bonus()['bonus']['user_to_seller'] ?? 0;
                 BalanceController::store('Bono de '.$balance.' jib por convertirse en vendedor de jimbo', 'credit', $balance, 'jib', $user->id);
                 NotificationController::store('Has recibido nuevos Jibs', 'Bono de '.$balance.' jib por convertirse en vendedor de jimbo', $user->id);
+            }elseif($user && $user->type == 2) {
+                LevelUser::insert([
+                    'seller_id'     => $seller->id,
+                    'referral_id'   => $user->id,
+                    'created_at'    =>now(),
+                ]);
+                BalanceController::store('Bono de referido en la aplicacion', 'credit', SettingController::bonus()['bonus']['referral_bonus_seller'], 'jib', $user->id);
+                NotificationController::store('Bono de Referido', 'Bono de '.Helper::amount(SettingController::bonus()['bonus']['referral_bonus_seller']).' jibs', $user->id);
             }
 
             $message_culqi = null;

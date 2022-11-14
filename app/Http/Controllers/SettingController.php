@@ -127,10 +127,11 @@ class SettingController extends Controller
 
     public static function bonus()
     {
-        $register       = Setting::where('name', 'register')->first();
-        $referrals      = Setting::where('name', 'referrals')->first();
-        $to_access      = Setting::where('name', 'to_access')->first();
-        $user_to_seller = Setting::where('name', 'user_to_seller')->first();
+        $register               = Setting::where('name', 'register')->first();
+        $referrals              = Setting::where('name', 'referrals')->first();
+        $to_access              = Setting::where('name', 'to_access')->first();
+        $user_to_seller         = Setting::where('name', 'user_to_seller')->first();
+        $referral_bonus_seller  = Setting::where('name', 'level_classic_referral_bonus')->first();
 
         return [
             /*
@@ -139,10 +140,11 @@ class SettingController extends Controller
             |--------------------------------------------------------------------------
             */
             'bonus' => [
-                'register'          => $register->value,
-                'referrals'         =>  $referrals->value,
-                'to_access'         =>  $to_access->value,
-                'user_to_seller'    =>  $user_to_seller->value
+                'register'              => $register->value,
+                'referrals'             =>  $referrals->value,
+                'to_access'             =>  $to_access->value,
+                'user_to_seller'        =>  $user_to_seller->value,
+                'referral_bonus_seller' => $referral_bonus_seller
             ]
         ];
 

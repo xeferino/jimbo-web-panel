@@ -388,19 +388,21 @@ class SaleController extends Controller
                 'users.image'
                 )
                 ->join('users', 'users.id', '=', 'sales.seller_id')
-                ->join('level_users', 'level_users.seller_id', '=', 'sales.seller_id')
-                ->join('levels', 'levels.id', '=', 'level_users.level_id')
+                ->leftJoin('level_users', 'level_users.seller_id', '=', 'sales.seller_id')
+                ->leftJoin('levels', 'levels.id', '=', 'level_users.level_id')
                 ->groupBy('sales.seller_id')
                 ->whereNotNull('sales.seller_id')
+                ->whereNull('sales.user_id')
                 ->offset(0)->limit(10)
                 ->orderBy('sales.id','DESC')
                 ->get();
 
             $data = [];
-
+            $i = 1;
             foreach ($top as $key => $value) {
 
                array_push($data, [
+                'id'            => $i++,
                 'fullnames'     => $value->fullnames,
                 'amount'        => Helper::amount($value->amount),
                 'level'         => $value->level,

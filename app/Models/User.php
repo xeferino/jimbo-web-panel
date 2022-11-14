@@ -41,6 +41,7 @@ class User extends Authenticatable
         'code',
         'code_referall',
         'type',
+        'become_seller',
         'balance_usd',
         'balance_jib',
     ];
