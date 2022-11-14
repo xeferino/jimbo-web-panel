@@ -11,6 +11,8 @@ use App\Models\CashRequest;
 use App\Helpers\Helper;
 use App\Models\User;
 use App\Http\Requests\FormChangeStatuRequest;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\BalanceController;
 
 class CashRequestController extends Controller
 {
@@ -123,10 +125,28 @@ class CashRequestController extends Controller
      */
     public function changeStatu(FormChangeStatuRequest $request, $id)
     {
+        $status = [
+            'approved'  => 'Aprobada',
+            'refused'   => 'Rechazada',
+            'pending'   => 'Pendiente',
+            'return'    => 'Regresada',
+            'created'   => 'Creada',
+        ];
         $cash = CashRequest::find($id);
         $cash->status       =  $request->status;
         $cash->observation  =  $request->observation;
         if($cash->save()){
+            if($cash->status == 'approved') {
+                NotificationController::store($cash->description.', Aprobada!', $cash->observation, $cash->user_id);
+            } elseif ($cash->status == 'refused'){
+                BalanceController::store($cash->description.', Rechazada!', 'credit', $cash->amount, 'usd', $cash->user_id);
+                NotificationController::store($cash->description.', Rechazada!', $cash->observation, $cash->user_id);
+            }elseif ($cash->status == 'pending'){
+                NotificationController::store($cash->description.', Pendiente', $cash->observation, $cash->user_id);
+            }elseif ($cash->status == 'return'){
+                NotificationController::store($cash->description.', Regresada', $cash->observation, $cash->user_id);
+                BalanceController::store($cash->description.', Rechazada!', 'credit', $cash->amount, 'usd', $cash->user_id);
+            }
             return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Estado de la solicitud actualizada exitosamente.'], 200);
         }
         return response()->json(['success' => false, 'message' => 'Jimbo panel notifica: Estado de la solicitud no se procactualizo exitosamente.'], 200);

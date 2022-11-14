@@ -15,6 +15,8 @@ use App\Models\Sale;
 use Illuminate\Support\Facades\File;
 use App\Helpers\Helper;
 use App\Models\TicketUser;
+use App\Http\Controllers\Api\NotificationController;
+
 
 class SaleController extends Controller
 {

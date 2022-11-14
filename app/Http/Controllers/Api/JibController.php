@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Slider;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Requests\Api\FormRechargeRequest;
 use App\Http\Requests\Api\FormExchangeRequest;
@@ -126,6 +127,7 @@ class JibController extends Controller
             $user->balance_jib  =  $user->balance_jib + $request->amout_jib;
             $user->save();
             BalanceController::store($data['description'], 'recharge', $request->amout_jib, 'jib', $user->id);
+            $notification = NotificationController::store('Has recargado nuevos Jibs', 'Recarga de '.$request->amout_jib.' jibs', $user->id);
 
             DB::commit();
             if($status == 'approved') {
@@ -185,6 +187,8 @@ class JibController extends Controller
 
             $user->balance_jib = $user->balance_jib-$request->amout_jib;
             $user->balance_usd = $user->balance_usd+$amout;
+            $notification = NotificationController::store('Has cambiado nuevos Jibs', 'Cambio de '.$request->amout_jib.' jibs por efectivo '.Helper::amount($amout), $user->id);
+
             $user->save();
 
             DB::commit();

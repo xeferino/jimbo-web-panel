@@ -69,7 +69,7 @@
                 <li class="{{(\Request::segment(2)=='promotions')?'active':''}}">
                     <a href="{{route('panel.promotions.index')}}">
                         <span class="pcoded-micon"><i class="icofont icofont-megaphone"></i><b>PM</b></span>
-                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">Promociones de Sorteos</span>
+                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">Promociones de Boletos</span>
                         <span class="pcoded-mcaret"></span>
                     </a>
                 </li>

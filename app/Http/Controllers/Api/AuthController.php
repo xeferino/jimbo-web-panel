@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\BalanceController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\Api\NotificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -27,6 +28,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\Helper;
+use Illuminate\Support\Carbon;
 class AuthController extends Controller
 {
     private $asset;
@@ -83,7 +85,12 @@ class AuthController extends Controller
                     $accessToken = $user->createToken('AuthToken')->plainTextToken;
                     $balance = SettingController::bonus()['bonus']['to_access'] ?? 0;
                     $user->save();
-                    BalanceController::store('Bono de ingreso a la aplicacion', 'credit', $balance, 'jib', $user->id);
+                    if($user->type == 1) {
+                        BalanceController::store('Bono de ingreso a la aplicacion', 'credit', $balance, 'jib', $user->id);
+                        NotificationController::store('Bono de ingreso a la aplicacion', 'Bono de '.$balance.' jibs', $user->id);
+                    }
+                    NotificationController::store('Hola, '.$user->email.' has accedido a jimbo!','has iniciado sesion en nuestra App!', $user->id);
+
                     $user = User::find($user->id);
 
                     $level = "Usuario";
@@ -124,7 +131,7 @@ class AuthController extends Controller
                                 'shoppings'         => $user->Shoppings->count(),
                                 'amount_sale'       => Helper::amount($user->Sales->sum('amount')),
                                 'sales'             => $user->Sales->count(),
-                                'guests_month'      => LevelUser::where('referral_id', $user->id)->whereMonth('created_at', date('m'))->count(),
+                                'guests_month'      => Carbon::now()->locale('es')->translatedFormat('F').' ('.LevelUser::where('referral_id', $user->id)->whereMonth('created_at', date('m'))->count().')',
                                 'guests'            => count(User::Guests($user->id)),
                                 'guests_list'       => User::Guests($user->id),
                                 'email_verified_at' => $user->email_verified_at,
@@ -184,7 +191,12 @@ class AuthController extends Controller
 
             $balance = SettingController::bonus()['bonus']['to_access'] ?? 0;
 
-            BalanceController::store('Bono de registro en la aplicacion', 'credit', $balance, 'jib', $user->id);
+
+            if($user->type == 1) {
+                BalanceController::store('Bono de registro en la aplicacion', 'credit', $balance, 'jib', $user->id);
+                $notification = NotificationController::store('Bono de regitro en la aplicacion', 'Bono de '.$balance.' jibs', $user->id);
+                $notification = NotificationController::store('Hola, '.$user->email.' bienvenido a jimbo!', 'Felicidades, ahora eres parte de la familia jimbo sorteos', $user->id);
+            }
 
             if ($request->has('code_referral') && $request->has('code_referral') != '') {
                 $referral = User::where('code_referral', $request->code_referral)->first();
@@ -195,6 +207,7 @@ class AuthController extends Controller
                         'created_at'    =>now(),
                     ]);
                     BalanceController::store('Bono de referido en la aplicacion', 'credit', SettingController::bonus()['bonus']['referrals'], 'jib', $referral->id);
+                    NotificationController::store('Bono de Referido', 'Bono de '.Helper::amount(SettingController::bonus()['bonus']['referrals']).' jibs', $user->id);
                 }
             }
 
@@ -246,7 +259,7 @@ class AuthController extends Controller
                     'shoppings'         => $user->Shoppings->count(),
                     'amount_sale'       => Helper::amount($user->Sales->sum('amount')),
                     'sales'             => $user->Sales->count(),
-                    'guests_month'      => LevelUser::where('referral_id', $user->id)->whereMonth('created_at', date('m'))->count(),
+                    'guests_month'      => Carbon::now()->locale('es')->translatedFormat('F').' ('.LevelUser::where('referral_id', $user->id)->whereMonth('created_at', date('m'))->count().')',
                     'guests'            => count(User::Guests($user->id)),
                     'guests_list'       => User::Guests($user->id),
                     'email_verified_at' => $user->email_verified_at,
@@ -325,7 +338,7 @@ class AuthController extends Controller
                         'shoppings'         => $user->Shoppings->count(),
                         'amount_sale'       => Helper::amount($user->Sales->sum('amount')),
                         'sales'             => $user->Sales->count(),
-                        'guests_month'      => LevelUser::where('referral_id', $user->id)->whereMonth('created_at', date('m'))->count(),
+                        'guests_month'      => Carbon::now()->locale('es')->translatedFormat('F').' ('.LevelUser::where('referral_id', $user->id)->whereMonth('created_at', date('m'))->count().')',
                         'guests'            => count(User::Guests($user->id)),
                         'guests_list'       => User::Guests($user->id),
                         'email_verified_at' => $user->email_verified_at,
@@ -366,7 +379,6 @@ class AuthController extends Controller
     public function settingProfile(FormRequestProfile $request, User $User, $id)
     {
         try {
-
             $user                    = User::find($id);
             $user->names             = $request->names;
             $user->surnames          = $request->surnames;
@@ -455,6 +467,7 @@ class AuthController extends Controller
                     }
                 }
 
+                NotificationController::store('Datos de perfil actualizados','Hola, '.$user->email.' has actualizado tu datos de perfil con exito, recuerda tener tu correo siempre activo!', $user->id);
                 return response()->json([
                     'profile'    => [
                         'id'                => $user->id,
@@ -474,7 +487,7 @@ class AuthController extends Controller
                         'shoppings'         => $user->Shoppings->count(),
                         'amount_sale'       => Helper::amount($user->Sales->sum('amount')),
                         'sales'             => $user->Sales->count(),
-                        'guests_month'      => LevelUser::where('referral_id', $user->id)->whereMonth('created_at', date('m'))->count(),
+                        'guests_month'      => Carbon::now()->locale('es')->translatedFormat('F').' ('.LevelUser::where('referral_id', $user->id)->whereMonth('created_at', date('m'))->count().')',
                         'guests'            => count(User::Guests($user->id)),
                         'guests_list'       => User::Guests($user->id),
                         'email_verified_at' => $user->email_verified_at,
@@ -565,6 +578,7 @@ class AuthController extends Controller
                     'message' =>  'Su contraseña ha sido recuperada exitosamente!'
                 ], 200);
             }
+            NotificationController::store('Recuperacion de contraseña', 'Hola! '.$user->email.' has solicitado un envio de codigo, para el restablecimiento de tu contraseña', $user->id);
             return response()->json([
                 'status'   => 404,
                 'message' =>  'El email igresado no existe!.'

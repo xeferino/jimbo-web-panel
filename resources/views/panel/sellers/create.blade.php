@@ -110,6 +110,11 @@
                         <input type="password" name="cpassword" id="cpassword" class="form-control">
                         <div class="col-form-label has-danger-cpassword"></div>
                     </div>
+                    <div class="col-sm-6">
+                        <label class="col-form-label">Code de referido</label>
+                        <input type="text" name="code_referral_user" id="code_referral_user" class="form-control">
+                        <div class="col-form-label has-danger-code_referral_user"></div>
+                    </div>
                 </div>
                 <div class="col-md-12 text-right">
                     <a href="{{route('panel.sellers.index')}}" type="submit" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="cancelar"><i class="ti-back-left"></i></a>

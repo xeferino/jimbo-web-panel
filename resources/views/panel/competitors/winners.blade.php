@@ -11,27 +11,26 @@
         <div class="card-header">
             <i class="ti-user"></i>
             <div class="d-inline-block">
-                <h5>Tabla de Participantes</h5>
+                <h5>Tabla de Ganadores</h5>
                 <span>Informacion</span>
             </div>
             <div class="float-right">
-                <a href="{{route('panel.competitors.winners')}}" class="btn btn-dark" data-toggle="tooltip" data-placement="top">Listados de ganadores</a>
-                {{-- @can('create-competitor')
-                    <a href="{{ route('panel.competitors.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nuevo participante">Nuevo</a>
-                @endcan --}}
+                <a href="{{route('panel.competitors.index')}}" class="btn btn-warning" data-toggle="tooltip" data-placement="top">Listados de participantes</a>
             </div>
         </div>
         <div class="card-block table-border-style">
             <div class="table-responsive">
-                <table class="table table-hover table-competitor">
+                <table class="table table-hover table-winner">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>Imagen</th>
                             <th>Nombres y Apellidos</th>
-                            <th>Role</th>
+                            <th>DNI</th>
                             <th>Email</th>
-                            <th>Estatus</th>
+                            <th>Telefono</th>
+                            <th>Pais</th>
+                            <th>Premio</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>

@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\Raffle;
 use App\Models\Action;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Api\NotificationController;
 
 class RaffleObserver
 {
@@ -24,6 +25,19 @@ class RaffleObserver
             'user_id'       => Auth::user()->id,
             'created_at'    => now()
         ]);
+    }
+
+    /**
+     * Handle the Raffle "updated" event.
+     *
+     * @param  \App\Models\Raffle  $raffle
+     * @return void
+     */
+    public function updated(Raffle $raffle)
+    {
+        if($raffle->active == 1 && $raffle->public == 1 && $raffle->finish == 0){
+            NotificationController::store('Nuevo sorteo!', 'se ha generado un nuevo sorteo para ti! '.$raffle->title.', finaliza '.$raffle->date_end.'');
+        }
     }
 
     /**

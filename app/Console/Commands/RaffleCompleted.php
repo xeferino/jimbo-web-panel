@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Raffle;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Api\NotificationController;
 
 class RaffleCompleted extends Command
 {
@@ -49,11 +50,13 @@ class RaffleCompleted extends Command
         foreach ($raffles as $key => $value) {
             $raffle = Raffle::find($value->id);
             if ($value->remaining_days == 0) {
+                NotificationController::store('Sorteo Finalizado!', 'se ha finalizado sorteo en jimbo! '.$raffle->title);
                 //array_push($ids, $value->id);
                 $raffle->finish = 1;
                 $save+=1;
             } elseif ($value->date_release_end == 0) {
                 $raffle->active = 0;
+                NotificationController::store('Sorteo Finalizado!', 'se ha finalizado sorteo en jimbo! '.$raffle->title);
                 //array_push($ids, $value->id);
                 $save+=1;
             }

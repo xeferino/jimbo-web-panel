@@ -24,7 +24,10 @@ class NotificationController extends Controller
                 $notification = Notification::where('show', 0)->pluck('id')->toArray();
                 $notification = Notification::whereIn('id', $notification)->update( ['show' => 1]);
             }
-            $notifications = Notification::where('user_id', $request->user)->where('show', 0)->orderBy('created_at','DESC')->get();
+            $notifications = Notification::where('user_id', $request->user)
+            ->where('show', 0)
+            ->orWhere('user_id', null)
+            ->orderBy('created_at','DESC')->get();
 
             return response()->json([
                 'status'  => 200,
@@ -38,26 +41,30 @@ class NotificationController extends Controller
         }
     }
 
-     /**
-     * Display a single of the resource.
+    /**
+     * store the specified resource.
      *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public static function store($title, $description, $user_id = null)
     {
         try {
-            $account = Notification::findOrFail($request->account);
-            //$account = Notification::where('id', $request->account)->first();
+            $data = [
+                'title'         => $title,
+                'description'   => $description,
+                'user_id'       => $user_id,
+                'created_at'    => now(),
+            ];
 
-            return response()->json([
-                'status'  => 200,
-                'account'   =>  $account
-            ], 200);
-        }catch (Exception $e) {
+            $notification = Notification::insert($data);
+            if ($notification)
+                return true;
+        } catch (Exception $e) {
             return response()->json([
                 'status'   => 500,
                 'message' =>  $e->getMessage()
-            ]);
+            ], 500);
         }
     }
 }

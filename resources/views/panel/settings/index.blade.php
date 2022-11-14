@@ -74,6 +74,15 @@
                             <div class="col-form-label has-danger-referrals"></div>
                         </div>
 
+                        <div class="col-sm-6">
+                            <label class="col-form-label">Por convertirse en vendedor</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="user_to_seller" name="user_to_seller" value="{{$settings['user_to_seller']}}" placeholder="1">
+                                <span class="input-group-addon">jib</span>
+                            </div>
+                            <div class="col-form-label has-danger-user_to_seller"></div>
+                        </div>
+
                         <div class="col-sm-12 text-right">
                             <button type="submit" class="btn btn-warning btn-sm btn-setting-bonu">Configurar</button>
                         </div>
@@ -305,14 +314,6 @@
                             </div>
                             <small class="text-danger">(9%+0.20%+mono) bono unico de nivel</small>
                             <div class="col-form-label has-danger-level_classic_ascent_unique_bonus"></div>
-                        </div>
-                        <div class="col-sm-6">
-                            <label class="col-form-label">Por convertirse en vendedor</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="level_classic_seller_percent" name="level_classic_seller_percent" value="{{$settings['level_classic_seller_percent']}}" placeholder="1">
-                                <span class="input-group-addon">jib</span>
-                            </div>
-                            <div class="col-form-label has-danger-level_classic_seller_percent"></div>
                         </div>
 
                         <div class="col-sm-6">

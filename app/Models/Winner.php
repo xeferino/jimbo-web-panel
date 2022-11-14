@@ -19,6 +19,16 @@ class Winner extends Model
         return $this->belongsTo('App\Models\Ticket');
     }
 
+    public function Country()
+    {
+        return $this->belongsTo('App\Models\Country');
+    }
+
+    public function Raffle()
+    {
+        return $this->belongsTo('App\Models\Raffle');
+    }
+
     public function TicketWinner()
     {
         return $this->belongsTo('App\Models\TicketUser', 'ticket_user_id', 'id');

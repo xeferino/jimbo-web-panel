@@ -10,6 +10,7 @@ use App\Services\CulqiService as Culqi;
 use Exception;
 use App\Models\CardUser as Card;
 use App\Models\User;
+use App\Http\Controllers\Api\NotificationController;
 
 class CardController extends Controller
 {
@@ -125,13 +126,15 @@ class CardController extends Controller
                     'valid'=> $value->deleted_at == null ? true : false
                 ]);
             }
-            if($saved)
+            if($saved){
+                NotificationController::store('Nueva tarjeta!', 'Tarjeta agregada exitosamente, bajo el numero '.$cardUser->number, $cardUser->user_id);
                 return response()->json([
                     'success' => true,
                     'message' => 'Tarjeta agregada exitosamente.',
                     'card'    => $cardUser,
                     'cards'   => $cards
                 ], 200);
+            }
         } catch (Exception $e) {
             return response()->json([
                 'status'   => 500,
@@ -155,8 +158,10 @@ class CardController extends Controller
 
             if ($culqiCard->getStatusCode() == 200){
                 $delete = $card->delete();
-                if ($delete)
+                if ($delete){
+                    NotificationController::store('Tarjeta Eliminada!', 'Tarjeta eliminada exitosamente, bajo el numero '.time(), $card->user_id);
                     return response()->json(['success' => true, 'message' => 'Tarjeta eliminada exitosamente.'], 200);
+                }
             }
         } catch (Exception $e) {
             return response()->json([

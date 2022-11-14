@@ -54,6 +54,9 @@ class SettingController extends Controller
             $to_access  = Setting::where('name', 'to_access')->first();
             $to_access->value = $request->to_access;
             $to_access->save();
+            $user_to_seller = Setting::where('name', 'user_to_seller')->first();
+            $user_to_seller->value = $request->user_to_seller;
+            $user_to_seller->save();
         } elseif($type == 'seller_single'){
             $level_single_junior  = Setting::where('name', 'level_single_junior')->first();
             $level_single_junior->value = $request->level_single_junior;
@@ -98,9 +101,6 @@ class SettingController extends Controller
             $level_classic_ascent_unique_bonus = Setting::where('name', 'level_classic_ascent_unique_bonus')->first();
             $level_classic_ascent_unique_bonus->value = (($request->level_classic_ascent_unique_bonus*9.20)/100)+$request->level_classic_ascent_unique_bonus;
             $level_classic_ascent_unique_bonus->save();
-            $level_classic_seller_percent = Setting::where('name', 'level_classic_seller_percent')->first();
-            $level_classic_seller_percent->value = $request->level_classic_seller_percent;
-            $level_classic_seller_percent->save();
             $level_classic_referral_bonus = Setting::where('name', 'level_classic_referral_bonus')->first();
             $level_classic_referral_bonus->value = $request->level_classic_referral_bonus;
             $level_classic_referral_bonus->save();
@@ -127,9 +127,10 @@ class SettingController extends Controller
 
     public static function bonus()
     {
-        $register  = Setting::where('name', 'register')->first();
-        $referrals = Setting::where('name', 'referrals')->first();
-        $to_access = Setting::where('name', 'to_access')->first();
+        $register       = Setting::where('name', 'register')->first();
+        $referrals      = Setting::where('name', 'referrals')->first();
+        $to_access      = Setting::where('name', 'to_access')->first();
+        $user_to_seller = Setting::where('name', 'user_to_seller')->first();
 
         return [
             /*
@@ -138,9 +139,10 @@ class SettingController extends Controller
             |--------------------------------------------------------------------------
             */
             'bonus' => [
-                'register'      => $register->value,
-                'referrals'     =>  $referrals->value,
-                'to_access'     =>  $to_access->value
+                'register'          => $register->value,
+                'referrals'         =>  $referrals->value,
+                'to_access'         =>  $to_access->value,
+                'user_to_seller'    =>  $user_to_seller->value
             ]
         ];
 

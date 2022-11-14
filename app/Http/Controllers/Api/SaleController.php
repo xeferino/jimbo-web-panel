@@ -213,6 +213,12 @@ class SaleController extends Controller
                     }
                     DB::commit();
                     if($status == 'approved') {
+                        if($user->type == 1) {
+                            $notification = NotificationController::store('Nueva Compra', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
+                        } elseif ($user->type == 2) {
+                            $notification = NotificationController::store('Nueva Venta', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
+                        }
+
                         return response()->json([
                             'success' => true,
                             'message' => 'Pago procesado exitosamente.',
@@ -364,7 +370,6 @@ class SaleController extends Controller
      */
     public function topSellers(Request $request)
     {
-
         try {
             $level_single_junior  = Setting::where('name', 'level_single_junior')->first();
             $level_single_middle  = Setting::where('name', 'level_single_middle')->first();

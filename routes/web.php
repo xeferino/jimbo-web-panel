@@ -50,6 +50,8 @@ Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     Route::get('egress/cash', [EgressController::class, 'cash'])->name('egress.cash');
     Route::get('egress/jib', [EgressController::class, 'jib'])->name('egress.jib');
     Route::get('egress/{id}', [EgressController::class, 'show'])->name('egress.show');
+    Route::get('competitors/winners', [CompetitorController::class, 'winners'])->name('competitors.winners');
+    Route::get('competitors/winners/{competitor}', [CompetitorController::class, 'showWinner'])->name('competitors.winners.show');
     Route::resource('competitors', CompetitorController::class);
     Route::resource('countries', CountryController::class);
     Route::resource('raffles', RaffleController::class);

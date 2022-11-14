@@ -155,10 +155,10 @@ $(function () {
                         $('.has-danger-level_classic_ascent_unique_bonus').text('');
                     }
 
-                    if (error.response.data.errors.level_classic_seller_percent) {
-                        $('.has-danger-level_classic_seller_percent').text('' + error.response.data.errors.level_classic_seller_percent + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.user_to_seller) {
+                        $('.has-danger-user_to_seller').text('' + error.response.data.errors.user_to_seller + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-level_classic_seller_percent').text('');
+                        $('.has-danger-user_to_seller').text('');
                     }
 
                     if (error.response.data.errors.level_classic_referral_bonus) {

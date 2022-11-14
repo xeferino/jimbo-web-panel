@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use App\Models\AccountUser as Account;
+use App\Http\Controllers\Api\NotificationController;
+
 class AccountController extends Controller
 {
 
@@ -75,8 +77,10 @@ class AccountController extends Controller
             $account->type      = $request->type;
             $account->user_id   = $request->user_id;
             $saved = $account->save();
-            if($saved)
+            if($saved){
+                NotificationController::store('Nueva cuenta de cobro!', 'cuenta registrada bajo el numero '.$account->number, $account->user_id);
                 return response()->json(['success' => true, 'message' => 'Cuenta agregada exitosamente.'], 200);
+            }
         } catch (Exception $e) {
             return response()->json([
                 'status'   => 500,
@@ -111,8 +115,10 @@ class AccountController extends Controller
             $account->user_id   = $request->user_id;
             $update = $account->save();
 
-            if($update)
+            if($update) {
                 return response()->json(['success' => true, 'message' => 'La Cuenta ha sido actualizada exitosamente.'], 200);
+                NotificationController::store('Cuenta de cobro Editada!', 'cuenta actualizada bajo el numero '.$account->number, $account->user_id);
+            }
         } catch (Exception $e) {
             return response()->json([
                 'status'   => 500,
@@ -137,8 +143,10 @@ class AccountController extends Controller
             }
 
             $delete = $account->delete();
-            if ($delete)
+            NotificationController::store('Cuenta de cobro Eliminada!', 'cuenta bajo el numero '.$account->number, $account->user_id);
+            if ($delete){
                 return response()->json(['success' => true, 'message' => 'Cuenta eliminada exitosamente.'], 200);
+            }
         } catch (Exception $e) {
             return response()->json([
                 'status'   => 500,

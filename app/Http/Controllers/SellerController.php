@@ -14,13 +14,14 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\FormSellerRequest;
 use App\Http\Requests\FormRechargeRequest;
 use App\Http\Controllers\Api\BalanceController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Models\Country;
 use App\Models\Sale;
 use App\Models\Customer;
 use App\Models\BalanceHistory;
 use Illuminate\Support\Facades\File;
 use App\Helpers\Helper;
-
+use App\Models\User;
 
 class SellerController extends Controller
 {
@@ -164,6 +165,13 @@ class SellerController extends Controller
 
         $saved = $seller->save();
         if($saved) {
+
+            $user = User::where('code_referral', $request->code_referral_user)->first();
+            if ($user) {
+                $balance = SettingController::bonus()['bonus']['user_to_seller'] ?? 0;
+                BalanceController::store('Bono de '.$balance.' jib por convertirse en vendedor de jimbo', 'credit', $balance, 'jib', $user->id);
+                NotificationController::store('Has recibido nuevos Jibs', 'Bono de '.$balance.' jib por convertirse en vendedor de jimbo', $user->id);
+            }
 
             $message_culqi = null;
             $culqi_customer_id = isset($seller->Customer->culqi_customer_id) ? $seller->Customer->culqi_customer_id : null;
@@ -321,6 +329,7 @@ class SellerController extends Controller
         $seller->balance_jib  =  $seller->balance_jib + $request->jib;
         $seller->save();
         $recharge = BalanceController::store($request->description, 'recharge', $request->jib, 'jib', $seller->id);
+        $notification = NotificationController::store('Has recibido nuevos Jibs', 'Bono de '.$request->jib.' por recarga por ser vendedor de jimbo', $seller->id);
 
         if($recharge){
             return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Recarga de jib exitosamente.'], 200);

@@ -16,6 +16,7 @@ use App\Models\Sale AS Shopping;
 use App\Models\PaymentHistory;
 use App\Models\CashRequest;
 use App\Models\BalanceHistory;
+use App\Models\Winner;
 use App\Helpers\Helper;
 use Illuminate\Support\Facades\File;
 
@@ -75,7 +76,7 @@ class CompetitorController extends Controller
                         return $btn;
                     })
                     ->addColumn('image', function($competitor){
-                        $img = $competitor->image != 'avatar.svg' ? asset('assets/images/users/'.$competitor->image): asset('assets/images/avatar.svg');
+                        $img = $competitor->image != 'avatar.svg' ? asset('assets/images/competitors/'.$competitor->image): asset('assets/images/avatar.svg');
                         return '<img src="'.$img.'" class="img-50 img-radius" alt="User-Profile-Image">';
                     })
                     ->addColumn('role', function($competitor){
@@ -91,6 +92,64 @@ class CompetitorController extends Controller
             'title'              => 'Participantes',
             'title_header'       => 'Listado de participantes',
             'description_module' => 'Informacion de los participantes que se encuentran en el sistema.',
+            'title_nav'          => 'Listado',
+            'icon'               => 'icofont-users'
+        ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function winners(Request $request)
+    {
+        if ($request->ajax()) {
+            $competitor = Winner::select(
+                                        'id',
+                                        'name AS fullname',
+                                        'dni',
+                                        'phone',
+                                        'email',
+                                        'country_id',
+                                        'user_id',
+                                        'amount'
+                                        )->get();
+            return Datatables::of($competitor)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($competitor){
+                           $btn = '';
+                        if(auth()->user()->can('show-competitor')){
+                            $btn .= '<a href="'.route('panel.competitors.winners.show',['competitor' => $competitor->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$competitor->id.'" id="det_'.$competitor->id.'" class="btn btn-inverse btn-sm  mr-1 detailCompetitor">
+                                        <i class="ti-eye"></i>
+                                    </a>';
+                        }
+                        return $btn;
+                    })
+                    ->addColumn('country', function($competitor){
+                        $country = Country::find($competitor->country_id);
+                        $img = $country->img != 'flag.png' ? config('app.url').'/assets/images/flags/'.$country->img : config('app.url').'/assets/images/flags/flag.png';
+                        return '<img src="'.$img.'" class="img-50" alt="User-Profile-Image">';
+                    })
+                    ->addColumn('image', function($competitor){
+                        $image = config('app.url').'/assets/images/avatar.svg';
+
+                        if($competitor->user_id != null){
+                            $user = Competitor::find($competitor->user_id);
+                            $image = $user->image != 'avatar.svg' ? config('app.url').'/assets/images/competitors/'.$user->image : config('app.url').'/assets/images/avatar.svg';
+                        }
+                        return '<img src="'.$image.'" class="img-50 img-radius" alt="User-Profile-Image">';
+                    })
+                    ->addColumn('amount', function($competitor){
+                        return Helper::amount($competitor->amount);
+                    })
+                    ->rawColumns(['action','country', 'image', 'amount'])
+                    ->make(true);
+        }
+        return view('panel.competitors.winners', [
+            'title'              => 'Ganadores',
+            'title_header'       => 'Listado de ganadores',
+            'description_module' => 'Informacion de los ganadores que se encuentran en el sistema.',
             'title_nav'          => 'Listado',
             'icon'               => 'icofont-users'
         ]);
@@ -352,10 +411,16 @@ class CompetitorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function detail($id)
+    public function showWinner(Request $request, $id)
     {
-        $competitorRole = DB::table('model_has_roles')->select('role_id')->where('model_id',  $id)->pluck('role_id')->toArray();
-        return view('panel.competitors.detail', ['title' => 'Vendedores - Detalle', 'competitor' => User::find($id), 'competitorRole' => $competitorRole, 'roles' => Role::all(), 'permissions' => User::findOrFail($id)->getAllPermissions()]);
+        return view('panel.competitors.show-winner', [
+            'title'              => 'Ganadores',
+            'title_header'       => 'Ganador detalles',
+            'description_module' => 'Informacion del Ganador en el sistema.',
+            'title_nav'          => 'Detalles',
+            'competitor'         => Winner::findOrFail($id),
+            'icon'               => 'icofont icofont-users'
+        ]);
     }
 
     /**

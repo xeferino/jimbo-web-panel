@@ -77,6 +77,10 @@
                             <strong class="text-uppercase">{{$competitor->address}}</strong>
                             <p class="text-muted">Direcion</p>
                         </div>
+                        <div class="col-sm-4">
+                            <strong class="text-uppercase">{{$competitor->code_referral}}</strong>
+                            <p class="text-muted">Codigo de referido</p>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\NotificationController;
 use App\Models\PaymentHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -147,6 +148,8 @@ class PaymentController extends Controller
 
 
             $debit  = BalanceController::store($data['description_request'], 'debit', $amount, 'usd', $user->id);
+            $notification = NotificationController::store('Has solicitado un retiro de efectivo', 'Solicitud de retiro '.Helper::amount($amount), $user->id);
+
             $cash = CashRequest::insert([
                 'currency'          => 'usd',
                 'amount'            =>  $amount,
