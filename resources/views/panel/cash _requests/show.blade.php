@@ -59,6 +59,17 @@
                             <p class="text-muted">Hora</p>
                         </div>
                     </div>
+                    @if($cash->observation != null)
+                        <div class="row mt-3">
+                            <div class="col-sm-12  text-left">
+                                <strong class="text-uppercase">
+                                    <span class="badge badge-light" style="float: left !important;">
+                                        Observaciones: {{$cash->observation}}
+                                    </span>
+                                </strong>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

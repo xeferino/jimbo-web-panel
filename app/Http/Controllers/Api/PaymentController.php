@@ -15,7 +15,7 @@ use App\Models\User;
 use App\Http\Requests\Api\FormCashRequest;
 use App\Helpers\Helper;
 use App\Models\CashRequest;
-
+use Illuminate\Support\Carbon;
 
 class PaymentController extends Controller
 {
@@ -51,6 +51,7 @@ class PaymentController extends Controller
     public function paymentHistory(Request $request)
     {
         $payments = PaymentHistory::select(
+            'id',
             'sale_id',
             'user_id',
             'description',
@@ -69,9 +70,27 @@ class PaymentController extends Controller
             ->orderBy('created_at','DESC')
             ->where('user_id', $request->user)->get();
 
+            $data = [];
+
+            foreach ($payments as $key => $value) {
+                # code...
+               array_push($data, [
+                   "id" => $value->id,
+                   "sale_id" => $value->sale_id,
+                   "user_id" =>  $value->user_id,
+                   "description" =>  $value->description,
+                   "payment_method" =>  $value->payment_method,
+                   "total_paid" =>  $value->total_paid,
+                   "response" =>  $value->response,
+                   "code_response" =>  $value->code_response,
+                   "status" =>  $value->status,
+                   "created_at" => Carbon::parse( $value->created_at)->format('d/m/Y H:i:s'),
+                   "updated_at" => Carbon::parse( $value->updated_at)->format('d/m/Y H:i:s')
+               ]);
+            }
         return response()->json([
             'status'  => 200,
-            'payment_histories' => $payments
+            'payment_histories' => $data
         ], 200);
     }
 
@@ -81,7 +100,19 @@ class PaymentController extends Controller
 
         return response()->json([
             'status'  => 200,
-            'payment' => $payment
+            'payment' => [
+                    "id" => $payment->id,
+                   "sale_id" => $payment->sale_id,
+                   "user_id" =>  $payment->user_id,
+                   "description" =>  $payment->description,
+                   "payment_method" =>  $payment->payment_method,
+                   "total_paid" =>  $payment->total_paid,
+                   "response" =>  $payment->response,
+                   "code_response" =>  $payment->code_response,
+                   "status" =>  $payment->status == 'approved' ? 'Aprobado' : 'Rechazado',
+                   "created_at" => Carbon::parse( $payment->created_at)->format('d/m/Y H:i:s'),
+                   "updated_at" => Carbon::parse( $payment->updated_at)->format('d/m/Y H:i:s')
+            ]
         ], 200);
     }
 
@@ -148,32 +179,35 @@ class PaymentController extends Controller
 
 
             $debit  = BalanceController::store($data['description_request'], 'debit', $amount, 'usd', $user->id);
-            $notification = NotificationController::store('Has solicitado un retiro de efectivo', 'Solicitud de retiro '.Helper::amount($amount), $user->id);
+            $notification = NotificationController::store('Nueva Retiro!', 'has solicitado un retiro de '.Helper::amount($amount), $user->id);
 
             $cash = CashRequest::insert([
                 'currency'          => 'usd',
                 'amount'            =>  $amount,
                 'date'              =>  date('Y-m-d'),
                 'hour'              =>  date('H:i:s'),
-                'reference'         => time(),
+                'reference'         =>  time(),
                 'description'       => $data['description_request'],
                 'status'            => 'created',
                 'user_id'           => $user->id,
-                'account_user_id'   => $request->account_user_id
+                'account_user_id'   => $request->account_user_id,
+                'created_at'        => now()
+
             ]);
             $user->balance_usd = $user->balance_usd-$amount;
-            $user->save();
 
-            DB::commit();
-            return response()->json([
-                'success' => true,
-                'message' => 'La solitud de retiro ha sido procesado exitosamente.',
-                'details' => [
-                    'fullname'          => $user->names .' '. $user->surnames,
-                    'date'              => now(),
-                    'amount'            => Helper::amount($amount),
-                ]
-            ], 200);
+            if($user->save()) {
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'La solitud de retiro ha sido procesado exitosamente.',
+                    'details' => [
+                        'fullname'          => $user->names .' '. $user->surnames,
+                        'date'              => date('d/m/Y H:i:s'),
+                        'amount'            => Helper::amount($amount),
+                    ]
+                ], 200);
+            }
 
             return response()->json([
                 'error'             => true,
@@ -187,4 +221,53 @@ class PaymentController extends Controller
                 ], 500);
         }
     }
+
+    public function cashRequestUser (Request $request)
+    {
+        try {
+            $requests = CashRequest::select('cash_requests.*', DB::raw('(CASE
+                                    WHEN status = "approved" THEN "Aprobada"
+                                    WHEN status = "refused" THEN "Rechazada"
+                                    WHEN status = "pending" THEN "Pendiente"
+                                    WHEN status = "return" THEN "Regresada"
+                                    ELSE "Creada"
+                                    END) AS status'))
+                                    ->where('user_id', $request->user)
+                                    ->where(function ($query) use ($request) {
+                                        if ($request->has('filter') && $request->filter) {
+                                            $query->where('status', $request->filter);
+                                        }
+                                    })
+                                    ->orderBy('created_at','DESC')->get();
+
+            $data = [];
+
+            foreach ($requests as $key => $value) {
+                # code...
+                array_push($data, [
+                'currency'          => $value->currency,
+                'amount'            => Helper::amount($value->amount),
+                'date'              => Carbon::parse( $value->date)->format('d/m/Y'),
+                'hour'              => Carbon::parse( $value->hour)->format('H:i:s'),
+                'reference'         => $value->reference,
+                'description'       => $value->description,
+                'status'            => $value->status,
+                'user_id'           => $value->user_id,
+                'account_user_id'   => $request->account_user_id,
+                'created_at'        => Carbon::parse( $value->created_at)->format('d/m/Y H:i:s')
+                ]);
+            }
+
+            return response()->json([
+                'requests'      => $data
+            ], 200);
+        }catch (Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'status'   => 500,
+                    'message' =>  $e->getMessage()
+                ], 500);
+        }
+    }
+
 }

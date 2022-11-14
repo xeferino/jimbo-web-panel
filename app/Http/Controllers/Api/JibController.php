@@ -127,7 +127,7 @@ class JibController extends Controller
             $user->balance_jib  =  $user->balance_jib + $request->amout_jib;
             $user->save();
             BalanceController::store($data['description'], 'recharge', $request->amout_jib, 'jib', $user->id);
-            $notification = NotificationController::store('Has recargado nuevos Jibs', 'Recarga de '.$request->amout_jib.' jibs', $user->id);
+            $notification = NotificationController::store('Nueva Recarga!', 'has recibo '.$request->amout_jib.' jibs en tu balance', $user->id);
 
             DB::commit();
             if($status == 'approved') {
@@ -136,7 +136,7 @@ class JibController extends Controller
                     'message' => 'La recarga y/o pago procesado exitosamente.',
                     'details' => [
                         'fullname'          => $user->names .' '. $user->surnames,
-                        'date'              => $data['created_at'],
+                        'date'              => date('d/m/Y H:i:s'),
                         'quantity'          => $request->amout_jib,
                         'number_operation'  => $data['code_response'],
                         'amount'            => Helper::amount($amout),
@@ -187,21 +187,21 @@ class JibController extends Controller
 
             $user->balance_jib = $user->balance_jib-$request->amout_jib;
             $user->balance_usd = $user->balance_usd+$amout;
-            $notification = NotificationController::store('Has cambiado nuevos Jibs', 'Cambio de '.$request->amout_jib.' jibs por efectivo '.Helper::amount($amout), $user->id);
+            $notification = NotificationController::store('Nuevo Cambio!', 'has canjeado '.$request->amout_jib.' jibs por efectivo '.Helper::amount($amout), $user->id);
 
-            $user->save();
-
-            DB::commit();
-            return response()->json([
-                'success' => true,
-                'message' => 'El cambio ha sido procesado exitosamente.',
-                'details' => [
-                    'fullname'          => $user->names .' '. $user->surnames,
-                    'date'              => now(),
-                    'quantity'          => $request->amout_jib,
-                    'amount'            => Helper::amount($amout),
-                ]
-            ], 200);
+            if ($user->save()){
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'El cambio ha sido procesado exitosamente.',
+                    'details' => [
+                        'fullname'          => $user->names .' '. $user->surnames,
+                        'date'              => date('d/m/Y H:i:s'),
+                        'quantity'          => $request->amout_jib,
+                        'amount'            => Helper::amount($amout),
+                    ]
+                ], 200);
+            }
 
             return response()->json([
                 'error'             => true,

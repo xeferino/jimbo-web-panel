@@ -28,6 +28,32 @@ class ShoppingController extends Controller
         try {
             $shoppings = Shopping::where('user_id', $request->user)->where('status', 'approved')->orderBy('created_at','DESC')->get();
 
+            $data = [];
+
+            foreach ($shoppings as $key => $value) {
+                # code...
+               array_push($data, [
+                   "id" => $value->id,
+                   "name" =>  $value->name,
+                   "dni" =>  $value->dni,
+                   "phone" =>  $value->phone,
+                   "email" =>  $value->email,
+                   "address" =>  $value->address,
+                   "country_id" =>  $value->country_id,
+                   "amount" =>  $value->amount,
+                   "number" =>  $value->number,
+                   "number_culqi" =>  $value->number_culqi,
+                   "quantity" =>  $value->quantity,
+                   "ticket_id" =>  $value->ticket_id,
+                   "seller_id" =>  $value->seller_id,
+                   "user_id" =>  $value->user_id,
+                   "raffle_id" =>  $value->raffle_id,
+                   "status" =>  $value->status,
+                   'status' => $value->status == 'approved' ? 'Aprodada' : 'Rechazada',
+                   "created_at" => $value->updated_at->format('d/m/Y H:i:s')
+               ]);
+            }
+
             return response()->json([
                 'status'  => 200,
                 'shoppings'   =>  $shoppings

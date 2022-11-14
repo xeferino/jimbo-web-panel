@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\BalanceController;
 use Illuminate\Http\Request;
 use App\Http\Requests\Api\FormSaleRequest;
 use App\Models\CardUser as Card;
@@ -214,9 +216,9 @@ class SaleController extends Controller
                     DB::commit();
                     if($status == 'approved') {
                         if($user->type == 1) {
-                            $notification = NotificationController::store('Nueva Compra', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
+                            $notification = NotificationController::store('Nueva Compra!', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
                         } elseif ($user->type == 2) {
-                            $notification = NotificationController::store('Nueva Venta', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
+                            $notification = NotificationController::store('Nueva Venta!', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
                         }
 
                         return response()->json([
@@ -310,9 +312,34 @@ class SaleController extends Controller
         try {
             $sales = Sale::where('seller_id', $request->user)->where('status', 'approved')->orderBy('created_at','DESC')->get();
 
+            $data = [];
+
+            foreach ($sales as $key => $value) {
+                # code...
+               array_push($data, [
+                   "id" => $value->id,
+                   "name" =>  $value->name,
+                   "dni" =>  $value->dni,
+                   "phone" =>  $value->phone,
+                   "email" =>  $value->email,
+                   "address" =>  $value->address,
+                   "country_id" =>  $value->country_id,
+                   "amount" =>  $value->amount,
+                   "number" =>  $value->number,
+                   "number_culqi" =>  $value->number_culqi,
+                   "quantity" =>  $value->quantity,
+                   "ticket_id" =>  $value->ticket_id,
+                   "seller_id" =>  $value->seller_id,
+                   "user_id" =>  $value->user_id,
+                   "raffle_id" =>  $value->raffle_id,
+                   "status" =>  $value->status,
+                   "method" =>  $value->method,
+                   "created_at" => $value->created_at->format('d/m/Y H:i:s')
+               ]);
+            }
             return response()->json([
                 'status'  => 200,
-                'sales'   =>  $sales
+                'sales'   =>  $data
             ], 200);
         }catch (Exception $e) {
             return response()->json([
@@ -341,15 +368,16 @@ class SaleController extends Controller
                     'tickets' => $sale->TicketsUsers,
                     'date_start' => $sale->Raffle->date_end->format('d/m/y'),
                     'date_end' => $sale->Raffle->date_end->format('d/m/y'),
-                    'date_release' => $sale->Raffle->date_release != null ? $sale->Raffle->date_release->format('d/m/y') : null,
-                    'date_extend' => $sale->Raffle->date_extend,
+                    'date_release' => $sale->Raffle->date_release->format('d/m/y'),
                 ],
                 'quantity' => $sale->quantity,
                 'amount' => $sale->amount,
                 'number_operation' => $sale->number,
                 'date'  => $sale->created_at->format('d/m/y'),
-                'hour'  => $sale->created_at->format('H:i:s')
+                'hour'  => $sale->created_at->format('H:i:s'),
+                'status' => $sale->status == 'approved' ? 'Aprodada' : 'Rechazada'
             ];
+
             return response()->json([
                 'status'   => 200,
                 'sale' => $sale
@@ -403,7 +431,7 @@ class SaleController extends Controller
 
                array_push($data, [
                 'id'            => $i++,
-                'fullnames'     => $value->fullnames,
+                'fullnames'     => substr(sha1(time()), 0, 8),
                 'amount'        => Helper::amount($value->amount),
                 'level'         => $value->level,
                 'image'         => $value->image != 'avatar.svg' ? config('app.url').'/assets/images/sellers/'.$value->Seller->image : config('app.url').'/assets/images/avatar.svg',

@@ -93,6 +93,7 @@ Route::middleware(['auth:sanctum', 'check.user'])->group(function () {
     Route::post('/jibs/exchange', [JibController::class, 'exchange']);
     //cash request
     Route::post('/cash/request', [PaymentController::class, 'cashRequest']);
+    Route::get('/cash/request/{user}', [PaymentController::class, 'cashRequestUser']);
 });
 
 /*Route::get('/foo', function () {

@@ -87,9 +87,9 @@ class AuthController extends Controller
                     $user->save();
                     if($user->type == 1) {
                         BalanceController::store('Bono de ingreso a la aplicacion', 'credit', $balance, 'jib', $user->id);
-                        NotificationController::store('Bono de ingreso a la aplicacion', 'Bono de '.$balance.' jibs', $user->id);
+                        NotificationController::store('Nuevo Bono!', 'Bono de '.$balance.' jibs por ingreso al App', $user->id);
                     }
-                    NotificationController::store('Hola, '.$user->email.' has accedido a jimbo!','has iniciado sesion en nuestra App!', $user->id);
+                    NotificationController::store('Nuevo Ingreso!', 'Hola, '.$user->email.' has accedido a jimbo!', $user->id);
 
                     $user = User::find($user->id);
 
@@ -195,8 +195,8 @@ class AuthController extends Controller
 
             if($user->type == 1) {
                 BalanceController::store('Bono de registro en la aplicacion', 'credit', $balance, 'jib', $user->id);
-                $notification = NotificationController::store('Bono de regitro en la aplicacion', 'Bono de '.$balance.' jibs', $user->id);
-                $notification = NotificationController::store('Hola, '.$user->email.' bienvenido a jimbo!', 'Felicidades, ahora eres parte de la familia jimbo sorteos', $user->id);
+                $notification = NotificationController::store('Nuevo Bono!', 'Bono de '.$balance.' jibs, por registrarte en Jimbo', $user->id);
+                $notification = NotificationController::store('Bienvenido!', 'Hola, '.$user->email.' felicidades! ahora eres parte de la familia jimbo sorteos', $user->id);
             }
 
             if ($request->has('code_referral') && $request->has('code_referral') != '') {
@@ -208,7 +208,7 @@ class AuthController extends Controller
                         'created_at'    =>now(),
                     ]);
                     BalanceController::store('Bono de referido en la aplicacion', 'credit', SettingController::bonus()['bonus']['referrals'], 'jib', $referral->id);
-                    NotificationController::store('Bono de Referido', 'Bono de '.Helper::amount(SettingController::bonus()['bonus']['referrals']).' jibs', $user->id);
+                    NotificationController::store('Nuevo Bono!', 'Has recibo '.Helper::amount(SettingController::bonus()['bonus']['referrals']).' jibs, un nuevo usuario se ha registrado con tu codigo', $user->id);
                 }
             }
 
@@ -470,7 +470,7 @@ class AuthController extends Controller
                     }
                 }
 
-                NotificationController::store('Datos de perfil actualizados','Hola, '.$user->email.' has actualizado tu datos de perfil con exito, recuerda tener tu correo siempre activo!', $user->id);
+                NotificationController::store('Datos Actualizados','Hola, '.$user->email.' tu perfil se ha actualizado con exito, recuerda tener tu correo siempre activo!', $user->id);
                 return response()->json([
                     'profile'    => [
                         'id'                => $user->id,

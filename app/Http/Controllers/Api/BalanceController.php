@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Exception;
 use App\Models\BalanceHistory;
 use App\Models\User;
-
+use Illuminate\Support\Carbon;
 
 class BalanceController extends Controller
 {
@@ -22,7 +22,7 @@ class BalanceController extends Controller
     {
         try {
             $user = User::find($request->user);
-            $balance = DB::table('balance_histories')
+            $balances = DB::table('balance_histories')
                 ->select(
                     'balance_histories.id',
                     'balance_histories.reference',
@@ -31,7 +31,8 @@ class BalanceController extends Controller
                     'balance_histories.currency',
                     'balance_histories.balance',
                     'balance_histories.date',
-                    'balance_histories.hour'
+                    'balance_histories.hour',
+                    'balance_histories.created_at'
                 )
                 ->join('users', 'users.id', '=', 'balance_histories.user_id')
                 ->where('users.id', $request->user)
@@ -39,8 +40,24 @@ class BalanceController extends Controller
                 ->orderBy('balance_histories.hour','DESC')
                 ->get();
 
+            $data = [];
+
+            foreach ($balances as $key => $value) {
+                # code...
+               array_push($data, [
+                   "id" => $value->id,
+                   "reference" =>  $value->reference,
+                   "description" =>  $value->description,
+                   "type" =>  $value->type,
+                   "currency" =>  $value->currency,
+                   "balance" =>  $value->balance,
+                   "date" =>   Carbon::parse( $value->date)->format('d/m/Y'),
+                   "hour" =>  Carbon::parse( $value->hour)->format('H:i:s'),
+                   "created_at" => Carbon::parse( $value->created_at)->format('d/m/Y H:i:s')
+               ]);
+            }
             return response()->json([
-                'balances'      => $balance,
+                'balances'      => $data,
                 'balance_jib'   => $user->balance_jib,
                 'balance_usd'   => $user->balance_usd
             ], 200);

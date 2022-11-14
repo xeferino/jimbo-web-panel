@@ -55,6 +55,16 @@
                 </li>
             @endcan
 
+            @can('withdrawal-menu')
+                <li class="{{(\Request::segment(2)=='cash-request')?'active':''}}">
+                    <a href="{{route('panel.cash.request')}}">
+                        <span class="pcoded-micon"><i class="icofont icofont-bill-alt"></i><b>SL</b></span>
+                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">Solicitudes de Retiros</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+            @endcan
+
             @can('raffle-menu')
                 <li class="{{(\Request::segment(2)=='raffles')?'active':''}}">
                     <a href="{{route('panel.raffles.index')}}">
@@ -90,16 +100,6 @@
                     <a href="{{route('panel.competitors.index')}}">
                         <span class="pcoded-micon"><i class="icofont icofont-users"></i><b>VD</b></span>
                         <span class="pcoded-mtext" data-i18n="nav.form-components.main">Participantes</span>
-                        <span class="pcoded-mcaret"></span>
-                    </a>
-                </li>
-            @endcan
-
-            @can('withdrawal-menu')
-                <li class="{{(\Request::segment(2)=='cash-request')?'active':''}}">
-                    <a href="{{route('panel.cash.request')}}">
-                        <span class="pcoded-micon"><i class="icofont icofont-bill-alt"></i><b>SL</b></span>
-                        <span class="pcoded-mtext" data-i18n="nav.form-components.main">Solicitudes de Retiros</span>
                         <span class="pcoded-mcaret"></span>
                     </a>
                 </li>
