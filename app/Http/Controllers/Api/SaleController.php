@@ -431,7 +431,7 @@ class SaleController extends Controller
 
                array_push($data, [
                 'id'            => $i++,
-                'fullnames'     => substr(sha1(time()), 0, 8),
+                'fullnames'     => $value->fullnames,
                 'amount'        => Helper::amount($value->amount),
                 'level'         => $value->level,
                 'image'         => $value->image != 'avatar.svg' ? config('app.url').'/assets/images/sellers/'.$value->Seller->image : config('app.url').'/assets/images/avatar.svg',

@@ -91,7 +91,7 @@ class RaffleController extends Controller
                     })->addColumn('type', function($raffle){
                         $btn = '';
                         if($raffle->type=='raffle'){
-                            $btn .= '<span class="badge badge-warning" title="Sorteo">Sorteo</span>';
+                            $btn .= '<span class="badge badge-warning" title="Sorteo">Efectivo</span>';
                         }else{
                             $btn .= '<span class="badge badge-inverse" title="Producto">Producto</span>';
                         }
@@ -392,7 +392,9 @@ class RaffleController extends Controller
     {
         if(\Request::wantsJson()){
             $raffle = Raffle::findOrFail($id);
-
+            if($raffle->public == 1 or $raffle->finish == 0 ) {
+                return response()->json(['success' => false, 'message' => 'Jimbo panel notifica: El sorteo no se puede eliminar esta modo publico.'], 200);
+            }
             $delete = $raffle->delete();
             if ($delete) {
                 return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Sorteo eliminado exitosamente.'], 200);

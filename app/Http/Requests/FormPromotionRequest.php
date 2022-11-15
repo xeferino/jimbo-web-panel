@@ -26,7 +26,7 @@ class FormPromotionRequest extends FormRequest
         return [
             'name'      => 'required|min:3',
             'code'      => 'required|min:3',
-            'price'     => 'required|integer',
+            'price'     => 'required|numeric|between:0.1,9999999.00',
             'quantity'  => 'required|integer',
             'active'    => 'required',
         ];
@@ -39,8 +39,9 @@ class FormPromotionRequest extends FormRequest
             'name.min'          => 'El nombre es requiere minimo :min caracteres.',
             'code.required'     => 'El codigo es requerido.',
             'code.min'          => 'El codigo es requiere minimo :min caracteres.',
-            'price.required'    => 'El codigo es requerido.',
-            'price.integer'     => 'La cantidad debe ser entero.',
+            'price.required'    => 'El precio es requerido.',
+            'price.numeric'     => 'El precio debe ser numerico.',
+            'price.between'     => 'El precio debe estar en el rango 0.1,9999999.00.',
             'quantity.required' => 'La cantidad es requerida.',
             'quantity.integer'  => 'El codigo debe ser entero.',
             'active.required'   => 'El estatus es requerido.',

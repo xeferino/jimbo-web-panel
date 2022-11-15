@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code');
-            $table->double('price');
+            $table->float('price');
             $table->integer('quantity');
             $table->boolean('active')->default(1);
             $table->timestamps();

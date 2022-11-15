@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\FormPromotionRequest;
@@ -19,7 +20,7 @@ class PromotionController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $promotion = DB::table('promotions')->select('id', 'name', 'code', DB::raw("CONCAT(price,'.00$') AS price"), 'quantity', 'active')->whereNull('deleted_at')->get();
+            $promotion = DB::table('promotions')->select('id', 'name', 'code', 'price', 'quantity', 'active')->whereNull('deleted_at')->get();
                 return Datatables::of($promotion)
                     ->addIndexColumn()
                     ->addColumn('action', function($promotion){
@@ -43,8 +44,11 @@ class PromotionController extends Controller
                             $btn .= '<span class="badge badge-danger" title="Inactiva"><i class="ti-close"></i></span>';
                         }
                         return $btn;
+                    })->addColumn('price', function($promotion){
+
+                        return Helper::amount($promotion->price);
                     })
-                    ->rawColumns(['action','active'])
+                    ->rawColumns(['action','active','price'])
                     ->make(true);
         }
 
@@ -152,12 +156,14 @@ class PromotionController extends Controller
     {
         if(\Request::wantsJson()){
             $promotion = Promotion::findOrFail($id);
-
+            if($promotion->Tickets->count()>0){
+                return response()->json(['success' => false, 'message' => 'Jimbo panel notifica: Promocion de boleto, no se puede eliminar, porque pertence a un sorteo.'], 200);
+            }
             $delete = $promotion->delete();
             if ($delete) {
-                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: promocion eliminado exitosamente.'], 200);
+                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Promocion de boleto eliminada exitosamente.'], 200);
             } else {
-                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: El promocion no se elimino correctamente. Intente mas tarde.'], 200);
+                return response()->json(['success' => false, 'message' => 'Jimbo panel notifica: La promocion de boleto no se elimino correctamente. Intente mas tarde.'], 200);
             }
         }
         abort(404);

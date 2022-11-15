@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('code_referral')->nullable();
             $table->integer('type')->nullable();
             $table->integer('become_seller')->default(0)->nullable();
+            $table->integer('become_seller_convert')->default(0)->nullable();
             $table->string('token')->nullable();
             $table->rememberToken();
             $table->timestamps();

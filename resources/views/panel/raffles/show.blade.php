@@ -114,7 +114,7 @@
                     <hr>
 
                     <strong class="text-uppercase">Tipo</strong>
-                    <span class="badge badge-warning" title="Activo">{{$raffle->type == 'raffle' ? 'Sorteo' : 'Producto'}}</span>
+                    <span class="badge badge-warning" title="Activo">{{$raffle->type == 'raffle' ? 'Efectivo' : 'Producto'}}</span>
                     <hr>
 
                     <strong class="text-uppercase">Visibilidad</strong>

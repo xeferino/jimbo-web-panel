@@ -179,7 +179,7 @@ class PaymentController extends Controller
 
 
             $debit  = BalanceController::store($data['description_request'], 'debit', $amount, 'usd', $user->id);
-            $notification = NotificationController::store('Nueva Retiro!', 'has solicitado un retiro de '.Helper::amount($amount), $user->id);
+            $notification = NotificationController::store('Nuevo Retiro!', 'has solicitado un retiro de '.Helper::amount($amount), $user->id);
 
             $cash = CashRequest::insert([
                 'currency'          => 'usd',

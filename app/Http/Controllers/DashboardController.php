@@ -108,18 +108,6 @@ class DashboardController extends Controller
                 ->offset(0)->limit(10)
                 ->orderBy('sales.id','DESC')
                 ->get();
-        /* $top = DB::table('sales')
-        ->select(
-            DB::raw("CONCAT(users.names,' ',users.surnames) AS fullnames"),
-            DB::raw('SUM(sales.amount) as amount')
-        )->join('users', 'users.id', '=', 'sales.seller_id')
-        ->whereNotNull('sales.seller_id')
-        ->orderBy('sales.seller_id','DESC')
-        ->groupBy('sales.seller_id')
-        ->offset(0)->limit(10)
-        ->get()->groupBy(function($data) {
-            return $data->seller_id;
-        }); */
         return [
             'top'  => $top ?? []
         ];

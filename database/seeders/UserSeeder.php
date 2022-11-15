@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 use App\Models\User;
 
 class UserSeeder extends Seeder
@@ -19,6 +20,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
         //roles
         $super_admin    = Role::create(['name' => 'super-admin', 'description' => 'Super Administrador, acceso completo a la aplicacion']);
         $administrator  = Role::create(['name' => 'administrator', 'description' => 'Administrador del panel de jimbo sorteos']);

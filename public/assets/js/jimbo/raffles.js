@@ -597,7 +597,7 @@ jQuery(document).ready(function() {
                             table.ajax.reload();
                         }else {
                             setTimeout(() => {$('.jimbo-loader').hide();}, 500);
-                            notify(response.data.message, 'success', '3000', 'top', 'right');
+                            notify(response.data.message, 'warning', '5000', 'top', 'right');
                         }
                     }).catch(error => {
                         if (error.response) {

@@ -94,7 +94,7 @@
                     <div class="col-sm-6">
                         <label class="col-form-label">Premio en Efectivo</label>
                         <div class="input-group">
-                            <input type="number" min="1" name="cash_to_draw" id="cash_to_draw" value="{{intval($raffle->cash_to_draw)}}" class="form-control">
+                            <input type="text" min="1" name="cash_to_draw" id="cash_to_draw" value="{{intval($raffle->cash_to_draw)}}" class="form-control">
                             <span class="input-group-addon" id="cash_to_draw"><i class="icofont icofont-bill-alt"></i></span>
                         </div>
                         <div class="col-form-label has-danger-cash_to_draw"></div>
@@ -103,7 +103,7 @@
                     <div class="col-sm-6">
                         <label class="col-form-label">Dinero a recolectar</label>
                         <div class="input-group">
-                            <input type="number" min="1" name="cash_to_collect" id="cash_to_collect" value="{{intval($raffle->cash_to_collect)}}" class="form-control">
+                            <input type="text" min="1" name="cash_to_collect" id="cash_to_collect" value="{{intval($raffle->cash_to_collect)}}" class="form-control">
                             <span class="input-group-addon" id="cash_to_collect"><i class="icofont icofont-bill-alt"></i></span>
                         </div>
                         <div class="col-form-label has-danger-cash_to_collect"></div>
@@ -139,7 +139,7 @@
                     <div class="col-sm-6">
                         <label class="col-form-label">Dias de prorroga</label>
                         <div class="input-group">
-                            <input type="number" min="1" name="days_extend" id="days_extend" class="form-control">
+                            <input type="text" min="1" name="days_extend" id="days_extend" class="form-control">
                             <span class="input-group-addon" id="days_extend"><i class="icofont icofont-calendar"></i></span>
                         </div>
                         <div class="col-form-label has-danger-days_extend"></div>
@@ -150,61 +150,61 @@
 
                     <div class="col-sm-3">
                         <label class="col-form-label">1° (%)</label>
-                        <input type="number" name="prize_1" id="prize_1" value="{{$raffle->prize_1}}" min="100" max="100" class="form-control">
+                        <input type="text" name="prize_1" id="prize_1" value="{{$raffle->prize_1}}" min="100" max="100" class="form-control">
                         <div class="col-form-label has-danger-prize_1"></div>
                     </div>
 
                     <div class="col-sm-3">
                         <label class="col-form-label">2° (%)</label>
-                        <input type="number" name="prize_2" id="prize_2" value="{{$raffle->prize_2}}" min="1" max="100" class="form-control">
+                        <input type="text" name="prize_2" id="prize_2" value="{{$raffle->prize_2}}" min="1" max="100" class="form-control">
                         <div class="col-form-label has-danger-prize_2"></div>
                     </div>
 
                     <div class="col-sm-3">
                         <label class="col-form-label">3° (%)</label>
-                        <input type="number" name="prize_3" id="prize_3" value="{{$raffle->prize_3}}" min="0.6" max="100" class="form-control">
+                        <input type="text" name="prize_3" id="prize_3" value="{{$raffle->prize_3}}" min="0.6" max="100" class="form-control">
                         <div class="col-form-label has-danger-prize_3"></div>
                     </div>
 
                     <div class="col-sm-3">
                         <label class="col-form-label">4° (%)</label>
-                        <input type="number" name="prize_4" id="prize_4" value="{{$raffle->prize_4}}" min="0.6" max="100" class="form-control">
+                        <input type="text" name="prize_4" id="prize_4" value="{{$raffle->prize_4}}" min="0.6" max="100" class="form-control">
                         <div class="col-form-label has-danger-prize_4"></div>
                     </div>
 
                     <div class="col-sm-2">
                         <label class="col-form-label">5° (%)</label>
-                        <input type="number" name="prize_5" id="prize_5" value="{{$raffle->prize_5}}" min="0.6" max="100" class="form-control">
+                        <input type="text" name="prize_5" id="prize_5" value="{{$raffle->prize_5}}" min="0.6" max="100" class="form-control">
                         <div class="col-form-label has-danger-prize_5"></div>
                     </div>
 
                     <div class="col-sm-2">
                         <label class="col-form-label">6° (%)</label>
-                        <input type="number" name="prize_6" id="prize_6" value="{{$raffle->prize_6}}" min="0.6" max="100" class="form-control">
+                        <input type="text" name="prize_6" id="prize_6" value="{{$raffle->prize_6}}" min="0.6" max="100" class="form-control">
                         <div class="col-form-label has-danger-prize_6"></div>
                     </div>
 
                     <div class="col-sm-2">
                         <label class="col-form-label">7° (%)</label>
-                        <input type="number" name="prize_7" id="prize_7" value="{{$raffle->prize_7}}" min="0.6" max="100" class="form-control">
+                        <input type="text" name="prize_7" id="prize_7" value="{{$raffle->prize_7}}" min="0.6" max="100" class="form-control">
                         <div class="col-form-label has-danger-prize_7"></div>
                     </div>
 
                     <div class="col-sm-2">
                         <label class="col-form-label">8° (%)</label>
-                        <input type="number" name="prize_8" id="prize_8" value="{{$raffle->prize_8}}" min="0.6" max="100" class="form-control">
+                        <input type="text" name="prize_8" id="prize_8" value="{{$raffle->prize_8}}" min="0.6" max="100" class="form-control">
                         <div class="col-form-label has-danger-prize_8"></div>
                     </div>
 
                     <div class="col-sm-2">
                         <label class="col-form-label">9° (%)</label>
-                        <input type="number" name="prize_9" id="prize_9" value="{{$raffle->prize_9}}" min="0.6" max="100" class="form-control">
+                        <input type="text" name="prize_9" id="prize_9" value="{{$raffle->prize_9}}" min="0.6" max="100" class="form-control">
                         <div class="col-form-label has-danger-prize_9"></div>
                     </div>
 
                     <div class="col-sm-2">
                         <label class="col-form-label">10° (%)</label>
-                        <input type="number" name="prize_10" id="prize_10" value="{{$raffle->prize_10}}" min="0.6" max="100" class="form-control">
+                        <input type="text" name="prize_10" id="prize_10" value="{{$raffle->prize_10}}" min="0.6" max="100" class="form-control">
                         <div class="col-form-label has-danger-prize_10"></div>
                     </div>
 
@@ -225,7 +225,7 @@
 
                     <div class="col-sm-2">
                         <label class="col-form-label">Cantidad de Boletos</label>
-                        <input type="number" name="quantity" id="quantity" value="1" min="1" max="10000" class="form-control">
+                        <input type="text" name="quantity" id="quantity" value="1" min="1" max="10000" class="form-control">
                         <div class="col-form-label has-danger-quantity"></div>
                     </div>
 

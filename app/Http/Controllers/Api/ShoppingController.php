@@ -48,9 +48,10 @@ class ShoppingController extends Controller
                    "seller_id" =>  $value->seller_id,
                    "user_id" =>  $value->user_id,
                    "raffle_id" =>  $value->raffle_id,
-                   "status" =>  $value->status,
-                   'status' => $value->status == 'approved' ? 'Aprodada' : 'Rechazada',
-                   "created_at" => $value->updated_at->format('d/m/Y H:i:s')
+                   "status" => $value->status == 'approved' ? 'Aprodada' : 'Rechazada',
+                   "date"  => $value->created_at->format('d/m/y'),
+                   "hour"  => $value->created_at->format('H:i:s'),
+                   "created_at" => $value->created_at->format('d/m/Y H:i:s')
                ]);
             }
 

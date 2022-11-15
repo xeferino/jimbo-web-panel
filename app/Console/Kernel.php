@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('raffle:completed')->daily();
+        $schedule->command('raffle:winner')->daily();
         $schedule->command('user-single:bonus')->monthly();
         $schedule->command('user-group:bonus')->monthly();
     }

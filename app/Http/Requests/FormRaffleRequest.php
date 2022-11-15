@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Helpers\Helper;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FormRaffleRequest extends FormRequest
 {
+    protected $amount;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,6 +25,7 @@ class FormRaffleRequest extends FormRequest
      */
     public function rules()
     {
+        $this->amount     = ((($this->cash_to_draw*$this->prize_1)/100)+(($this->cash_to_draw*$this->prize_2)/100)+(($this->cash_to_draw*$this->prize_3)/100)+(($this->cash_to_draw*$this->prize_4)/100)+(($this->cash_to_draw*$this->prize_5)/100)+(($this->cash_to_draw*$this->prize_6)/100)+(($this->cash_to_draw*$this->prize_7)/100)+(($this->cash_to_draw*$this->prize_8)/100)+(($this->cash_to_draw*$this->prize_9)/100)+(($this->cash_to_draw*$this->prize_10)/100));
         return [
             'title'             => 'required|min:3',
             'description'       => 'required|min:10',
@@ -30,30 +33,30 @@ class FormRaffleRequest extends FormRequest
             'promoter'          => 'required|min:3',
             'place'             => 'required|min:3',
             'provider'          => 'required|min:3',
-            'cash_to_draw'      => 'required|integer',
-            'cash_to_collect'   => 'required|integer|gt:cash_to_draw',
+            'cash_to_draw'      => 'required|integer|between:1.00,9999999.00',
+            'cash_to_collect'   => 'required|integer|gt:'.$this->amount.'|between:1.00,9999999.00',
             'total'             => 'gte:cash_to_collect',
             'type'              => 'required',
             'days_extend'       => 'nullable|integer',
             'public'            => 'required',
             'active'            => 'required',
-            'prize_1'           => 'required',
-            'prize_2'           => 'required',
-            'prize_3'           => 'required',
-            'prize_4'           => 'required',
-            'prize_5'           => 'required',
-            'prize_6'           => 'required',
-            'prize_7'           => 'required',
-            'prize_8'           => 'required',
-            'prize_9'           => 'required',
-            'prize_10'          => 'required',
+            'prize_1'           => 'required|numeric|between:0.0,100',
+            'prize_2'           => 'required|numeric|between:0.0,100',
+            'prize_3'           => 'required|numeric|between:0.0,100',
+            'prize_4'           => 'required|numeric|between:0.0,100',
+            'prize_5'           => 'required|numeric|between:0.0,100',
+            'prize_6'           => 'required|numeric|between:0.0,100',
+            'prize_7'           => 'required|numeric|between:0.0,100',
+            'prize_8'           => 'required|numeric|between:0.0,100',
+            'prize_9'           => 'required|numeric|between:0.0,100',
+            'prize_10'          => 'required|numeric|between:0.0,100',
             'date_start'        => isset($this->raffle->id) ? 'required|date_format:d/m/Y' : 'required|date_format:d/m/Y|after_or_equal:'.date('d/m/Y'),
             'date_end'          => 'required|date_format:d/m/Y|after_or_equal:date_start',
             'date_release'      => 'required|date_format:d/m/Y|after_or_equal:date_end',
             'promotions_raffle' => isset($this->raffle->id) ? 'nullable' : 'required',
             //'percent'           => 'required',
             'promotions'        => isset($this->raffle->id) ? 'nullable' : 'required',
-            'quantity'          => 'required|integer',
+            //'quantity'          => 'required|integer',
             'image'             => $this->hasFile('image') ? 'required|sometimes|mimes:jpeg,jpg,png,svg|max:512|dimensions:width=400,height=200' : 'nullable',
         ];
     }
@@ -77,8 +80,8 @@ class FormRaffleRequest extends FormRequest
             'cash_to_draw.integer'          => 'El premio en efectivo debe ser entero.',
             'cash_to_collect.required'      => 'El dinero a recaudar es requerido.',
             'cash_to_collect.integer'       => 'El dinero a recaudar debe ser entero.',
-            'cash_to_collect.gt'            => 'El dinero a recaudar debe ser mayor al premio :'.$this->input('cash_to_draw'),
-            'total.gte'                     => 'Por favor verifique la cantidad de boletos configurados, el total debe ser mayor o igual al dinero a recaudar :'.$this->input('cash_to_collect'),
+            'cash_to_collect.gt'            => 'El dinero a recaudar debe ser mayor a las premiaciones '.Helper::amount($this->amount),
+            'total.gte'                     => 'Por favor verifique la cantidad de boletos configurados, el total debe ser mayor o igual al dinero a recaudar :'.Helper::amount($this->input('cash_to_collect')),
             'days_extend.integer'           => 'El valor ingresado para extender el sorteo es invalido.',
             'type.required'                 => 'El tipo es requerido.',
             'public.required'               => 'La visibilidad es requerida.',
@@ -93,6 +96,26 @@ class FormRaffleRequest extends FormRequest
             'prize_8.required'              => 'El porcentaje es requerido.',
             'prize_9.required'              => 'El porcentaje es requerido.',
             'prize_10.required'             => 'El porcentaje es requerido.',
+            'prize_1.numeric'              => 'El porcentaje debe ser numerico.',
+            'prize_2.numeric'              => 'El porcentaje debe ser numerico.',
+            'prize_3.numeric'              => 'El porcentaje debe ser numerico.',
+            'prize_4.numeric'              => 'El porcentaje debe ser numerico.',
+            'prize_5.numeric'              => 'El porcentaje debe ser numerico.',
+            'prize_6.numeric'              => 'El porcentaje debe ser numerico.',
+            'prize_7.numeric'              => 'El porcentaje debe ser numerico.',
+            'prize_8.numeric'              => 'El porcentaje debe ser numerico.',
+            'prize_9.numeric'              => 'El porcentaje debe ser numerico.',
+            'prize_10.numeric'             => 'El porcentaje debe ser numerico.',
+            'prize_1.between'              => 'El porcentaje debe estar entre 0.00 y 100.',
+            'prize_2.between'              => 'El porcentaje debe estar entre 0.00 y 100.',
+            'prize_3.between'              => 'El porcentaje debe estar entre 0.00 y 100.',
+            'prize_4.between'              => 'El porcentaje debe estar entre 0.00 y 100.',
+            'prize_5.between'              => 'El porcentaje debe estar entre 0.00 y 100.',
+            'prize_6.between'              => 'El porcentaje debe estar entre 0.00 y 100.',
+            'prize_7.between'              => 'El porcentaje debe estar entre 0.00 y 100.',
+            'prize_8.between'              => 'El porcentaje debe estar entre 0.00 y 100.',
+            'prize_9.between'              => 'El porcentaje debe estar entre 0.00 y 100.',
+            'prize_10.between'             => 'El porcentaje debe estar entre 0.00 y 100.',
             'date_start.required'           => 'La fecha de apertura es requerida.',
             'date_start.date'               => 'La fecha de apertura no es valida.',
             'date_start.after_or_equal'     => 'La fecha  de apertura no puede ser menor a la fecha de actual ('.date('d/m/Y').')',

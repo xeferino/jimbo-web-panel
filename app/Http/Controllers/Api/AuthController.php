@@ -269,6 +269,7 @@ class AuthController extends Controller
                     'seller'            => $user->type == 2 ? true : false,
                     'level'             => $level,
                     'status'            => 'Activo',
+                    'become_seller'     => $user->become_seller == 1 ? true : false,
                     'image'             => $image,
                     'country'      => [
                         'id'    => $user->country->id,
@@ -470,7 +471,7 @@ class AuthController extends Controller
                     }
                 }
 
-                NotificationController::store('Datos Actualizados','Hola, '.$user->email.' tu perfil se ha actualizado con exito, recuerda tener tu correo siempre activo!', $user->id);
+                NotificationController::store('Datos Actualizados!','Hola, '.$user->email.' tu perfil se ha actualizado con exito, recuerda tener tu correo siempre activo!', $user->id);
                 return response()->json([
                     'profile'    => [
                         'id'                => $user->id,
