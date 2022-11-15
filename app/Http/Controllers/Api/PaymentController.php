@@ -166,7 +166,7 @@ class PaymentController extends Controller
 
             $amount = $request->amount;
 
-            if ($amount>intval($user->balance_usd)) {
+            if ($amount>$user->balance_usd) {
                 return response()->json([
                     'error'    => true,
                     'message'  => 'Balance en usd '.Helper::amount($user->balance_usd).', es insuficiente.',

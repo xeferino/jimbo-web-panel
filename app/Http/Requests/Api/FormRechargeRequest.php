@@ -24,7 +24,7 @@ class FormRechargeRequest extends FormRequest
     public function rules()
     {
         return [
-            'amout_jib'     => 'required|integer',
+            'amout_jib'     => 'required|numeric|between:10.00,9999999.00',
             'user_id'       => 'required|integer',
             'method_id'     => 'required|integer',
             'method_type'   => 'required',
@@ -34,8 +34,9 @@ class FormRechargeRequest extends FormRequest
     public function messages()
     {
         return [
+            'amout_jib.numeric'         => 'El monto de jib debe ser numerico',
+            'amout_jib.between'         => 'El monto minimo de cambio es de 10.00 jib',
             'amout_jib.required'        => 'El monto de jib es requerido.',
-            'amout_jib.required'        => 'El monto de jib debe ser entero',
             'user_id.required'          => 'El usuario es requerido.',
             'user_id.integer'           => 'El usuario  debe ser entero.',
             'method_type.required'      => 'El metodo de pago es requerido.',

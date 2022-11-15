@@ -118,7 +118,7 @@ class SaleController extends Controller
 
                             $available_jib = $user->balance_jib-$amout_jib;
 
-                            if (intval($user->balance_jib)<$amout_jib) {
+                            if ($user->balance_jib<$amout_jib) {
                                 return response()->json([
                                     'error'    => true,
                                     'message'  => 'Balance en jib '.$user->balance_jib.', es insuficiente, usted requiere de un saldo mayor o igual a '.$amout_jib.'.00 jib',
@@ -165,7 +165,7 @@ class SaleController extends Controller
                             $user->save();
                             BalanceController::store($data['description'], 'debit', $amout_jib, 'jib', $user->id);
                         }elseif ($request->method_type == 'cash') {
-                            if (intval($user->balance_usd)<$ticket->promotion->price) {
+                            if ($user->balance_usd<$ticket->promotion->price) {
                                 return response()->json([
                                     'error'    => true,
                                     'message'  => 'Balance en usd '.$user->balance_usd.', es insuficiente',

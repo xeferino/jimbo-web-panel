@@ -169,7 +169,7 @@ class JibController extends Controller
 
             $amout = ($request->amout_jib*$jib_usd->value);
 
-            if (intval($user->balance_jib)<$request->amout_jib) {
+            if ($user->balance_jib<$request->amout_jib) {
                 return response()->json([
                     'error'    => true,
                     'message'  => 'Balance en jib '.$user->balance_jib.', es insuficiente.',
