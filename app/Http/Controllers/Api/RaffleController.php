@@ -46,7 +46,8 @@ class RaffleController extends Controller
             'raffles.date_end',
             'raffles.date_release',
             DB::raw("TIMESTAMPDIFF(DAY, now(), raffles.date_end) AS remaining_days"),
-            DB::raw("CONCAT('".$this->asset."',raffles.image) AS logo"))
+            DB::raw("CONCAT('".$this->asset."',raffles.image) AS logo"),
+            'type')
             ->where('raffles.active', 1)
             ->where('raffles.public', 1)
             ->where('raffles.finish', 0)
@@ -69,7 +70,7 @@ class RaffleController extends Controller
             array_push($data, [
                 'id'                => $value->id,
                 'title'             => $value->title,
-                'cash_to_draw'      => Helper::amount($value->cash_to_draw),
+                'cash_to_draw'      => $value->type == 'raffle' ? Helper::amount($value->cash_to_draw) : $value->title,
                 'date_start'        => $value->date_start->format('d/m/Y'),
                 'date_end'          => $value->date_end->format('d/m/Y'),
                 'date_release'      => $value->date_release->format('d/m/Y'),
@@ -190,7 +191,7 @@ class RaffleController extends Controller
                     'promoter'      => $raffle->promoter,
                     'place'         => $raffle->place,
                     'provider'      => $raffle->provider,
-                    'cash_to_draw'  => Helper::amount($raffle->cash_to_draw),
+                    'cash_to_draw'  => $raffle->type == 'raffle' ? Helper::amount($raffle->cash_to_draw) : $raffle->title,
                     'logo'          => $raffle->image != 'raffle.jpg' ? $this->asset.$raffle->image : $this->asset.'raffle.jpg',
                     'date_start'    => $raffle->date_start->format('d/m/Y'),
                     'date_end'      => $raffle->date_end->format('d/m/Y'),
@@ -269,7 +270,7 @@ class RaffleController extends Controller
                     'promoter'          => $raffle->promoter,
                     'place'             => $raffle->place,
                     'provider'          => $raffle->provider,
-                    'cash_to_draw'      => Helper::amount($raffle->cash_to_draw),
+                    'cash_to_draw'  => $raffle->type == 'raffle' ? Helper::amount($raffle->cash_to_draw) : $raffle->title,
                     'logo'              => $raffle->image != 'raffle.jpg' ? $this->asset.$raffle->image : $this->asset.'raffle.jpg',
                     'date_start'        => $raffle->date_start->format('d/m/Y'),
                     'date_end'          => $raffle->date_end->format('d/m/Y'),

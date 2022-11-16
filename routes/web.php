@@ -15,6 +15,7 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CashRequestController;
 use App\Http\Controllers\EgressController;
+use Illuminate\Http\Request;
 
 
 
@@ -32,7 +33,7 @@ use App\Http\Controllers\EgressController;
 
 require __DIR__.'/auth.php';
 
-Route::get('/', function () {
+Route::get('/', function (Request $request) {
     return redirect('login');
 });
 

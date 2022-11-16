@@ -259,7 +259,7 @@ class SaleController extends Controller
         if ($ticket) {
             for ($i = 1; $i <= $ticket->promotion->quantity; $i++) {
                 array_push($tickets, [
-                    'serial'        =>  $ticket->id.$i.time(),
+                    'serial'        =>  substr(sha1($ticket->id.$i.time()), 0, 8),
                     'ticket_id'     =>  $ticket->id,
                     'raffle_id'     =>  $ticket->raffle_id,
                     'user_id'       =>  $user->type == 1 ? $user->id : null,
