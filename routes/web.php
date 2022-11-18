@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ActionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SellerController;
@@ -33,9 +34,9 @@ use Illuminate\Http\Request;
 
 require __DIR__.'/auth.php';
 
-Route::get('/', function (Request $request) {
-    return redirect('login');
-});
+Route::get('/', [LandingPageController::class, 'home'])->name('landing.home');
+Route::get('/terms_and_conditions', [LandingPageController::class, 'term'])->name('landing.terms_conditions');
+Route::get('/faq', [LandingPageController::class, 'faq'])->name('landing.faq');
 
 Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
