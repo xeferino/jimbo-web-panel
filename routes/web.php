@@ -36,6 +36,7 @@ require __DIR__.'/auth.php';
 
 Route::get('/', [LandingPageController::class, 'home'])->name('landing.home');
 Route::get('/terms_and_conditions', [LandingPageController::class, 'term'])->name('landing.terms_conditions');
+Route::get('/privacy_policies', [LandingPageController::class, 'privacy'])->name('landing.privacy_policies');
 Route::get('/faq', [LandingPageController::class, 'faq'])->name('landing.faq');
 
 Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {

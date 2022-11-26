@@ -10,6 +10,7 @@ use App\Models\CashRequest;
 use App\Helpers\Helper;
 use App\Models\Promotion;
 use App\Models\Raffle;
+use App\Models\Setting;
 
 class LandingPageController extends Controller
 {
@@ -32,8 +33,18 @@ class LandingPageController extends Controller
         ]);
     }
 
+    public function privacy(Request $request)
+    {
+        $privacy_policies = DB::table('settings')->where('name', 'terms_and_conditions')->first();
+        return view('landing.privacy_policies', [
+            'title'  => 'Jimbo Sorteos',
+            'privacy_policies' => $privacy_policies->value
+        ]);
+    }
+
     public function faq(Request $request)
     {
+
         return view('landing.faq', [
             'title'  => 'Jimbo Sorteos'
         ]);
