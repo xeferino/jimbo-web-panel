@@ -16,6 +16,7 @@ use App\Http\Requests\Api\FormRequestProfile;
 use App\Http\Requests\Api\FormRequestForgot;
 use App\Http\Requests\Api\FormRequestRecoveryPassword;
 use App\Http\Requests\Api\FormRequestVerifiedEmail;
+use App\Mail\Notify;
 use App\Services\CulqiService as Culqi;
 use App\Mail\RecoveryPassword;
 use App\Mail\VerifiedEmail;
@@ -551,6 +552,14 @@ class AuthController extends Controller
 
             if ($user->save()) {
                 NotificationController::store('Solicitud de vendedor!','Hola, '.$user->email.' has solicitado convertirte en vendedor, se le enviara un correo una vez aprobada su solicitud, como vendedor!', $user->id);
+                $data = [
+                    'user'      =>  $user,
+                    'title'     => 'Has solicitado convertirte en vendedor!',
+                    'message'   => 'Una vez aprobada tu solicitud se te notificara a traves de un email, te falta poco para formar parte de nuestra familia Jimbo.',
+                    'subject'   => 'Quieres ser vendedor de Jimbo Sorteos?'
+                ];
+                Mail::to($user->email)->send(new Notify($data));
+
                 return response()->json([
                     'profile'    => [
                         'id'                => $user->id,
@@ -590,7 +599,7 @@ class AuthController extends Controller
                         ]
                     ],
                     'status'        => 200,
-                    'message'       => $user->names.'!, Solicitud de enviada exitosamente.',
+                    'message'       => $user->names.'!, Solicitud enviada exitosamente.',
                 ], 200);
             }
         } catch (Exception $e) {

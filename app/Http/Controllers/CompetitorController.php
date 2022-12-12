@@ -19,6 +19,8 @@ use App\Models\BalanceHistory;
 use App\Models\Winner;
 use App\Helpers\Helper;
 use Illuminate\Support\Facades\File;
+use App\Mail\Notify;
+use Illuminate\Support\Facades\Mail;
 
 
 class CompetitorController extends Controller
@@ -467,6 +469,13 @@ class CompetitorController extends Controller
                 $competitor->seller_at  = now();
                 if($competitor->save()){
                     $competitor->syncRoles(3,4);
+                    $data = [
+                        'user'      =>  $competitor,
+                        'title'     => 'Nuevo vendedor',
+                        'message'   => 'Bienvenido! ahora eres parte de nuestra familia Jimbo. Vende, comparte y ganas muchas comisiones.',
+                        'subject'   => '¿Felicidades, te has convertido en vendedor de Jimbo Sorteos?'
+                    ];
+                    Mail::to($competitor->email)->send(new Notify($data));
                     return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Usuario dado de alta como vendedor exitosamente.'], 200);
                 }
             }

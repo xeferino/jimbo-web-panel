@@ -52,7 +52,7 @@
                                                             <p class="text-muted">Inicio - {{$data['date_start']}}</p>
                                                             <p class="text-muted">Fin - {{$data['date_end']}}</p>
                                                             <p class="text-muted">Lanzamiento - {{$data['date_release']}}</p>
-                                                            <p class="text-muted">Dias restantes - {{$data['remaining_days']}}</p>
+                                                            <p class="text-muted">{{$data['remaining_days']}} Dias restantes</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -62,24 +62,30 @@
                                             <div class="carousel-item">
                                                 <div class="row ">
                                                     <div class="col-sm-12">
-                                                        <div class="float-left text-left ml-5">
+                                                        <div class="text-left ml-5">
                                                             <h5 class="text-warning">{{$data['title']}}</h5>
                                                             <p class="text-muted">ID - {{$data['id']}}</p>
                                                             <h5 class="text-warning">{{$data['cash_to_draw']}}</h5>
                                                         </div>
                                                         <div
-                                                            style="float:right !important;"
+                                                            style="
+                                                                float:right !important;
+                                                                margin-top:-50px !important;
+                                                                margin-right:50px !important;
+                                                            "
                                                             id="donut1"
+                                                            data-size="100"
                                                             data-fill="#ff9800"
                                                             data-role="donut"
                                                             data-show-value="true"
                                                             data-total="100"
                                                             data-value="{{$data['percent']}}">
                                                         </div>
-                                                        <div class="float-left text-left ml-1">
+                                                        <div class="text-left ml-5">
                                                             <p class="text-muted">Inicio - {{$data['date_start']}}</p>
                                                             <p class="text-muted">Fin - {{$data['date_end']}}</p>
                                                             <p class="text-muted">Lanzamiento - {{$data['date_release']}}</p>
+                                                            <p class="text-muted">{{$data['remaining_days']}} Dias restantes</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -413,17 +419,6 @@
                 </div>
             </div>
             <div class="card-block">
-                {{-- <div class="table-responsive">
-                    <ul style="">
-                        <li style="display:inline;"> <button class="btn btn-classic btn-sm"></button> Clasico  {{Helper::amount($sales["seller_classic_sale_year_amount"])}}</li>
-                        <li style="display:inline;"> <button class="btn btn-junior btn-sm"></button> Junior  {{Helper::amount($sales["seller_junior_sale_year_amount"])}}</li>
-                    </ul>
-                    <ul class="mt-3">
-                        <li style="display:inline;"> <button class="btn btn-middle btn-sm"></button> Semi Senior {{Helper::amount($sales["seller_middle_sale_year_amount"])}}</li>
-                        <li style="display:inline;"> <button class="btn btn-master btn-sm"></button> Senior {{Helper::amount($sales["seller_master_sale_year_amount"])}}</li>
-                    </ul>
-                    <div id="graph-donut"></div>
-                </div> --}}
                 <canvas id="donutChartSales" width="400" height="400"></canvas>
             </div>
         </div>
@@ -622,12 +617,12 @@
       scales: {
         xAxes: [{
           gridLines : {
-            display : true,
+            display : false,
           }
         }],
         yAxes: [{
           gridLines : {
-            display : true,
+            display : false,
           },
         }]
       },
@@ -706,7 +701,19 @@
     var barChartOptions = {
       responsive              : true,
       maintainAspectRatio     : false,
-      datasetFill             : false
+      datasetFill             : false,
+      scales: {
+        xAxes: [{
+          gridLines : {
+            display : false,
+          }
+        }],
+        yAxes: [{
+          gridLines : {
+            display : false,
+          },
+        }]
+      },
     }
 
     new Chart(barChartCanvas, {
@@ -781,7 +788,19 @@
     var barChartOptions = {
       responsive              : true,
       maintainAspectRatio     : false,
-      datasetFill             : false
+      datasetFill             : false,
+      scales: {
+        xAxes: [{
+          gridLines : {
+            display : false,
+          }
+        }],
+        yAxes: [{
+          gridLines : {
+            display : false,
+          },
+        }]
+      },
     }
 
     new Chart(barChartCanvas, {
@@ -904,9 +923,15 @@
       scales: {
         xAxes: [{
           stacked: true,
+          gridLines : {
+            display : false,
+          }
         }],
         yAxes: [{
-          stacked: true
+          stacked: true,
+          gridLines : {
+            display : false,
+          }
         }]
       }
     }
@@ -1030,9 +1055,15 @@
       scales: {
         xAxes: [{
           stacked: true,
+          gridLines : {
+            display : false,
+          }
         }],
         yAxes: [{
-          stacked: true
+          stacked: true,
+          gridLines : {
+            display : false,
+          }
         }]
       }
     }

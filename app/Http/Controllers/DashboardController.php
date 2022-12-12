@@ -1300,7 +1300,7 @@ class DashboardController extends Controller
                     'date_start'        => $value->date_start->format('d/m/Y'),
                     'date_end'          => $value->date_end->format('d/m/Y'),
                     'date_release'      => $value->date_release->format('d/m/Y'),
-                    'percent'           => $percent == 100 ?  100 : $percent,
+                    'percent'           => $percent == 100 ?  100 : sprintf("%.2f", $percent),
                     'remaining_days'    => $value->remaining_days
                 ]);
             }
