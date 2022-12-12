@@ -79,6 +79,22 @@ class RaffleController extends Controller
                 'favorite'          => $raffle_favorite
             ]);
         }
+
+        foreach ($data as $clave => $fila) {
+            $id[$clave] = $fila['id'];
+            $title[$clave] = $fila['title'];
+            $cash_to_draw[$clave] = $fila['cash_to_draw'];
+            $date_start[$clave] = $fila['date_start'];
+            $date_end[$clave] = $fila['date_end'];
+            $date_release[$clave] = $fila['date_release'];
+            $remaining_days[$clave] = $fila['remaining_days'];
+            $logo[$clave] = $fila['logo'];
+            $favorite[$clave] = $fila['favorite'];
+        }
+
+        $id  = array_column($data, 'id');
+        $favorite = array_column($data, 'favorite');
+        array_multisort($favorite, SORT_DESC, $id, SORT_DESC, $data);
         return $data;
     }
 
@@ -90,10 +106,7 @@ class RaffleController extends Controller
     public function index(Request $request)
     {
         try {
-
-
             return response()->json(['raffles' => $this->favorites()], 200);
-
         } catch (Exception $e) {
 
             return response()->json([
@@ -279,7 +292,7 @@ class RaffleController extends Controller
                     'active'            => $raffle->active,
                     'public'            => $raffle->public,
                     'type'              => ($raffle->type == 'raffle') ? 'Sorteo' : 'Producto',
-                    'progress'          => $percent == 100 ?  100 : $percent,
+                    'progress'          => $percent == 100 ?  100 : sprintf("%.2f", $percent),
                     'remaining_days'    => $days,
                     'awards' => [
                         'first'     => Helper::amount(($raffle->cash_to_draw*$raffle->prize_1)/100),
@@ -406,7 +419,7 @@ class RaffleController extends Controller
                         return response()->json([
                             'status'    => 200,
                             'success'   => true,
-                            'raffles' => $this->favorites(),
+                            'raffles'   => $this->favorites(),
                             'message'   =>  'Sorteo eliminado de favoritos',
                         ], 200);
             }
@@ -422,7 +435,7 @@ class RaffleController extends Controller
                 return response()->json([
                     'status'    => 200,
                     'success'   => true,
-                    'raffles' => $this->favorites(),
+                    'raffles'   => $this->favorites(),
                     'message'   =>  'Sorteo agregado como favorito',
                 ], 200);
         }catch (Exception $e) {

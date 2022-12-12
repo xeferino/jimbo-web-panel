@@ -36,6 +36,7 @@ class FormSaleRequest extends FormRequest
             'user_id'       => 'required|integer',
             'method_id'     => 'required|integer',
             'method_type'   => 'required',
+            'operation'     => 'required'
         ];
     }
 
@@ -66,6 +67,7 @@ class FormSaleRequest extends FormRequest
             'phone.required'            =>  'El telefono es requerido.',
             'phone.string'              =>  'El telefono debe ser entero.',
             'address.required'          =>  'La direcion es requerida.',
+            'operation.required'        =>  'El tipo de operacion es requerido.',
         ];
     }
 }

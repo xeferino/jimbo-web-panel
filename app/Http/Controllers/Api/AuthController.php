@@ -106,10 +106,12 @@ class AuthController extends Controller
                     }
 
                     $image = $this->asset.'avatar.svg';
-                    if ($user->image != 'avatar.svg' && $user->type == 2) {
-                        $image = $this->asset.'sellers/'.$user->image;
-                    } elseif ($user->image != 'avatar.svg' && $user->type == 1) {
-                        $image = $this->asset.'competitors/'.$user->image;
+                    if ($user->image != 'avatar.svg') {
+                        if ($user->type == 2) {
+                            $image = $this->asset.'sellers/'.$user->image;
+                        } elseif ($user->type == 1) {
+                            $image = $this->asset.'competitors/'.$user->image;
+                        }
                     }
 
                     return response()->json(
@@ -236,10 +238,12 @@ class AuthController extends Controller
 
 
             $image = $this->asset.'avatar.svg';
-            if ($user->image != 'avatar.svg' && $user->type == 2) {
-                $image = $this->asset.'sellers/'.$user->image;
-            } elseif ($user->image != 'avatar.svg' && $user->type == 1) {
-                $image = $this->asset.'competitors/'.$user->image;
+            if ($user->image != 'avatar.svg') {
+                if ($user->type == 2) {
+                    $image = $this->asset.'sellers/'.$user->image;
+                } elseif ($user->type == 1) {
+                    $image = $this->asset.'competitors/'.$user->image;
+                }
             }
 
             return response()->json([
@@ -316,10 +320,12 @@ class AuthController extends Controller
                 }
 
                 $image = $this->asset.'avatar.svg';
-                if ($user->image != 'avatar.svg' && $user->type == 2) {
-                    $image = $this->asset.'sellers/'.$user->image;
-                } elseif ($user->image != 'avatar.svg' && $user->type == 1) {
-                    $image = $this->asset.'competitors/'.$user->image;
+                if ($user->image != 'avatar.svg') {
+                    if ($user->type == 2) {
+                        $image = $this->asset.'sellers/'.$user->image;
+                    } elseif ($user->type == 1) {
+                        $image = $this->asset.'competitors/'.$user->image;
+                    }
                 }
 
                 return response()->json([
@@ -400,25 +406,33 @@ class AuthController extends Controller
                 $user->password     = Hash::make($request->password);
             }
 
-            if ($user->type == 2) {
-                $image = 'assets/images/sellers/';
-            } elseif ($user->type == 1) {
-                $image = 'assets/images/competitors/';
-            }
-
-            if ($user->image != "avatar.svg") {
-
+            if ($request->has('image') && isset($request->image)) {
+                if ($user->image != "avatar.svg") {
+                    if ($user->type == 2) {
+                        if (File::exists(public_path('assets/images/sellers/' . $user->image))) {
+                            File::delete(public_path('assets/images/sellers/' . $user->image));
+                        }
+                    } elseif ($user->type == 1) {
+                        if (File::exists(public_path('assets/images/competitors/' . $user->image))) {
+                            File::delete(public_path('assets/images/competitors/' . $user->image));
+                        }
+                    }
+                }
+                $image_64 = $request->image;
+                $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];
+                $replace = substr($image_64, 0, strpos($image_64, ',')+1);
+                $image = str_replace($replace, '', $image_64);
+                $image = str_replace(' ', '+', $image);
+                $imageName = Str::random(10).'.'.$extension;
+                //$imageName = Str::random(10).'.png';
+                $path = null;
                 if ($user->type == 2) {
-                    $folder = 'assets/images/sellers/';
+                    $path = 'assets/images/sellers/';
                 } elseif ($user->type == 1) {
-                    $folder = 'assets/images/competitors/';
+                    $path = 'assets/images/competitors/';
                 }
-
-                if (File::exists(public_path($folder . $user->image))) {
-                    File::delete(public_path($folder . $user->image));
-                }
-
-                $user->image = $this->saveBase64($request->image, $folder, $user->id.time().'.'.'jpeg');
+                File::put(public_path($path).$imageName, base64_decode($image));
+                $user->image = $imageName;
             }
 
             $level = "Usuario";
@@ -432,14 +446,7 @@ class AuthController extends Controller
                 $level = 'Senior';
             }
 
-            $image = $this->asset.'avatar.svg';
-            if ($user->image != 'avatar.svg' && $user->type == 2) {
-                $image = $this->asset.'sellers/'.$user->image;
-            } elseif ($user->image != 'avatar.svg' && $user->type == 1) {
-                $image = $this->asset.'competitors/'.$user->image;
-            }
-
-             $data =    [
+            $data =    [
                 "address"       => $request->address,
                 "address_city"  => $request->address_city,
                 "country_code"  => $user->country->iso,
@@ -468,6 +475,15 @@ class AuthController extends Controller
                     } else {
                         $customer = json_decode($customer, true);
                         $message_culqi = "Culqi informa:".$customer['merchant_message'];
+                    }
+                }
+
+                $image = $this->asset.'avatar.svg';
+                if ($user->image != "avatar.svg") {
+                    if ($user->type == 2) {
+                        $image = $this->asset.'sellers/'.$user->image;
+                    } elseif ($user->type == 1) {
+                        $image = $this->asset.'competitors/'.$user->image;
                     }
                 }
 

@@ -32,9 +32,14 @@ class Sale extends Model
         return $this->belongsTo('App\Models\User');
     }
 
-    public function Seller()
+    public function Buyer()
     {
         return $this->belongsTo('App\Models\User');
+    }
+
+    public function Seller()
+    {
+        return $this->belongsTo('App\Models\User', 'seller_id', 'id');
     }
 
     public function TicketsUsers()

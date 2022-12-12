@@ -42,7 +42,7 @@ class FormRequestProfile extends FormRequest
             ],
             'password'      => 'nullable|min:8|max:16',
             'cpassword'     => 'nullable|min:8|max:16|required_with:password|same:password',
-            'image'         => $this->hasFile('image') ? 'required|sometimes|mimes:jpeg,jpg,png,svg|max:512' : 'nullable',
+            //'image'         => $this->hasFile('image') ? 'required|file|mimes:jpeg,jpg,png,svg|max:512' : 'nullable',
         ];
     }
 
@@ -72,8 +72,9 @@ class FormRequestProfile extends FormRequest
             'cpassword.same'             =>  'Contraseña y confirmar contraseña deben coincidir.',
             'password.min'               =>  'La contraseña debe debe contener un minimo de 8 caracteres.',
             'password.max'               =>  'La contraseña debe debe contener un maximo de 16 caracteres.',
-            'image.mimes'                =>  'El formato de imagen no esta permitido, la imagen debe ser jpg, jpeg, png o svg.',
-            'image.max'                  =>  'El peso maximo de la imagen es de 512 KB.'
+            /*'image.mimes'                =>  'El formato de imagen no esta permitido, la imagen debe ser jpg, jpeg, png o svg.',
+            'image.max'                  =>  'El peso maximo de la imagen es de 512 KB.',
+            'image.image'                =>  'El archivo debe ser una imagen.',*/
         ];
     }
 }

@@ -43,6 +43,12 @@ class SaleController extends Controller
                         $reference_code = null;
                         $amout_jib = 0;
                         if($request->method_type == 'card') {
+                            if ($ticket->promotion->price<5) {
+                                return response()->json([
+                                    'error'    => true,
+                                    'message'  => 'Para realizar una compra con tu tarjeta, el monto debe ser mayor o igual '. Helper::amount(5)
+                                ], 422);
+                            }
                             //id de la tarjeta a pagar
                             $cardUser = Card::find($request->method_id);
                             //cargo que se le aplica a tarjeta por la compra
@@ -215,10 +221,22 @@ class SaleController extends Controller
                     }
                     DB::commit();
                     if($status == 'approved') {
+                        $operation = $request->operation;
+                        $seller = null;
+                        $buyer = null;
                         if($user->type == 1) {
-                            $notification = NotificationController::store('Nueva Compra!', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
+                            if($operation == 1){
+                                $notification = NotificationController::store('Nueva Compra!', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
+                                $buyer = $saleUpdate->Buyer->names. ' ' .$saleUpdate->Buyer->surnames;
+                            }else {
+                                $notification = NotificationController::store('Nueva Venta!', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
+                                $seller = $saleUpdate->Seller->names. ' ' .$saleUpdate->Seller->surnames;
+                                $buyer = $saleUpdate->Buyer->names. ' ' .$saleUpdate->Buyer->surnames;
+                            }
                         } elseif ($user->type == 2) {
                             $notification = NotificationController::store('Nueva Venta!', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
+                            $seller = $saleUpdate->Seller->names. ' ' .$saleUpdate->Seller->surnames;
+                            $buyer = $saleUpdate->Buyer->names. ' ' .$saleUpdate->Buyer->surnames;
                         }
 
                         return response()->json([
@@ -226,6 +244,8 @@ class SaleController extends Controller
                             'message' => 'Pago procesado exitosamente.',
                             'details' => [
                                 'fullname'          => $saleUpdate->name,
+                                'buyer'             => $buyer,
+                                'seller'            => $seller,
                                 'date'              =>  Carbon::parse($saleUpdate->created_at)->format('d/m/Y H:i:s'),
                                 'code_ticket'       => $ticket->serial,
                                 'tickets'           => $saleUpdate->TicketsUsers,
@@ -262,7 +282,7 @@ class SaleController extends Controller
                     'serial'        =>  substr(sha1($ticket->id.$i.time()), 0, 8),
                     'ticket_id'     =>  $ticket->id,
                     'raffle_id'     =>  $ticket->raffle_id,
-                    'user_id'       =>  $user->type == 1 ? $user->id : null,
+                    'user_id'       =>  $data->operation == 1 ? $user->id : null,
                     'sale_id'       =>  $sale_id,
                     'created_at'    =>  now(),
                     'updated_at'    =>  now(),
@@ -280,19 +300,19 @@ class SaleController extends Controller
         if ($ticket) {
             $user = User::find($data->user_id);
             $sale = new Sale();
-            $fullnames        =   $user->type == 1 ? $user->names . ' ' . $user->surnames : $data->name;
+            $fullnames        =   $data->operation == 1 ? $user->names . ' ' . $user->surnames : $data->name;
             $sale->name       =   $fullnames;
-            $sale->dni        =   $user->type == 1 ? $user->dni :  $data->dni;
-            $sale->phone      =   $user->type == 1 ? $user->phone :  $data->phone;
-            $sale->email      =   $user->type == 1 ? $user->email :  $data->email;
-            $sale->address    =   $user->type == 1 ? $user->address :  $data->address;
+            $sale->dni        =   $data->operation == 1 ? $user->dni :  $data->dni;
+            $sale->phone      =   $data->operation == 1 ? $user->phone :  $data->phone;
+            $sale->email      =   $data->operation == 1 ? $user->email :  $data->email;
+            $sale->address    =   $data->operation == 1 ? $user->address :  $data->address;
             $sale->country_id =   $data->country_id;
             $sale->amount     =   $ticket->promotion->price;
             $sale->number     =   time();
             $sale->quantity   =   $ticket->promotion->quantity;
             $sale->ticket_id  =   $ticket->id;
-            $sale->seller_id  =   $user->type == 1 ? null: $user->id;
-            $sale->user_id    =   $user->type == 1 ? $user->id :null;
+            $sale->seller_id  =   $data->operation == 1 ? null: $user->id;
+            $sale->user_id    =   $data->operation == 1 ? $user->id :null;
             $sale->raffle_id  =   $data->raffle_id;
             $sale->status     =   'pending';
             $sale->save();
