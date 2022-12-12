@@ -35,7 +35,7 @@ class FormRequestProfile extends FormRequest
             'address_city'  => 'required',
             'email'         => 'required|email|unique:users,email,'.$this->id,
             'code' => [
-                'required',
+                'nullable',
                  Rule::exists('users')->where(function ($query) {
                        return $query->where('id', $this->id)->where('code', $this->code);
                  }),

@@ -3,14 +3,23 @@ const APP_URL = $('meta[name="base-url"]').attr('content');
 const JIMBO = { url : '/panel/settings' };
 $(function () {
     $( document ).ready(function() {
-        $("#editor").Editor();
-        $("#editor").Editor("setText", $('#terms_and_conditions').val());
+        $("#term").Editor();
+        $("#term").Editor("setText", $('#terms_and_conditions').val());
+        $("#game").Editor();
+        $("#game").Editor("setText", $('#game_rules').val());
+        $("#policy").Editor();
+        $("#policy").Editor("setText", $('#policies_privacy').val());
+        $("#question").Editor();
+        $("#question").Editor("setText", $('#faqs').val());
     });
 
     /*setting-register*/
     $(".form-setting").submit(function( event ) {
-        $("#terms_and_conditions").val($("#editor").Editor("getText"));
         event.preventDefault();
+        $("#terms_and_conditions").val($("#term").Editor("getText"));
+        $("#game_rules").val($("#game").Editor("getText"));
+        $("#policies_privacy").val($("#policy").Editor("getText"));
+        $("#faqs").val($("#question").Editor("getText"));
         $('.jimbo-loader').show();
         $('.load-text').text('Enviando...');
         $('.btn-setting-jib').prop("disabled", true).text('Enviando...');
@@ -22,6 +31,9 @@ $(function () {
         $('.btn-setting-bonu-unique').prop("disabled", true).text('Enviando...');
         $('.btn-setting-bonu-ascent').prop("disabled", true).text('Enviando...');
         $('.btn-setting-term').prop("disabled", true).text('Enviando...');
+        $('.btn-setting-policy').prop("disabled", true).text('Enviando...');
+        $('.btn-setting-game').prop("disabled", true).text('Enviando...');
+        $('.btn-setting-question').prop("disabled", true).text('Enviando...');
 
         var formData = new FormData(event.currentTarget);
 
@@ -41,7 +53,9 @@ $(function () {
                 $('.btn-setting-bonu-unique').prop("disabled", false).text('Configurar');
                 $('.btn-setting-bonu-ascent').prop("disabled", false).text('Configurar');
                 $('.btn-setting-term').prop("disabled", false).text('Configurar');
-
+                $('.btn-setting-policy').prop("disabled", false).text('Configurar');
+                $('.btn-setting-game').prop("disabled", false).text('Configurar');
+                $('.btn-setting-question').prop("disabled", false).text('Configurar');
                 $('div.col-form-label').text('');
                 setTimeout(() => {$('.jimbo-loader').hide();}, 500);
                 setTimeout(() => {location.href = APP_URL+JIMBO.url;}, 3000);
@@ -196,6 +210,24 @@ $(function () {
                     }else{
                         $('.has-danger-terms_and_conditions').text('');
                     }
+
+                    if (error.response.data.errors.game_rules) {
+                        $('.has-danger-game_rules').text('' + error.response.data.errors.game_rules + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-game_rules').text('');
+                    }
+
+                    if (error.response.data.errors.policies_privacy) {
+                        $('.has-danger-policies_privacy').text('' + error.response.data.errors.policies_privacy + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-policies_privacy').text('');
+                    }
+
+                    if (error.response.data.errors.faqs) {
+                        $('.has-danger-faqs').text('' + error.response.data.errors.faqs + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-faqs').text('');
+                    }
                 }else{
                     notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
                 }
@@ -211,6 +243,9 @@ $(function () {
             $('.btn-setting-bonu-unique').prop("disabled", false).text('Configurar');
             $('.btn-setting-bonu-ascent').prop("disabled", false).text('Configurar');
             $('.btn-setting-term').prop("disabled", false).text('Configurar');
+            $('.btn-setting-policy').prop("disabled", false).text('Configurar');
+            $('.btn-setting-game').prop("disabled", false).text('Configurar');
+            $('.btn-setting-question').prop("disabled", false).text('Configurar');
             setTimeout(() => {$('.jimbo-loader').hide();}, 500);
         });
     });

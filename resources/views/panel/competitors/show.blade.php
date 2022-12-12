@@ -81,13 +81,19 @@
                             <strong class="text-uppercase">{{$competitor->code_referral}}</strong>
                             <p class="text-muted">Codigo de referido</p>
                         </div>
-                        @if ($competitor->become_seller == 1)
+                        @if ($competitor->become_seller == 1 && $competitor->seller_at == null)
                             <div class="col-sm-4">
                                 <strong class="text-uppercase">
                                     <span class="badge badge-warning" style="float: left !important;">
                                         Este participante, ha solicitado convertirse en vendedor
+                                        <button class="btn btn-dark btn-sm seller" data-url="{{ route('panel.competitors.show', ['competitor' => $competitor->id, 'type' => 'become_seller']) }}">Dar de alta como vendedor</button>
                                     </span>
                                 </strong>
+                            </div>
+                        @elseif ($competitor->become_seller == 1 && $competitor->seller_at != null)
+                            <div class="col-sm-4">
+                                <strong class="text-uppercase"> <a href="{{route('panel.sellers.show', ['seller' => $competitor->id])}}" > Usuario - Vendedor </a></strong>
+                                <p class="text-muted">Tipo</p>
                             </div>
                         @endif
                     </div>

@@ -143,6 +143,24 @@ class SettingSeeder extends Seeder
             'name'      => 'terms_and_conditions',
             'value'  => 'text',
         ],
+
+        //politicas de privacidad
+        [
+            'name'      => 'policies_privacy',
+            'value'  => 'text',
+        ],
+
+        //reglas del juego
+        [
+            'name'      => 'game_rules',
+            'value'  => 'text',
+        ],
+
+        //preguntas frecuentes
+        [
+            'name'      => 'faqs',
+            'value'  => 'text',
+        ],
     ];
 
     /**

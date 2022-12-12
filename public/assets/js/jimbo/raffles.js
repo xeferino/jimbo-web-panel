@@ -80,8 +80,26 @@ jQuery(document).ready(function() {
         },
         dom: 'lBfrtip',
         buttons: [
-            'csv', 'excel'
-            //'copy', 'csv', 'excel', 'pdf', 'print'
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6,7,8,10 ]
+                },
+                filename: function() {
+                    return "Reportes-de-sorteos"
+                },
+                title: "Reportes de sorteos"
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6,7,8,10 ]
+                },
+                filename: function() {
+                    return "Reportes-de-sorteos"
+                },
+                title: "Reportes de sorteos"
+            }
         ],
         ajax: {
             url: APP_URL+JIMBO.url,

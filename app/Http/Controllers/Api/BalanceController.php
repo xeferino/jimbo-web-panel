@@ -80,10 +80,22 @@ class BalanceController extends Controller
     public static function store($description, $type, $amount, $currency, $user_id)
     {
         try {
+            $operation = null;
+            if($type == 'recharge') {
+                $operation = $type;
+            } elseif ($type == 'exchange') {
+                $operation = $type;
+            } elseif ($type == 'request') {
+                $operation = $type;
+            } elseif ($type == 'credit' && $currency == 'jib'){
+                $operation = 'bonus';
+            }
+
             $data = [
                 'reference'     => $user_id.time(),
                 'description'   => $description,
                 'type'          => ($type == 'recharge' or $type == 'exchange' or $type == 'request' or $type == 'credit') ? 'credit' : 'debit',
+                'operation'     => $operation,
                 'balance'       => $amount,
                 'currency'      => $currency,
                 'date'          => date('Y-m-d'),

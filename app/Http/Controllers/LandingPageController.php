@@ -28,25 +28,38 @@ class LandingPageController extends Controller
 
     public function term(Request $request)
     {
+        $terms_and_conditions = DB::table('settings')->where('name', 'terms_and_conditions')->first();
         return view('landing.term_conditions', [
-            'title'  => 'Jimbo Sorteos'
+            'title'  => 'Jimbo Sorteos',
+            'terms_and_conditions' => $terms_and_conditions->value
         ]);
     }
 
     public function privacy(Request $request)
     {
-        $privacy_policies = DB::table('settings')->where('name', 'terms_and_conditions')->first();
+        $policies_privacy = DB::table('settings')->where('name', 'policies_privacy')->first();
         return view('landing.privacy_policies', [
             'title'  => 'Jimbo Sorteos',
-            'privacy_policies' => $privacy_policies->value
+            'policies_privacy' => $policies_privacy->value
+        ]);
+    }
+
+    public function game(Request $request)
+    {
+        $game_rules = DB::table('settings')->where('name', 'game_rules')->first();
+        return view('landing.rules_game', [
+            'title'  => 'Jimbo Sorteos',
+            'game_rules' => $game_rules->value
         ]);
     }
 
     public function faq(Request $request)
     {
 
-        return view('landing.faq', [
-            'title'  => 'Jimbo Sorteos'
+        $faqs = DB::table('settings')->where('name', 'faqs')->first();
+        return view('landing.faqs', [
+            'title'  => 'Jimbo Sorteos',
+            'faqs' => $faqs->value
         ]);
     }
 }

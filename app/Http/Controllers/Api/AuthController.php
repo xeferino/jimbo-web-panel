@@ -140,7 +140,7 @@ class AuthController extends Controller
                                 'seller'            => $user->type == 2 ? true : false,
                                 'level'             => $level,
                                 'status'            => 'Activo',
-                                'become_seller'     => $user->become_seller == 1 ? true : false,
+                                'become_seller'     => (($user->type == 1 or $user->type == 2) && $user->become_seller == 1 && $user->seller_at != null ) ? true : false,
                                 'image'             => $image,
                                 'country'      => [
                                     'id'    => $user->country->id,
@@ -269,7 +269,7 @@ class AuthController extends Controller
                     'seller'            => $user->type == 2 ? true : false,
                     'level'             => $level,
                     'status'            => 'Activo',
-                    'become_seller'     => $user->become_seller == 1 ? true : false,
+                    'become_seller'     => (($user->type == 1 or $user->type ==2) && $user->become_seller == 1 && $user->seller_at != null ) ? true : false,
                     'image'             => $image,
                     'country'      => [
                         'id'    => $user->country->id,
@@ -349,7 +349,7 @@ class AuthController extends Controller
                         'seller'            => $user->type == 2 ? true : false,
                         'level'             => $level,
                         'status'            => 'Activo',
-                        'become_seller'     => $user->become_seller == 1 ? true : false,
+                        'become_seller'     => (($user->type == 1 or $user->type ==2) && $user->become_seller == 1 && $user->seller_at != null ) ? true : false,
                         'image'             => $image,
                         'country'   => [
                             'id'    => $user->country->id,
@@ -390,7 +390,6 @@ class AuthController extends Controller
             $user->phone             = $request->phone;
             $user->address           = $request->address;
             $user->address_city      = $request->address_city;
-            $user->become_seller     = $request->become_seller == 1 ? 1 : 0;
 
             if ($request->has('code') && $request->code && $user->code == $request->code) {
                 $user->email_verified_at = now();
@@ -500,7 +499,7 @@ class AuthController extends Controller
                         'seller'            => $user->type == 2 ? true : false,
                         'level'             => $level,
                         'status'            => 'Activo',
-                        'become_seller'     => $user->become_seller == 1 ? true : false,
+                        'become_seller'     => (($user->type == 1 or $user->type == 2) && $user->become_seller == 1 && $user->seller_at != null ) ? true : false,
                         'image'             => $image,
                         'country'      => [
                             'id'    => $user->country->id,
@@ -512,6 +511,86 @@ class AuthController extends Controller
                     ],
                     'status'        => 200,
                     'message'       => $user->names.'!, Perfil actualizado. '.$message_culqi,
+                ], 200);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'status'   => 500,
+                'message' =>  $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Display profile dada.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function competitor_to_seller(Request $request, User $User, $id)
+    {
+        try {
+            $user                    = User::findOrFail($id);
+            $user->become_seller     = 1;
+
+            if ($user->type == 2) {
+                $image = 'assets/images/sellers/';
+            } elseif ($user->type == 1) {
+                $image = 'assets/images/competitors/';
+            }
+
+            $level = "Usuario";
+            if(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'classic') {
+                $level = 'Clasico';
+            }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'junior') {
+                $level = 'Junior';
+            }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'middle') {
+                $level = 'Semi Senior';
+            }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'master') {
+                $level = 'Senior';
+            }
+
+            if ($user->save()) {
+                NotificationController::store('Solicitud de vendedor!','Hola, '.$user->email.' has solicitado convertirte en vendedor, se le enviara un correo una vez aprobada su solicitud, como vendedor!', $user->id);
+                return response()->json([
+                    'profile'    => [
+                        'id'                => $user->id,
+                        'names'             => $user->names,
+                        'surnames'          => $user->surnames,
+                        'email'             => $user->email,
+                        'dni'               => $user->dni,
+                        'phone'             => $user->phone,
+                        'address'           => $user->address,
+                        'address_city'      => $user->address_city,
+                        'usd'               => Helper::amount($user->balance_usd),
+                        'jib'               => Helper::jib($user->balance_jib),
+                        'jib_rate'          => SettingController::jib()['value']['jib_usd'],
+                        'balance_jib'       => $user->balance_jib,
+                        'balance_usd'       => $user->balance_usd,
+                        'amount_shopping'   => Helper::amount($user->Shoppings->sum('amount')),
+                        'shoppings'         => $user->Shoppings->count(),
+                        'amount_sale'       => Helper::amount($user->Sales->sum('amount')),
+                        'sales'             => $user->Sales->count(),
+                        'guests_month'      => Carbon::now()->locale('es')->translatedFormat('F').' ('.LevelUser::where('referral_id', $user->id)->whereMonth('created_at', date('m'))->count().')',
+                        'guests'            => count(User::Guests($user->id)),
+                        'guests_list'       => User::Guests($user->id),
+                        'email_verified_at' => $user->email_verified_at,
+                        'code_referral'     => $user->code_referral,
+                        'role'              => count($user->getRoleNames()) > 1 ? $user->getRoleNames()->join(',') : $user->getRoleNames()->join(''),
+                        'seller'            => $user->type == 2 ? true : false,
+                        'level'             => $level,
+                        'status'            => 'Activo',
+                        'become_seller'     => ($user->become_seller == 1 && $user->type == 1 && $user->seller_at != null ) ? true : false,
+                        'image'             => $image,
+                        'country'      => [
+                            'id'    => $user->country->id,
+                            'name'  => $user->country->name,
+                            'iso'   => $user->country->iso,
+                            'code'  => $user->country->code,
+                            'icon'  => $user->country->img != 'flag.png' ? $this->asset.'flags/'.$user->country->img : $this->asset.'flags/flag.png'
+                        ]
+                    ],
+                    'status'        => 200,
+                    'message'       => $user->names.'!, Solicitud de enviada exitosamente.',
                 ], 200);
             }
         } catch (Exception $e) {

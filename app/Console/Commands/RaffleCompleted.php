@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\Raffle;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Api\NotificationController;
+use App\Models\User;
 
 class RaffleCompleted extends Command
 {
@@ -45,18 +46,23 @@ class RaffleCompleted extends Command
             ->whereNull('raffles.deleted_at')
             ->orderBy('raffles.id', 'DESC')
             ->get();
+        $users = User::whereIn('type', [1,2])->where('active', 1)->get();
         $ids  = [];
         $save = 0;
         foreach ($raffles as $key => $value) {
             $raffle = Raffle::find($value->id);
             if ($value->remaining_days == 0) {
-                NotificationController::store('Sorteo Finalizado!', 'se ha finalizado sorteo en jimbo! '.$raffle->title);
+                foreach ($users as $key => $user) {
+                    NotificationController::store('Sorteo Finalizado!', 'se ha finalizado sorteo en jimbo! '.$raffle->title, $user->id);
+                }
                 //array_push($ids, $value->id);
                 $raffle->finish = 1;
                 $save+=1;
             } elseif ($value->date_release_end == 0) {
                 $raffle->active = 0;
-                NotificationController::store('Sorteo Finalizado!', 'se ha finalizado sorteo en jimbo! '.$raffle->title);
+                foreach ($users as $key => $user) {
+                    NotificationController::store('Sorteo Finalizado!', 'se ha finalizado sorteo en jimbo! '.$raffle->title, $user->id);
+                }
                 //array_push($ids, $value->id);
                 $save+=1;
             }

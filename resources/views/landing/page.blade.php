@@ -587,9 +587,10 @@
             <ul>
               <li><i class="bx bx-chevron-right"></i> <a href="#hero">Home</a></li>
               <li><i class="bx bx-chevron-right"></i> <a href="#features">Nosotros</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="{{route('landing.faq')}}" target="blank">Preguntas frecuentes</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="{{route('landing.faqs')}}" target="blank">Preguntas frecuentes</a></li>
               <li><i class="bx bx-chevron-right"></i> <a href="{{route('landing.terms_conditions')}}" target="blank">Terminos y condiciones</a></li>
               <li><i class="bx bx-chevron-right"></i> <a href="{{route('landing.privacy_policies')}}" target="blank">Politicas de privacidad</a></li>
+              <li><i class="bx bx-chevron-right"></i> <a href="{{route('landing.rules_game')}}" target="blank">Reglas del juego</a></li>
             </ul>
           </div>
 

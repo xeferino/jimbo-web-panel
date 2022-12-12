@@ -3,16 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Http\Request;
-use App\Http\Requests\Api\FormSaleRequest;
-use App\Models\CardUser as Card;
-use Illuminate\Support\Facades\DB;
 use Exception;
-use App\Models\Slider;
-use App\Models\Ticket;
 use App\Models\Sale as Shopping;
-use App\Models\TicketUser;
 use App\Models\User;
 use App\Helpers\Helper;
 
@@ -57,7 +50,7 @@ class ShoppingController extends Controller
 
             return response()->json([
                 'status'  => 200,
-                'shoppings'   =>  $shoppings
+                'shoppings'   =>  $data
             ], 200);
         }catch (Exception $e) {
             return response()->json([

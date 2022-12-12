@@ -409,12 +409,99 @@
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <label class="col-form-label">Terminos y Condiciones</label>
-                            <textarea id="editor" autofocus></textarea>
+                            <textarea id="term" autofocus></textarea>
                             <div class="col-form-label has-danger-terms_and_conditions"></div>
                         </div>
                     </div>
                     <div class="col-md-12 text-right">
                         <button type="submit" class="btn btn-warning btn-sm  btn-setting-term">Configurar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="card fb-card">
+            <div class="card-header">
+                <i class="ti-eye"></i>
+                <div class="d-inline-block">
+                    <h5>Politicas de privacidad</h5>
+                    <span>Datos recabados</span>
+                </div>
+            </div>
+            <div class="card-block">
+                <form method="POST" class="form-setting" action="{{ route('panel.settings.update') }}" name="form-setting" id="form-setting">
+                    @csrf
+                    <input type="hidden" name="type" value="policies_privacy">
+                    <input type="hidden" name="policies_privacy" id="policies_privacy" value="{{$settings['policies_privacy']}}">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="col-form-label">Politicas y privacidad</label>
+                            <textarea id="policy" autofocus></textarea>
+                            <div class="col-form-label has-danger-policies_privacy"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-right">
+                        <button type="submit" class="btn btn-warning btn-sm  btn-setting-policy">Configurar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="card fb-card">
+            <div class="card-header">
+                <i class="ti-eye"></i>
+                <div class="d-inline-block">
+                    <h5>Reglas del juego</h5>
+                    <span>Instrucciones</span>
+                </div>
+            </div>
+            <div class="card-block">
+                <form method="POST" class="form-setting" action="{{ route('panel.settings.update') }}" name="form-setting" id="form-setting">
+                    @csrf
+                    <input type="hidden" name="type" value="game_rules">
+                    <input type="hidden" name="game_rules" id="game_rules" value="{{$settings['game_rules']}}">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="col-form-label">Reglas de juego</label>
+                            <textarea id="game" autofocus></textarea>
+                            <div class="col-form-label has-danger-game_rules"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-right">
+                        <button type="submit" class="btn btn-warning btn-sm  btn-setting-game">Configurar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12">
+        <div class="card fb-card">
+            <div class="card-header">
+                <i class="ti-eye"></i>
+                <div class="d-inline-block">
+                    <h5>Preguntas frecuentes</h5>
+                    <span>Listado</span>
+                </div>
+            </div>
+            <div class="card-block">
+                <form method="POST" class="form-setting" action="{{ route('panel.settings.update') }}" name="form-setting" id="form-setting">
+                    @csrf
+                    <input type="hidden" name="type" value="faqs">
+                    <input type="hidden" name="faqs" id="faqs" value="{{$settings['faqs']}}">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="col-form-label">Preguntas</label>
+                            <textarea id="question" autofocus></textarea>
+                            <div class="col-form-label has-danger-faqs"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 text-right">
+                        <button type="submit" class="btn btn-warning btn-sm  btn-setting-question">Configurar</button>
                     </div>
                 </form>
             </div>

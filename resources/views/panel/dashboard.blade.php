@@ -311,7 +311,6 @@
             </div>
         </div>
     </div>
-
     @if (count($sellers['top'])>0 )
         <div class="col-md-6 col-sm-12 col-xl-6">
             <div class="card project-task fb-card">
@@ -356,24 +355,55 @@
         </div>
     @endif
     <!-- Statestics Start -->
-    <div class="col-md-8 col-sm-8 col-xl-8">
+      <div class="col-md-12 col-sm-12 col-xl-12">
         <div class="card fb-card">
             <div class="card-header">
-                <i class="icofont icofont-gift"></i>
+                <i class="icofont  icofont-money"></i>
                 <div class="d-inline-block">
-                    <h5>Sorteos</h5>
+                    <h5>Venta Jimbo Boletos y Jibs Anual</h5>
                     <span>Sistema</span>
                 </div>
             </div>
             <div class="card-block">
                 <div class="table-responsive">
-                    <canvas id="barChartRaflles" width="400" height="400"></canvas>
+                    <canvas id="salesYears" width="400" height="400"></canvas>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="col-md-4 col-sm-4 col-xl-4">
+    <div class="col-md-6 col-sm-6 col-xl-6">
+        <div class="card fb-card">
+            <div class="card-header">
+                <i class="icofont  icofont-money"></i>
+                <div class="d-inline-block">
+                    <h5>Venta de Boletos Paises Anual</h5>
+                    <span>Sistema</span>
+                </div>
+            </div>
+            <div class="card-block">
+                <div class="table-responsive">
+                    <canvas id="barChart" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-sm-6 col-xl-6">
+        <div class="card fb-card">
+            <div class="card-header">
+                <i class="icofont  icofont-money"></i>
+                <div class="d-inline-block">
+                    <h5>Venta de Jibs Paises Anual</h5>
+                    <span>Sistema</span>
+                </div>
+            </div>
+            <div class="card-block">
+                <div class="table-responsive">
+                    <canvas id="barChartJib" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-sm-6 col-xl-6">
         <div class="card fb-card">
             <div class="card-header">
                 <i class="icofont icofont-users"></i>
@@ -383,7 +413,7 @@
                 </div>
             </div>
             <div class="card-block">
-                <div class="table-responsive">
+                {{-- <div class="table-responsive">
                     <ul style="">
                         <li style="display:inline;"> <button class="btn btn-classic btn-sm"></button> Clasico  {{Helper::amount($sales["seller_classic_sale_year_amount"])}}</li>
                         <li style="display:inline;"> <button class="btn btn-junior btn-sm"></button> Junior  {{Helper::amount($sales["seller_junior_sale_year_amount"])}}</li>
@@ -393,11 +423,59 @@
                         <li style="display:inline;"> <button class="btn btn-master btn-sm"></button> Senior {{Helper::amount($sales["seller_master_sale_year_amount"])}}</li>
                     </ul>
                     <div id="graph-donut"></div>
+                </div> --}}
+                <canvas id="donutChartSales" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-sm-6 col-xl-6">
+        <div class="card fb-card">
+            <div class="card-header">
+                <i class="icofont icofont-users"></i>
+                <div class="d-inline-block">
+                    <h5>Sorteos</h5>
+                    <span>Sistema</span>
+                </div>
+            </div>
+            <div class="card-block">
+                <canvas id="donutChartRaffles" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-sm-6 col-xl-6">
+        <div class="card fb-card">
+            <div class="card-header">
+                <i class="icofont  icofont-money"></i>
+                <div class="d-inline-block">
+                    <h5>Venta de Usuarios Boletos Perú Anual</h5>
+                    <span>Sistema</span>
+                </div>
+            </div>
+            <div class="card-block">
+                <div class="table-responsive">
+                    <canvas id="barChartBoletoPeru" width="400" height="400"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="col-md-6 col-sm-6 col-xl-6">
+        <div class="card fb-card">
+            <div class="card-header">
+                <i class="icofont  icofont-money"></i>
+                <div class="d-inline-block">
+                    <h5>Venta de Usuarios Boletos Ecuador Anual</h5>
+                    <span>Sistema</span>
+                </div>
+            </div>
+            <div class="card-block">
+                <div class="table-responsive">
+                    <canvas id="barChartBoletoEcuador" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 @section('script-content')
@@ -411,25 +489,35 @@
     var    seller_middle_sale_year  =  '{{$sales["seller_middle_sale_year"]}}';
     var    seller_master_sale_year  =  '{{$sales["seller_master_sale_year"]}}';
 
-    var donut = Metro.getPlugin('#donut','donut');
-    Morris.Donut({
-        element: 'graph-donut',
-        data: [
-          {value: 3, label: 'Clasico'},
-          {value: 23, label: 'Junior'},
-          {value: 45, label: 'Semi Senior'},
-          {value: 56, label: 'Senior'}
-        ],
-        backgroundColor: '#ccc',
-        labelColor: '#000',
-        colors: [
-          '#cc7514',
-          '#8a5112',
-          '#eb8413',
-          '#e69232',
-          '#eda85c'
-        ],
-        //formatter: function (x) { return x + "%"}
+    //-------------
+    //- DONUT CHART - SALES
+    //-------------
+    // Get context with jQuery - using jQuery's .get() method.
+    var donutChartCanvas = $('#donutChartSales').get(0).getContext('2d')
+    var donutData        = {
+      labels: [
+          "Clasico " + "{{Helper::amount($sales['seller_classic_sale_year_amount'])}}",
+          "Junior " + "{{Helper::amount($sales['seller_junior_sale_year_amount'])}}",
+          "Semi Señior " + "{{Helper::amount($sales['seller_middle_sale_year_amount'])}}",
+          "Señior " + "{{Helper::amount($sales['seller_master_sale_year_amount'])}}",
+      ],
+      datasets: [
+        {
+          data: [seller_classic_sale_year,seller_junior_sale_year,seller_middle_sale_year,seller_master_sale_year],
+          backgroundColor : ['#f56954', '#00a65a', '#00c0ef', '#3f4096'],
+        }
+      ]
+    }
+    var donutOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    new Chart(donutChartCanvas, {
+      type: 'doughnut',
+      data: donutData,
+      options: donutOptions
     });
 
     var val1 = '{{$raffles["raffle_p"]}}';
@@ -442,44 +530,517 @@
     var val8 = '{{$raffles["raffle_inactive"]}}';
     var raffles = '{{$raffles["raffles"]}}';
 
-    const ctx = document.getElementById('barChartRaflles');
-    const myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Producto', 'Sorteo', 'Arbiertos', 'Finalizados', 'Publicados', 'Borradores', 'Activos', 'Inactivos'],
-            datasets: [{
-                label: `Graficas de sorteos (${raffles})`,
-                data: [val1, val2, val3, val4, val5, val6, val7, val8],
-                backgroundColor: [
-                    '#cc7514',
-                    '#8a5112',
-                    '#eb8413',
-                    '#e69232',
-                    '#eda85c',
-                    '#f2b263',
-                    '#f5ce9f',
-                    '#9c5705'
-                ],
-                borderColor: [
-                    '#cc7514',
-                    '#8a5112',
-                    '#eb8413',
-                    '#e69232',
-                    '#eda85c',
-                    '#f2b263',
-                    '#f5ce9f',
-                    '#9c5705'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
+    //-------------
+    //- DONUT CHART - SALES
+    //-------------
+    // Get context with jQuery - using jQuery's .get() method.
+    var donutChartCanvas = $('#donutChartRaffles').get(0).getContext('2d')
+    var donutData        = {
+      labels: ['Producto', 'Efectivo', 'Arbiertos', 'Finalizados', 'Publicados', 'Borradores', 'Activos', 'Inactivos'],
+      datasets: [
+        {
+          data: [val1, val2, val3, val4, val5, val6, val7, val8],
+          backgroundColor : ['#cc7514', '#8a5112', '#eb8413', '#e69232', '#eda85c', '#f2b263', '#f5ce9f', '#9c5705'],
         }
+      ]
+    }
+    var donutOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    new Chart(donutChartCanvas, {
+      type: 'doughnut',
+      data: donutData,
+      options: donutOptions
+    });
+
+
+    var areaChartCanvas = $('#salesYears').get(0).getContext('2d')
+
+    var areaChartData = {
+      labels  : ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+      datasets: [
+        {
+          label               : 'Venta total de boletos',
+          backgroundColor     : 'rgba(245,135,53,0.7)',
+          borderColor         : 'rgba(245,135,53,0.6)',
+          pointRadius          : true,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(245,135,53,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(245,135,53,1)',
+          data : [
+                "{{$sales['sales_year'][0]['Ene']}}",
+                "{{$sales['sales_year'][0]['Feb']}}",
+                "{{$sales['sales_year'][0]['Mar']}}",
+                "{{$sales['sales_year'][0]['Abr']}}",
+                "{{$sales['sales_year'][0]['May']}}",
+                "{{$sales['sales_year'][0]['Jun']}}",
+                "{{$sales['sales_year'][0]['Jul']}}",
+                "{{$sales['sales_year'][0]['Ago']}}",
+                "{{$sales['sales_year'][0]['Sep']}}",
+                "{{$sales['sales_year'][0]['Oct']}}",
+                "{{$sales['sales_year'][0]['Nov']}}",
+                "{{$sales['sales_year'][0]['Dic']}}"
+            ]
+        },
+        {
+          label               : 'Venta total de Jibs',
+          backgroundColor     : 'rgba(63, 64, 150, 0.7)',
+          borderColor         : 'rgba(63, 64, 150, 0.6)',
+          pointRadius         : true,
+          pointColor          : 'rgba(63, 64, 150, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(63, 64, 150,1)',
+          data : [
+                "{{$sales['jibs_year'][0]['Ene']}}",
+                "{{$sales['jibs_year'][0]['Feb']}}",
+                "{{$sales['jibs_year'][0]['Mar']}}",
+                "{{$sales['jibs_year'][0]['Abr']}}",
+                "{{$sales['jibs_year'][0]['May']}}",
+                "{{$sales['jibs_year'][0]['Jun']}}",
+                "{{$sales['jibs_year'][0]['Jul']}}",
+                "{{$sales['jibs_year'][0]['Ago']}}",
+                "{{$sales['jibs_year'][0]['Sep']}}",
+                "{{$sales['jibs_year'][0]['Oct']}}",
+                "{{$sales['jibs_year'][0]['Nov']}}",
+                "{{$sales['jibs_year'][0]['Dic']}}"
+            ]
+        },
+      ]
+    }
+
+    var areaChartOptions = {
+      maintainAspectRatio : false,
+      responsive : true,
+      legend: {
+        display: true
+      },
+      scales: {
+        xAxes: [{
+          gridLines : {
+            display : true,
+          }
+        }],
+        yAxes: [{
+          gridLines : {
+            display : true,
+          },
+        }]
+      },
+    }
+
+    // This will get the first returned node in the jQuery collection.
+    new Chart(areaChartCanvas, {
+      type: 'line',
+      data: areaChartData,
+      options: areaChartOptions
+    });
+
+    //-------------
+    //- BAR CHART VENTA BOLETOS PAISES ANUAL -
+    //-------------
+    var barChartData = {
+      labels  : ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+      datasets: [
+        {
+          label               : 'Venta de Boletos Perú',
+          backgroundColor     : 'rgba(255,0,0,0.7)',
+          borderColor         : 'rgba(255,0,0,0.6)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(255,0,0,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(255,0,0,1)',
+          data : [
+                "{{$sales['sales_year_peru'][0]['Ene']}}",
+                "{{$sales['sales_year_peru'][0]['Feb']}}",
+                "{{$sales['sales_year_peru'][0]['Mar']}}",
+                "{{$sales['sales_year_peru'][0]['Abr']}}",
+                "{{$sales['sales_year_peru'][0]['May']}}",
+                "{{$sales['sales_year_peru'][0]['Jun']}}",
+                "{{$sales['sales_year_peru'][0]['Jul']}}",
+                "{{$sales['sales_year_peru'][0]['Ago']}}",
+                "{{$sales['sales_year_peru'][0]['Sep']}}",
+                "{{$sales['sales_year_peru'][0]['Oct']}}",
+                "{{$sales['sales_year_peru'][0]['Nov']}}",
+                "{{$sales['sales_year_peru'][0]['Dic']}}"
+            ]
+        },
+        {
+          label               : 'Venta de Boletos Ecuador',
+          backgroundColor     : 'rgba(255, 240, 0, 0.7)',
+          borderColor         : 'rgba(255, 240, 0, 0.6)',
+          pointRadius         : false,
+          pointColor          : 'rgba(255, 240, 0, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(255, 240, 0,1)',
+          data : [
+                "{{$sales['sales_year_ecuador'][0]['Ene']}}",
+                "{{$sales['sales_year_ecuador'][0]['Feb']}}",
+                "{{$sales['sales_year_ecuador'][0]['Mar']}}",
+                "{{$sales['sales_year_ecuador'][0]['Abr']}}",
+                "{{$sales['sales_year_ecuador'][0]['May']}}",
+                "{{$sales['sales_year_ecuador'][0]['Jun']}}",
+                "{{$sales['sales_year_ecuador'][0]['Jul']}}",
+                "{{$sales['sales_year_ecuador'][0]['Ago']}}",
+                "{{$sales['sales_year_ecuador'][0]['Sep']}}",
+                "{{$sales['sales_year_ecuador'][0]['Oct']}}",
+                "{{$sales['sales_year_ecuador'][0]['Nov']}}",
+                "{{$sales['sales_year_ecuador'][0]['Dic']}}"
+            ]
+        },
+      ]
+    }
+    var barChartCanvas = $('#barChart').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, barChartData)
+    var temp0 = barChartData.datasets[0]
+    var temp1 = barChartData.datasets[1]
+    barChartData.datasets[0] = temp1
+    barChartData.datasets[1] = temp0
+
+    var barChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      datasetFill             : false
+    }
+
+    new Chart(barChartCanvas, {
+      type: 'bar',
+      data: barChartData,
+      options: barChartOptions
+    });
+
+    //-------------
+    //- BAR CHART VENTA JIBS PAISES ANUAL -
+    //-------------
+    var barChartData = {
+      labels  : ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+      datasets: [
+        {
+          label               : 'Venta de Jibs Perú',
+          backgroundColor     : 'rgba(255,0,0,0.7)',
+          borderColor         : 'rgba(255,0,0,0.6)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(255,0,0,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(255,0,0,1)',
+          data : [
+                "{{$sales['jibs_year_peru'][0]['Ene']}}",
+                "{{$sales['jibs_year_peru'][0]['Feb']}}",
+                "{{$sales['jibs_year_peru'][0]['Mar']}}",
+                "{{$sales['jibs_year_peru'][0]['Abr']}}",
+                "{{$sales['jibs_year_peru'][0]['May']}}",
+                "{{$sales['jibs_year_peru'][0]['Jun']}}",
+                "{{$sales['jibs_year_peru'][0]['Jul']}}",
+                "{{$sales['jibs_year_peru'][0]['Ago']}}",
+                "{{$sales['jibs_year_peru'][0]['Sep']}}",
+                "{{$sales['jibs_year_peru'][0]['Oct']}}",
+                "{{$sales['jibs_year_peru'][0]['Nov']}}",
+                "{{$sales['jibs_year_peru'][0]['Dic']}}"
+            ]
+        },
+        {
+          label               : 'Venta de Jibs Ecuador',
+          backgroundColor     : 'rgba(255, 240, 0, 0.7)',
+          borderColor         : 'rgba(255, 240, 0, 0.6)',
+          pointRadius         : false,
+          pointColor          : 'rgba(255, 240, 0, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(255, 240, 0,1)',
+          data : [
+                "{{$sales['jibs_year_ecuador'][0]['Ene']}}",
+                "{{$sales['jibs_year_ecuador'][0]['Feb']}}",
+                "{{$sales['jibs_year_ecuador'][0]['Mar']}}",
+                "{{$sales['jibs_year_ecuador'][0]['Abr']}}",
+                "{{$sales['jibs_year_ecuador'][0]['May']}}",
+                "{{$sales['jibs_year_ecuador'][0]['Jun']}}",
+                "{{$sales['jibs_year_ecuador'][0]['Jul']}}",
+                "{{$sales['jibs_year_ecuador'][0]['Ago']}}",
+                "{{$sales['jibs_year_ecuador'][0]['Sep']}}",
+                "{{$sales['jibs_year_ecuador'][0]['Oct']}}",
+                "{{$sales['jibs_year_ecuador'][0]['Nov']}}",
+                "{{$sales['jibs_year_ecuador'][0]['Dic']}}"
+            ]
+        },
+      ]
+    }
+    var barChartCanvas = $('#barChartJib').get(0).getContext('2d')
+    var barChartData = $.extend(true, {}, barChartData)
+    var temp0 = barChartData.datasets[0]
+    var temp1 = barChartData.datasets[1]
+    barChartData.datasets[0] = temp1
+    barChartData.datasets[1] = temp0
+
+    var barChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      datasetFill             : false
+    }
+
+    new Chart(barChartCanvas, {
+      type: 'bar',
+      data: barChartData,
+      options: barChartOptions
+    });
+
+
+     //---------------------
+    //- STACKED BAR CHART Perú-
+    //---------------------
+    var stackedChartData = {
+      labels  : ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+      datasets: [
+        {
+          label               : 'Clasicos',
+          backgroundColor     : 'rgba(255,255,0,0.7)',
+          borderColor         : 'rgba(255,255,0,0.6)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(255,255,0,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(255,255,0,1)',
+          data : [
+                "{{$sales['sales_year_classic_peru'][0]['Ene']}}",
+                "{{$sales['sales_year_classic_peru'][0]['Feb']}}",
+                "{{$sales['sales_year_classic_peru'][0]['Mar']}}",
+                "{{$sales['sales_year_classic_peru'][0]['Abr']}}",
+                "{{$sales['sales_year_classic_peru'][0]['May']}}",
+                "{{$sales['sales_year_classic_peru'][0]['Jun']}}",
+                "{{$sales['sales_year_classic_peru'][0]['Jul']}}",
+                "{{$sales['sales_year_classic_peru'][0]['Ago']}}",
+                "{{$sales['sales_year_classic_peru'][0]['Sep']}}",
+                "{{$sales['sales_year_classic_peru'][0]['Oct']}}",
+                "{{$sales['sales_year_classic_peru'][0]['Nov']}}",
+                "{{$sales['sales_year_classic_peru'][0]['Dic']}}"
+            ]
+        },
+        {
+          label               : 'Junior',
+          backgroundColor     : 'rgba(255, 0, 255, 0.7)',
+          borderColor         : 'rgba(255, 0, 255, 0.6)',
+          pointRadius         : false,
+          pointColor          : 'rgba(255, 0, 255, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(255, 0, 255,1)',
+          data : [
+                "{{$sales['sales_year_junior_peru'][0]['Ene']}}",
+                "{{$sales['sales_year_junior_peru'][0]['Feb']}}",
+                "{{$sales['sales_year_junior_peru'][0]['Mar']}}",
+                "{{$sales['sales_year_junior_peru'][0]['Abr']}}",
+                "{{$sales['sales_year_junior_peru'][0]['May']}}",
+                "{{$sales['sales_year_junior_peru'][0]['Jun']}}",
+                "{{$sales['sales_year_junior_peru'][0]['Jul']}}",
+                "{{$sales['sales_year_junior_peru'][0]['Ago']}}",
+                "{{$sales['sales_year_junior_peru'][0]['Sep']}}",
+                "{{$sales['sales_year_junior_peru'][0]['Oct']}}",
+                "{{$sales['sales_year_junior_peru'][0]['Nov']}}",
+                "{{$sales['sales_year_junior_peru'][0]['Dic']}}"
+            ]
+        },
+        {
+          label               : 'Semi Señior',
+          backgroundColor     : 'rgba(0,23,255,0.7)',
+          borderColor         : 'rgba(0,23,255,0.6)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(0,23,255,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(0,23,255,1)',
+          data : [
+                "{{$sales['sales_year_middle_peru'][0]['Ene']}}",
+                "{{$sales['sales_year_middle_peru'][0]['Feb']}}",
+                "{{$sales['sales_year_middle_peru'][0]['Mar']}}",
+                "{{$sales['sales_year_middle_peru'][0]['Abr']}}",
+                "{{$sales['sales_year_middle_peru'][0]['May']}}",
+                "{{$sales['sales_year_middle_peru'][0]['Jun']}}",
+                "{{$sales['sales_year_middle_peru'][0]['Jul']}}",
+                "{{$sales['sales_year_middle_peru'][0]['Ago']}}",
+                "{{$sales['sales_year_middle_peru'][0]['Sep']}}",
+                "{{$sales['sales_year_middle_peru'][0]['Oct']}}",
+                "{{$sales['sales_year_middle_peru'][0]['Nov']}}",
+                "{{$sales['sales_year_middle_peru'][0]['Dic']}}"
+            ]
+        },
+        {
+          label               : 'Señior',
+          backgroundColor     : 'rgba(255,0,0,0.7)',
+          borderColor         : 'rgba(255,0,0,0.6)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(255,0,0,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(255,0,0,1)',
+          data : [
+                "{{$sales['sales_year_master_peru'][0]['Ene']}}",
+                "{{$sales['sales_year_master_peru'][0]['Feb']}}",
+                "{{$sales['sales_year_master_peru'][0]['Mar']}}",
+                "{{$sales['sales_year_master_peru'][0]['Abr']}}",
+                "{{$sales['sales_year_master_peru'][0]['May']}}",
+                "{{$sales['sales_year_master_peru'][0]['Jun']}}",
+                "{{$sales['sales_year_master_peru'][0]['Jul']}}",
+                "{{$sales['sales_year_master_peru'][0]['Ago']}}",
+                "{{$sales['sales_year_master_peru'][0]['Sep']}}",
+                "{{$sales['sales_year_master_peru'][0]['Oct']}}",
+                "{{$sales['sales_year_master_peru'][0]['Nov']}}",
+                "{{$sales['sales_year_master_peru'][0]['Dic']}}"
+            ]
+        },
+      ]
+    }
+    var stackedBarChartCanvas = $('#barChartBoletoPeru').get(0).getContext('2d')
+    var stackedBarChartData = $.extend(true, {}, stackedChartData)
+
+    var stackedBarChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      scales: {
+        xAxes: [{
+          stacked: true,
+        }],
+        yAxes: [{
+          stacked: true
+        }]
+      }
+    }
+
+    new Chart(stackedBarChartCanvas, {
+      type: 'bar',
+      data: stackedBarChartData,
+      options: stackedBarChartOptions
+    });
+
+     //---------------------
+    //- STACKED BAR CHART Ecuador-
+    //---------------------
+    var stackedChartData = {
+      labels  : ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Setiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+      datasets: [
+        {
+          label               : 'Clasicos',
+          backgroundColor     : 'rgba(255,255,0,0.7)',
+          borderColor         : 'rgba(255,255,0,0.6)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(255,255,0,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(255,255,0,1)',
+          data : [
+                "{{$sales['sales_year_classic_ecuador'][0]['Ene']}}",
+                "{{$sales['sales_year_classic_ecuador'][0]['Feb']}}",
+                "{{$sales['sales_year_classic_ecuador'][0]['Mar']}}",
+                "{{$sales['sales_year_classic_ecuador'][0]['Abr']}}",
+                "{{$sales['sales_year_classic_ecuador'][0]['May']}}",
+                "{{$sales['sales_year_classic_ecuador'][0]['Jun']}}",
+                "{{$sales['sales_year_classic_ecuador'][0]['Jul']}}",
+                "{{$sales['sales_year_classic_ecuador'][0]['Ago']}}",
+                "{{$sales['sales_year_classic_ecuador'][0]['Sep']}}",
+                "{{$sales['sales_year_classic_ecuador'][0]['Oct']}}",
+                "{{$sales['sales_year_classic_ecuador'][0]['Nov']}}",
+                "{{$sales['sales_year_classic_ecuador'][0]['Dic']}}"
+            ]
+        },
+        {
+          label               : 'Junior',
+          backgroundColor     : 'rgba(255, 0, 255, 0.7)',
+          borderColor         : 'rgba(255, 0, 255, 0.6)',
+          pointRadius         : false,
+          pointColor          : 'rgba(255, 0, 255, 1)',
+          pointStrokeColor    : '#c1c7d1',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(255, 0, 255,1)',
+          data : [
+                "{{$sales['sales_year_junior_ecuador'][0]['Ene']}}",
+                "{{$sales['sales_year_junior_ecuador'][0]['Feb']}}",
+                "{{$sales['sales_year_junior_ecuador'][0]['Mar']}}",
+                "{{$sales['sales_year_junior_ecuador'][0]['Abr']}}",
+                "{{$sales['sales_year_junior_ecuador'][0]['May']}}",
+                "{{$sales['sales_year_junior_ecuador'][0]['Jun']}}",
+                "{{$sales['sales_year_junior_ecuador'][0]['Jul']}}",
+                "{{$sales['sales_year_junior_ecuador'][0]['Ago']}}",
+                "{{$sales['sales_year_junior_ecuador'][0]['Sep']}}",
+                "{{$sales['sales_year_junior_ecuador'][0]['Oct']}}",
+                "{{$sales['sales_year_junior_ecuador'][0]['Nov']}}",
+                "{{$sales['sales_year_junior_ecuador'][0]['Dic']}}"
+            ]
+        },
+        {
+          label               : 'Semi Señior',
+          backgroundColor     : 'rgba(0,23,255,0.7)',
+          borderColor         : 'rgba(0,23,255,0.6)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(0,23,255,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(0,23,255,1)',
+          data : [
+                "{{$sales['sales_year_middle_ecuador'][0]['Ene']}}",
+                "{{$sales['sales_year_middle_ecuador'][0]['Feb']}}",
+                "{{$sales['sales_year_middle_ecuador'][0]['Mar']}}",
+                "{{$sales['sales_year_middle_ecuador'][0]['Abr']}}",
+                "{{$sales['sales_year_middle_ecuador'][0]['May']}}",
+                "{{$sales['sales_year_middle_ecuador'][0]['Jun']}}",
+                "{{$sales['sales_year_middle_ecuador'][0]['Jul']}}",
+                "{{$sales['sales_year_middle_ecuador'][0]['Ago']}}",
+                "{{$sales['sales_year_middle_ecuador'][0]['Sep']}}",
+                "{{$sales['sales_year_middle_ecuador'][0]['Oct']}}",
+                "{{$sales['sales_year_middle_ecuador'][0]['Nov']}}",
+                "{{$sales['sales_year_middle_ecuador'][0]['Dic']}}"
+            ]
+        },
+        {
+          label               : 'Señior',
+          backgroundColor     : 'rgba(255,0,0,0.7)',
+          borderColor         : 'rgba(255,0,0,0.6)',
+          pointRadius          : false,
+          pointColor          : '#3b8bba',
+          pointStrokeColor    : 'rgba(255,0,0,1)',
+          pointHighlightFill  : '#fff',
+          pointHighlightStroke: 'rgba(255,0,0,1)',
+          data : [
+                "{{$sales['sales_year_master_ecuador'][0]['Ene']}}",
+                "{{$sales['sales_year_master_ecuador'][0]['Feb']}}",
+                "{{$sales['sales_year_master_ecuador'][0]['Mar']}}",
+                "{{$sales['sales_year_master_ecuador'][0]['Abr']}}",
+                "{{$sales['sales_year_master_ecuador'][0]['May']}}",
+                "{{$sales['sales_year_master_ecuador'][0]['Jun']}}",
+                "{{$sales['sales_year_master_ecuador'][0]['Jul']}}",
+                "{{$sales['sales_year_master_ecuador'][0]['Ago']}}",
+                "{{$sales['sales_year_master_ecuador'][0]['Sep']}}",
+                "{{$sales['sales_year_master_ecuador'][0]['Oct']}}",
+                "{{$sales['sales_year_master_ecuador'][0]['Nov']}}",
+                "{{$sales['sales_year_master_ecuador'][0]['Dic']}}"
+            ]
+        },
+      ]
+    }
+    var stackedBarChartCanvas = $('#barChartBoletoEcuador').get(0).getContext('2d')
+    var stackedBarChartData = $.extend(true, {}, stackedChartData)
+
+    var stackedBarChartOptions = {
+      responsive              : true,
+      maintainAspectRatio     : false,
+      scales: {
+        xAxes: [{
+          stacked: true,
+        }],
+        yAxes: [{
+          stacked: true
+        }]
+      }
+    }
+
+    new Chart(stackedBarChartCanvas, {
+      type: 'bar',
+      data: stackedBarChartData,
+      options: stackedBarChartOptions
     });
 </script>
 @endsection

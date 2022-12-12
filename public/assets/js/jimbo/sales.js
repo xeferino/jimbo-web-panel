@@ -49,6 +49,29 @@ $(function () {
                 "sortDescending": ": activate to sort column descending"
             }
         },
+        dom: 'lBfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6,7,8,9 ]
+                },
+                filename: function() {
+                    return "Reportes-de-ventas"
+                },
+                title: "Reportes de ventas"
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6,7,8,9 ]
+                },
+                filename: function() {
+                    return "Reportes-de-ventas"
+                },
+                title: "Reportes de ventas"
+            }
+        ],
         ajax: APP_URL+JIMBO.url,
         columns: [
             {data: 'id', name: 'id'},

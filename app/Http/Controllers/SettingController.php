@@ -121,7 +121,19 @@ class SettingController extends Controller
             $terms_and_conditions = Setting::where('name', 'terms_and_conditions')->first();
             $terms_and_conditions->value = $request->terms_and_conditions;
             $terms_and_conditions->save();
-    }
+        } elseif($type == 'game_rules') {
+            $game_rules = Setting::where('name', 'game_rules')->first();
+            $game_rules->value = $request->game_rules;
+            $game_rules->save();
+        } elseif($type == 'policies_privacy') {
+            $policies_privacy = Setting::where('name', 'policies_privacy')->first();
+            $policies_privacy->value = $request->policies_privacy;
+            $policies_privacy->save();
+        } elseif($type == 'faqs') {
+            $faqs = Setting::where('name', 'faqs')->first();
+            $faqs->value = $request->faqs;
+            $faqs->save();
+        }
         return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Configuracion agregada exitosamente!'], 200);
     }
 

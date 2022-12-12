@@ -47,6 +47,29 @@ $(function () {
                 "sortDescending": ": activate to sort column descending"
             }
         },
+        dom: 'lBfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6 ]
+                },
+                filename: function() {
+                    return "Reportes-de-egresos"
+                },
+                title: "Reportes de egresos"
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6 ]
+                },
+                filename: function() {
+                    return "Reportes-de-egresos"
+                },
+                title: "Reportes de egresos"
+            }
+        ],
         ajax: APP_URL+JIMBO.url+'/cash',
         columns: [
             {data: 'id', name: 'id'},

@@ -38,7 +38,7 @@
                                         <label class="col-form-label">Tipo</label>
                                         <select name="type" id="type" class="form-control">
                                             <option value="">.::Seleccione::.</option>
-                                            <option value="raffle">Sorteo</option>
+                                            <option value="raffle">Efectivo</option>
                                             <option value="product">Producto</option>
                                         </select>
                                     </div>

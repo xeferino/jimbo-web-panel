@@ -50,6 +50,29 @@ $(function () {
                 "sortDescending": ": activate to sort column descending"
             }
         },
+        dom: 'lBfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6 ]
+                },
+                filename: function() {
+                    return "Reportes-de-retiro de efectivo"
+                },
+                title: "Reportes de retiro de efectivo"
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6 ]
+                },
+                filename: function() {
+                    return "Reportes-de-retiro de efectivo"
+                },
+                title: "Reportes de retiro de efectivo"
+            }
+        ],
         ajax: APP_URL+JIMBO.url,
         columns: [
             {data: 'id', name: 'id'},

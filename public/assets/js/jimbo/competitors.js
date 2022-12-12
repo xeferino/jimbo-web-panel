@@ -55,6 +55,7 @@ $(function () {
             {data: 'fullname', name: 'fullname'},
             {data: 'role', name: 'role'},
             {data: 'email', name: 'email'},
+            {data: 'become_seller', name: 'become_seller'},
             {data: 'active', name: 'active'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
@@ -126,6 +127,65 @@ $(function () {
             "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ compras",
             "infoEmpty":      "Mostrando 0 para 0 de 0 compras",
             "infoFiltered":   "(Filtrado para un total de _MAX_ compras)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Mostrar _MENU_ Registros",
+            "loadingRecords": `<div class="ball-scale">
+                                    <div class='contain'>
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <img src="${APP_URL+'/assets/images/jimbo-table.png'}" class="ring" width="48" alt="logo.png">
+                                        <div class="ring"><div class="frame"></div></div>
+                                        <div class="ring"><div class="frame"></div></div>
+                                    </div>
+                                </div>`,
+            "processing": `<div class="ball-scale">
+                                <div class='contain'>
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <img src="${APP_URL+'/assets/images/jimbo-table.png'}" class="ring" width="48" alt="logo.png">
+                                    <div class="ring"><div class="frame"></div></div>
+                                    <div class="ring"><div class="frame"></div></div>
+                                </div>
+                            </div>`,
+            "search":         "Buscar:",
+            "zeroRecords":    "No hay coicidencias de registros en la busqueda",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Ultimo",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": activate to sort column ascending",
+                "sortDescending": ": activate to sort column descending"
+            }
+        },
+        ajax: APP_URL+JIMBO.url+'/'+id+'?mod=shopping',
+        columns: [
+            {data: 'id', name: 'id'},
+            {data: 'number', name: 'number'},
+            {data: 'number_culqi', name: 'number_culqi'},
+            {data: 'amount', name: 'amount'},
+            {data: 'method', name: 'method'},
+            {data: 'raffle', name: 'raffle'},
+            {data: 'quantity', name: 'quantity'},
+            {data: 'ticket', name: 'ticket'},
+            {data: 'date', name: 'date'},
+            {data: 'status', name: 'status'},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+    });
+
+    var table5 = $('.table-competitor-sales').DataTable({
+        processing: true,
+        serverSide: true,
+        order: [[0, 'desc']],
+        "language": {
+            "decimal":        "",
+            "info":           "Mostrando _START_ - _END_ de un total _TOTAL_ ventas",
+            "infoEmpty":      "Mostrando 0 para 0 de 0 ventas",
+            "infoFiltered":   "(Filtrado para un total de _MAX_ ventas)",
             "infoPostFix":    "",
             "thousands":      ",",
             "lengthMenu":     "Mostrar _MENU_ Registros",
@@ -628,4 +688,56 @@ $(function () {
             });
     });
     /*alert-competitor-delete*/
+
+    /*alert-competitor-seller*/
+    $('body').on('click', '.seller', function () {
+        var url = $(this).data("url");
+        swal({
+                title: '¿Dar de alta, al Usuario como vendedor?',
+                text: "Agrega un nuevo rol al usuario de tipo seller (vendedor).",
+                type: 'error',
+                icon : APP_URL+"/assets/images/jimbo-logo.png",
+                buttons:{
+                    confirm: {
+                        text : 'Alta',
+                        className : 'btn btn-warning',
+                        showLoaderOnConfirm: true,
+                    },
+                    cancel: {
+                        visible: true,
+                        text : 'Cancelar',
+                        className : 'btn btn-inverse',
+                    }
+                },
+            }).then((confirm) => {
+                if (confirm) {
+                    $('.jimbo-loader').show();
+                    axios.get(url, {
+                    }).then(response => {
+                        if(response.data.success){
+                            setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+                            notify(response.data.message, 'success', '3000', 'top', 'right');
+                            setTimeout(() => {location.href = APP_URL+JIMBO.url;}, 3000);
+                        }else {
+                            setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+                            notify(response.data.message, 'success', '3000', 'top', 'right');
+                        }
+                    }).catch(error => {
+                        if (error.response) {
+                            if(error.response.status === 403){
+                                notify(error.response.data.message, 'success', '3000', 'top', 'right');
+                            }else{
+                                notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
+                            }
+                        }else{
+                            notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
+                        }
+                        setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+                    });
+                } else {
+                    swal.close();
+                }
+            });
+    });
+    /*alert-competitor-seller*/
 });

@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Raffle;
 use App\Models\Action;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\NotificationController;
 
@@ -35,8 +36,11 @@ class RaffleObserver
      */
     public function updated(Raffle $raffle)
     {
-        if($raffle->active == 1 && $raffle->public == 1 && $raffle->finish == 0){
-            NotificationController::store('Nuevo sorteo!', 'se ha generado un nuevo sorteo para ti! '.$raffle->title.', finaliza '.$raffle->date_end.'');
+        $users = User::whereIn('type', [1,2])->where('active', 1)->get();
+        foreach ($users as $key => $user) {
+            if($raffle->active == 1 && $raffle->public == 1 && $raffle->finish == 0){
+                NotificationController::store('Nuevo sorteo!', 'se ha generado un nuevo sorteo para ti! '.$raffle->title.', finaliza '.$raffle->date_end->format('d/m/Y').'', $user->id);
+            }
         }
     }
 

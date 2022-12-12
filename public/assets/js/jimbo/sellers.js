@@ -56,6 +56,7 @@ $(function () {
             {data: 'fullname', name: 'fullname'},
             {data: 'role', name: 'role'},
             {data: 'email', name: 'email'},
+            {data: 'become_seller', name: 'become_seller'},
             {data: 'active', name: 'active'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]

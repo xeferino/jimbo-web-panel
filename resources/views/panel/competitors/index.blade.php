@@ -31,6 +31,7 @@
                             <th>Nombres y Apellidos</th>
                             <th>Role</th>
                             <th>Email</th>
+                            <th>Tipo</th>
                             <th>Estatus</th>
                             <th>Acciones</th>
                         </tr>

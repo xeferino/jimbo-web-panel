@@ -45,6 +45,8 @@ Route::prefix('user')->middleware(['auth:sanctum', 'check.user'])->group(functio
     Route::post('/profile/{id}', [AuthController::class, 'settingProfile']);
     Route::post('/logout/{user}', [AuthController::class, 'logout']);
     Route::get('/balance/{user}', [BalanceController::class, 'balance']);
+    //to sellers
+    Route::post('/to/seller/{id}', [AuthController::class, 'competitor_to_seller']);
     //cards
     Route::get('/cards/all/{user}', [CardController::class, 'index']);
     Route::get('/cards/{card}', [CardController::class, 'show']);

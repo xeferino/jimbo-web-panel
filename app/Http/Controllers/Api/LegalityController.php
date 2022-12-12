@@ -18,7 +18,13 @@ class LegalityController extends Controller
     {
         try {
             $terms_and_conditions = Setting::where('name', 'terms_and_conditions')->first();
-            return response()->json(['legality' => $terms_and_conditions->value], 200);
+            $game_rules = Setting::where('name', 'game_rules')->first();
+            $policies_privacy = Setting::where('name', 'policies_privacy')->first();
+            return response()->json([
+                'legality'   => $terms_and_conditions->value,
+                'game'       => $game_rules->value,
+                'privacity'  => $policies_privacy->value
+            ], 200);
         } catch (Exception $e) {
             return response()->json([
                 'status'   => 500,

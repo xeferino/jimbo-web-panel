@@ -37,7 +37,8 @@ require __DIR__.'/auth.php';
 Route::get('/', [LandingPageController::class, 'home'])->name('landing.home');
 Route::get('/terms_and_conditions', [LandingPageController::class, 'term'])->name('landing.terms_conditions');
 Route::get('/privacy_policies', [LandingPageController::class, 'privacy'])->name('landing.privacy_policies');
-Route::get('/faq', [LandingPageController::class, 'faq'])->name('landing.faq');
+Route::get('/rules_game', [LandingPageController::class, 'game'])->name('landing.rules_game');
+Route::get('/faqs', [LandingPageController::class, 'faq'])->name('landing.faqs');
 
 Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');

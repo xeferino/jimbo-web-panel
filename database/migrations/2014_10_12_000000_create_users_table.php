@@ -35,6 +35,7 @@ return new class extends Migration
             $table->integer('become_seller_convert')->default(0)->nullable();
             $table->string('token')->nullable();
             $table->rememberToken();
+            $table->timestamp('seller_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

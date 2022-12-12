@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('reference')->nullable();
             $table->string('description')->nullable();
             $table->enum('type',['debit', 'credit'])->nullable();
+            $table->string('operation', 45)->nullable();
             $table->string('currency')->nullable();
             $table->float('balance',10,2)->nullable();
             $table->date('date')->nullable();

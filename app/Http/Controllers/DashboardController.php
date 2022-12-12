@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Sale;
 use App\Models\CashRequest;
 use App\Helpers\Helper;
+use App\Models\BalanceHistory;
 use App\Models\Promotion;
 use App\Models\Raffle;
 
@@ -213,6 +214,991 @@ class DashboardController extends Controller
         ->sum('sales.amount');
 
 
+        $jibs_year = BalanceHistory::selectRaw("
+            SUM(CASE WHEN  MONTH(`created_at`) = 1
+                THEN balance
+                ELSE 0
+                END
+            ) AS Ene,
+            SUM(CASE WHEN  MONTH(`created_at`) = 2
+                THEN balance
+                ELSE 0
+                END
+            ) AS Feb,
+            SUM(CASE WHEN  MONTH(`created_at`) = 3
+                THEN balance
+                ELSE 0
+                END
+            ) AS Mar,
+            SUM(CASE WHEN  MONTH(`created_at`) = 4
+                THEN balance
+                ELSE 0
+                END
+            ) AS Abr,
+            SUM(CASE WHEN  MONTH(`created_at`) = 5
+                THEN balance
+                ELSE 0
+                END
+            ) AS May,
+            SUM(CASE WHEN  MONTH(`created_at`) = 6
+                THEN balance
+                ELSE 0
+                END
+            ) AS Jun,
+            SUM(CASE WHEN  MONTH(`created_at`) = 7
+                THEN balance
+                ELSE 0
+                END
+            ) AS Jul,
+            SUM(CASE WHEN  MONTH(`created_at`) = 8
+                THEN balance
+                ELSE 0
+                END
+            ) AS Ago,
+            SUM(CASE WHEN  MONTH(`created_at`) = 9
+                THEN balance
+                ELSE 0
+                END
+            ) AS Sep,
+            SUM(CASE WHEN  MONTH(`created_at`) = 10
+                THEN balance
+                ELSE 0
+                END
+            ) AS Oct,
+            SUM(CASE WHEN  MONTH(`created_at`) = 11
+                THEN balance
+                ELSE 0
+                END
+            ) AS Nov,
+            SUM(CASE WHEN  MONTH(`created_at`) = 12
+                THEN balance
+                ELSE 0
+                END
+            ) AS Dic")
+        ->whereYear('created_at', date('Y'))
+        ->where('type', 'credit')
+        ->where('currency', 'jib')
+        ->get();
+
+        $sales_year = Sale::selectRaw("
+            SUM(CASE WHEN  MONTH(`created_at`) = 1
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Ene,
+            SUM(CASE WHEN  MONTH(`created_at`) = 2
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Feb,
+            SUM(CASE WHEN  MONTH(`created_at`) = 3
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Mar,
+            SUM(CASE WHEN  MONTH(`created_at`) = 4
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Abr,
+            SUM(CASE WHEN  MONTH(`created_at`) = 5
+                THEN quantity
+                ELSE 0
+                END
+            ) AS May,
+            SUM(CASE WHEN  MONTH(`created_at`) = 6
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Jun,
+            SUM(CASE WHEN  MONTH(`created_at`) = 7
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Jul,
+            SUM(CASE WHEN  MONTH(`created_at`) = 8
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Ago,
+            SUM(CASE WHEN  MONTH(`created_at`) = 9
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Sep,
+            SUM(CASE WHEN  MONTH(`created_at`) = 10
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Oct,
+            SUM(CASE WHEN  MONTH(`created_at`) = 11
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Nov,
+            SUM(CASE WHEN  MONTH(`created_at`) = 12
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Dic")
+        ->whereYear('created_at', date('Y'))
+        ->where('status', 'approved')
+        ->get();
+
+        $sales_year_peru = Sale::selectRaw("
+            SUM(CASE WHEN  MONTH(`created_at`) = 1
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Ene,
+            SUM(CASE WHEN  MONTH(`created_at`) = 2
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Feb,
+            SUM(CASE WHEN  MONTH(`created_at`) = 3
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Mar,
+            SUM(CASE WHEN  MONTH(`created_at`) = 4
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Abr,
+            SUM(CASE WHEN  MONTH(`created_at`) = 5
+                THEN quantity
+                ELSE 0
+                END
+            ) AS May,
+            SUM(CASE WHEN  MONTH(`created_at`) = 6
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Jun,
+            SUM(CASE WHEN  MONTH(`created_at`) = 7
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Jul,
+            SUM(CASE WHEN  MONTH(`created_at`) = 8
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Ago,
+            SUM(CASE WHEN  MONTH(`created_at`) = 9
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Sep,
+            SUM(CASE WHEN  MONTH(`created_at`) = 10
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Oct,
+            SUM(CASE WHEN  MONTH(`created_at`) = 11
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Nov,
+            SUM(CASE WHEN  MONTH(`created_at`) = 12
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Dic")
+        ->whereYear('created_at', date('Y'))
+        ->where('status', 'approved')
+        ->where('country_id', 1)
+        ->get();
+
+        $sales_year_ecuador = Sale::selectRaw("
+            SUM(CASE WHEN  MONTH(`created_at`) = 1
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Ene,
+            SUM(CASE WHEN  MONTH(`created_at`) = 2
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Feb,
+            SUM(CASE WHEN  MONTH(`created_at`) = 3
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Mar,
+            SUM(CASE WHEN  MONTH(`created_at`) = 4
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Abr,
+            SUM(CASE WHEN  MONTH(`created_at`) = 5
+                THEN quantity
+                ELSE 0
+                END
+            ) AS May,
+            SUM(CASE WHEN  MONTH(`created_at`) = 6
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Jun,
+            SUM(CASE WHEN  MONTH(`created_at`) = 7
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Jul,
+            SUM(CASE WHEN  MONTH(`created_at`) = 8
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Ago,
+            SUM(CASE WHEN  MONTH(`created_at`) = 9
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Sep,
+            SUM(CASE WHEN  MONTH(`created_at`) = 10
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Oct,
+            SUM(CASE WHEN  MONTH(`created_at`) = 11
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Nov,
+            SUM(CASE WHEN  MONTH(`created_at`) = 12
+                THEN quantity
+                ELSE 0
+                END
+            ) AS Dic")
+        ->whereYear('created_at', date('Y'))
+        ->where('status', 'approved')
+        ->where('country_id', 2)
+        ->get();
+
+        $jibs_year_peru = BalanceHistory::selectRaw("
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 1
+                THEN balance
+                ELSE 0
+                END
+            ) AS Ene,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 2
+                THEN balance
+                ELSE 0
+                END
+            ) AS Feb,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 3
+                THEN balance
+                ELSE 0
+                END
+            ) AS Mar,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 4
+                THEN balance
+                ELSE 0
+                END
+            ) AS Abr,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 5
+                THEN balance
+                ELSE 0
+                END
+            ) AS May,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 6
+                THEN balance
+                ELSE 0
+                END
+            ) AS Jun,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 7
+                THEN balance
+                ELSE 0
+                END
+            ) AS Jul,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 8
+                THEN balance
+                ELSE 0
+                END
+            ) AS Ago,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 9
+                THEN balance
+                ELSE 0
+                END
+            ) AS Sep,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 10
+                THEN balance
+                ELSE 0
+                END
+            ) AS Oct,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 11
+                THEN balance
+                ELSE 0
+                END
+            ) AS Nov,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 12
+                THEN balance
+                ELSE 0
+                END
+            ) AS Dic")
+        ->join('users', 'users.id', '=', 'balance_histories.user_id' )
+        ->whereYear('balance_histories.created_at', date('Y'))
+        ->where('balance_histories.type', 'credit')
+        ->where('balance_histories.currency', 'jib')
+        ->where('users.country_id', 1)
+        ->get();
+
+        $jibs_year_ecuador = BalanceHistory::selectRaw("
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 1
+                THEN balance
+                ELSE 0
+                END
+            ) AS Ene,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 2
+                THEN balance
+                ELSE 0
+                END
+            ) AS Feb,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 3
+                THEN balance
+                ELSE 0
+                END
+            ) AS Mar,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 4
+                THEN balance
+                ELSE 0
+                END
+            ) AS Abr,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 5
+                THEN balance
+                ELSE 0
+                END
+            ) AS May,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 6
+                THEN balance
+                ELSE 0
+                END
+            ) AS Jun,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 7
+                THEN balance
+                ELSE 0
+                END
+            ) AS Jul,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 8
+                THEN balance
+                ELSE 0
+                END
+            ) AS Ago,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 9
+                THEN balance
+                ELSE 0
+                END
+            ) AS Sep,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 10
+                THEN balance
+                ELSE 0
+                END
+            ) AS Oct,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 11
+                THEN balance
+                ELSE 0
+                END
+            ) AS Nov,
+            SUM(CASE WHEN  MONTH(balance_histories.date) = 12
+                THEN balance
+                ELSE 0
+                END
+            ) AS Dic")
+        ->join('users', 'users.id', '=', 'balance_histories.user_id' )
+        ->whereYear('balance_histories.created_at', date('Y'))
+        ->where('balance_histories.type', 'credit')
+        ->where('balance_histories.currency', 'jib')
+        ->where('users.country_id', 2)
+        ->get();
+
+        $sales_year_classic_ecuador = Sale::selectRaw("
+            SUM(CASE WHEN  MONTH(sales.created_at) = 1
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Ene,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 2
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Feb,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 3
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Mar,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 4
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Abr,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 5
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS May,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 6
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Jun,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 7
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Jul,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 8
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Ago,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 9
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Sep,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 10
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Oct,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 11
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Nov,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 12
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Dic")
+        ->join('users', 'users.id', '=', 'sales.seller_id' )
+        ->join('level_users', 'level_users.seller_id', '=', 'users.id' )
+        ->join('levels', 'levels.id', '=', 'level_users.level_id' )
+        ->whereNull('users.deleted_at')
+        ->where('users.active', 1)
+        ->whereYear('sales.created_at', date('Y'))
+        ->where('sales.status', 'approved')
+        ->where('levels.name', 'classic')
+        ->where('sales.status', 'approved')
+        ->where('sales.country_id', 2)
+        ->get();
+
+        $sales_year_junior_ecuador = Sale::selectRaw("
+            SUM(CASE WHEN  MONTH(sales.created_at) = 1
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Ene,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 2
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Feb,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 3
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Mar,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 4
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Abr,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 5
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS May,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 6
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Jun,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 7
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Jul,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 8
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Ago,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 9
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Sep,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 10
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Oct,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 11
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Nov,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 12
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Dic")
+        ->join('users', 'users.id', '=', 'sales.seller_id' )
+        ->join('level_users', 'level_users.seller_id', '=', 'users.id' )
+        ->join('levels', 'levels.id', '=', 'level_users.level_id' )
+        ->whereNull('users.deleted_at')
+        ->where('users.active', 1)
+        ->whereYear('sales.created_at', date('Y'))
+        ->where('sales.status', 'approved')
+        ->where('levels.name', 'junior')
+        ->where('sales.status', 'approved')
+        ->where('sales.country_id', 2)
+        ->get();
+
+        $sales_year_middle_ecuador = Sale::selectRaw("
+            SUM(CASE WHEN  MONTH(sales.created_at) = 1
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Ene,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 2
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Feb,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 3
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Mar,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 4
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Abr,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 5
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS May,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 6
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Jun,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 7
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Jul,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 8
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Ago,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 9
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Sep,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 10
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Oct,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 11
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Nov,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 12
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Dic")
+        ->join('users', 'users.id', '=', 'sales.seller_id' )
+        ->join('level_users', 'level_users.seller_id', '=', 'users.id' )
+        ->join('levels', 'levels.id', '=', 'level_users.level_id' )
+        ->whereNull('users.deleted_at')
+        ->where('users.active', 1)
+        ->whereYear('sales.created_at', date('Y'))
+        ->where('sales.status', 'approved')
+        ->where('levels.name', 'middle')
+        ->where('sales.status', 'approved')
+        ->where('sales.country_id', 2)
+        ->get();
+
+        $sales_year_master_ecuador = Sale::selectRaw("
+            SUM(CASE WHEN  MONTH(sales.created_at) = 1
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Ene,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 2
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Feb,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 3
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Mar,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 4
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Abr,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 5
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS May,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 6
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Jun,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 7
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Jul,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 8
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Ago,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 9
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Sep,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 10
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Oct,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 11
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Nov,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 12
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Dic")
+        ->join('users', 'users.id', '=', 'sales.seller_id' )
+        ->join('level_users', 'level_users.seller_id', '=', 'users.id' )
+        ->join('levels', 'levels.id', '=', 'level_users.level_id' )
+        ->whereNull('users.deleted_at')
+        ->where('users.active', 1)
+        ->whereYear('sales.created_at', date('Y'))
+        ->where('sales.status', 'approved')
+        ->where('levels.name', 'master')
+        ->where('sales.status', 'approved')
+        ->where('sales.country_id', 2)
+        ->get();
+
+
+        $sales_year_classic_peru = Sale::selectRaw("
+            SUM(CASE WHEN  MONTH(sales.created_at) = 1
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Ene,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 2
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Feb,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 3
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Mar,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 4
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Abr,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 5
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS May,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 6
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Jun,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 7
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Jul,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 8
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Ago,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 9
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Sep,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 10
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Oct,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 11
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Nov,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 12
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Dic")
+        ->join('users', 'users.id', '=', 'sales.seller_id' )
+        ->join('level_users', 'level_users.seller_id', '=', 'users.id' )
+        ->join('levels', 'levels.id', '=', 'level_users.level_id' )
+        ->whereNull('users.deleted_at')
+        ->where('users.active', 1)
+        ->whereYear('sales.created_at', date('Y'))
+        ->where('sales.status', 'approved')
+        ->where('levels.name', 'classic')
+        ->where('sales.status', 'approved')
+        ->where('sales.country_id', 1)
+        ->get();
+
+        $sales_year_junior_peru = Sale::selectRaw("
+            SUM(CASE WHEN  MONTH(sales.created_at) = 1
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Ene,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 2
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Feb,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 3
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Mar,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 4
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Abr,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 5
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS May,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 6
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Jun,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 7
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Jul,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 8
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Ago,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 9
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Sep,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 10
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Oct,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 11
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Nov,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 12
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Dic")
+        ->join('users', 'users.id', '=', 'sales.seller_id' )
+        ->join('level_users', 'level_users.seller_id', '=', 'users.id' )
+        ->join('levels', 'levels.id', '=', 'level_users.level_id' )
+        ->whereNull('users.deleted_at')
+        ->where('users.active', 1)
+        ->whereYear('sales.created_at', date('Y'))
+        ->where('sales.status', 'approved')
+        ->where('levels.name', 'junior')
+        ->where('sales.status', 'approved')
+        ->where('sales.country_id', 1)
+        ->get();
+
+        $sales_year_middle_peru = Sale::selectRaw("
+            SUM(CASE WHEN  MONTH(sales.created_at) = 1
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Ene,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 2
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Feb,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 3
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Mar,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 4
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Abr,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 5
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS May,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 6
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Jun,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 7
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Jul,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 8
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Ago,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 9
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Sep,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 10
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Oct,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 11
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Nov,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 12
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Dic")
+        ->join('users', 'users.id', '=', 'sales.seller_id' )
+        ->join('level_users', 'level_users.seller_id', '=', 'users.id' )
+        ->join('levels', 'levels.id', '=', 'level_users.level_id' )
+        ->whereNull('users.deleted_at')
+        ->where('users.active', 1)
+        ->whereYear('sales.created_at', date('Y'))
+        ->where('sales.status', 'approved')
+        ->where('levels.name', 'middle')
+        ->where('sales.status', 'approved')
+        ->where('sales.country_id', 1)
+        ->get();
+
+        $sales_year_master_peru = Sale::selectRaw("
+            SUM(CASE WHEN  MONTH(sales.created_at) = 1
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Ene,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 2
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Feb,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 3
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Mar,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 4
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Abr,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 5
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS May,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 6
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Jun,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 7
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Jul,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 8
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Ago,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 9
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Sep,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 10
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Oct,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 11
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Nov,
+            SUM(CASE WHEN  MONTH(sales.created_at) = 12
+                THEN sales.quantity
+                ELSE 0
+                END
+            ) AS Dic")
+        ->join('users', 'users.id', '=', 'sales.seller_id' )
+        ->join('level_users', 'level_users.seller_id', '=', 'users.id' )
+        ->join('levels', 'levels.id', '=', 'level_users.level_id' )
+        ->whereNull('users.deleted_at')
+        ->where('users.active', 1)
+        ->whereYear('sales.created_at', date('Y'))
+        ->where('sales.status', 'approved')
+        ->where('levels.name', 'master')
+        ->where('sales.status', 'approved')
+        ->where('sales.country_id', 1)
+        ->get();
+
+
         return  [
             'sale_approved'                     =>  $sale_approved,
             'sale_pending'                      =>  $sale_pending,
@@ -230,6 +1216,20 @@ class DashboardController extends Controller
             'seller_junior_sale_year_amount'    =>  $seller_junior_sale_year_amount,
             'seller_middle_sale_year_amount'    =>  $seller_middle_sale_year_amount,
             'seller_master_sale_year_amount'    =>  $seller_master_sale_year_amount,
+            'sales_year'                        =>  $sales_year,
+            'jibs_year'                         =>  $jibs_year,
+            'jibs_year_peru'                    =>  $jibs_year_peru,
+            'jibs_year_ecuador'                 =>  $jibs_year_ecuador,
+            'sales_year_peru'                   =>  $sales_year_peru,
+            'sales_year_ecuador'                =>  $sales_year_ecuador,
+            'sales_year_classic_ecuador'        =>  $sales_year_classic_ecuador,
+            'sales_year_junior_ecuador'         =>  $sales_year_junior_ecuador,
+            'sales_year_middle_ecuador'         =>  $sales_year_middle_ecuador,
+            'sales_year_master_ecuador'         =>  $sales_year_master_ecuador,
+            'sales_year_classic_peru'           =>  $sales_year_classic_peru,
+            'sales_year_junior_peru'            =>  $sales_year_junior_peru,
+            'sales_year_middle_peru'            =>  $sales_year_middle_peru,
+            'sales_year_master_peru'            =>  $sales_year_master_peru
         ];
     }
 

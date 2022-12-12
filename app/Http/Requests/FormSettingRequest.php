@@ -49,6 +49,9 @@ class FormSettingRequest extends FormRequest
             'level_ascent_bonus_single_middle'   => $this->type == 'bonus_ascent' ? 'required|integer' : 'nullable',
             'level_ascent_bonus_single_master'   => $this->type == 'bonus_ascent' ? 'required|integer' : 'nullable',
             'terms_and_conditions'               => $this->type == 'terms_and_conditions' ? 'required' : 'nullable',
+            'game_rules'                         => $this->type == 'game_rules' ? 'required' : 'nullable',
+            'policies_privacy'                   => $this->type == 'policies_privacy' ? 'required' : 'nullable',
+            'faqs'                               => $this->type == 'faqs' ? 'required' : 'nullable',
         ];
     }
 
@@ -102,7 +105,10 @@ class FormSettingRequest extends FormRequest
             'level_ascent_bonus_single_middle.integer' => 'El valor debe ser numerico.',
             'level_ascent_bonus_single_master.required' => 'El valor es requerido',
             'level_ascent_bonus_single_master.integer' => 'El valor debe ser numerico.',
-            'terms_and_conditions.required' => 'El texto es requerido',
+            'terms_and_conditions.required' => 'Los terminos y condiciones son requeridos',
+            'game_rules.required' => 'Las reglas del juego son requeridas',
+            'policies_privacy.required' => 'Las politicas de privacidad son requeridas',
+            'faqs.required' => 'Las preguntas frecuentes son requeridas',
         ];
     }
 }

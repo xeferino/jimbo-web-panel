@@ -16,6 +16,7 @@
             <h4 class="sub-title">Informacion requerida</h4>
             <form method="POST" action="{{ route('panel.competitors.update', ['competitor' => $competitor->id]) }}" name="form-competitor-edit" id="form-competitor-edit" enctype="multipart/form-data">
                 @csrf
+                <input type="hidden" name="type" id="type" value="update">
                 @method('PUT')
                 <div class="form-group row">
                     {{-- <div class="col-sm-12">

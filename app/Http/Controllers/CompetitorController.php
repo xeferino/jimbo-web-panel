@@ -75,6 +75,18 @@ class CompetitorController extends Controller
                         }
                         return $btn;
                     })
+                    ->addColumn('become_seller', function($competitor){
+                        $btn = '';
+                        $user = Competitor::find($competitor->id);
+                        if($user->type == 1 && $user->become_seller == 1 && $user->seller_at != null){
+                            $btn .= '<a href="'.route('panel.sellers.show', ['seller' => $user->id]).'" > <span class="badge badge-success">Usuario - Vendedor</span></a>';
+                        }elseif($user->type == 1 && $user->become_seller == 1){
+                            $btn .= '<span class="badge badge-inverse">Quiero ser vendedor</span>';
+                        }else{
+                            $btn .= '<span class="badge badge-primary">Usuario</span>';
+                        }
+                        return $btn;
+                    })
                     ->addColumn('image', function($competitor){
                         $img = $competitor->image != 'avatar.svg' ? asset('assets/images/competitors/'.$competitor->image): asset('assets/images/avatar.svg');
                         return '<img src="'.$img.'" class="img-50 img-radius" alt="User-Profile-Image">';
@@ -82,10 +94,10 @@ class CompetitorController extends Controller
                     ->addColumn('role', function($competitor){
                         $btn = '';
                         $competitor = Competitor::find($competitor->id);
-                        $btn .= '<span class="badge badge-inverse">'.$competitor->getRoleNames()->join('').'</span>';
+                        $btn .= '<span class="badge badge-inverse">'.$competitor->getRoleNames()->join(', ').'</span>';
                         return   $btn;
                     })
-                    ->rawColumns(['action','active', 'role', 'image'])
+                    ->rawColumns(['action','active', 'role', 'image', 'become_seller'])
                     ->make(true);
         }
         return view('panel.competitors.index', [
@@ -271,6 +283,60 @@ class CompetitorController extends Controller
                     })
                     ->rawColumns(['action', 'status', 'raffle', 'ticket', 'amount', 'date'])
                     ->make(true);
+            }elseif($request->mod == 'sale'){
+                $sale = Shopping::select(
+                    'id',
+                    'number',
+                    'number_culqi',
+                    'amount',
+                    'quantity',
+                    'status',
+                    'created_at AS date',
+                    DB::raw('(CASE
+                                WHEN method = "card" THEN "Tarjeta"
+                                WHEN method = "jib" THEN "Jibs"
+                                ELSE "Otro"
+                                END) AS method')
+                    )->where('seller_id', $id)->get();
+                    return Datatables::of($sale)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($sale){
+                        if(auth()->user()->can('show-sale')){
+
+                            $btn = '';
+                            $sale = Shopping::find($sale->id);
+                            $btn .= '<a href="'.route('panel.sales.show',['sale' => $sale->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  class="btn btn-warning btn-sm  mr-1 detailSale">
+                                            <i class="ti-eye"></i>
+                                        </a>';
+                            return $btn;
+                        }
+                    })
+                    ->addColumn('status', function($sale){
+                        $btn = '';
+                        if($sale->status=='approved'){
+                            $btn .= '<span class="badge badge-success" title="Aprobada">Aprobada</span>';
+                        }elseif($sale->status=='refused'){
+                            $btn .= '<span class="badge badge-danger" title="Rechazada">Rechazada</span>';
+                        } else{
+                            $btn .= '<span class="badge badge-warning" title="Pendiente">Pendiente</span>';
+                        }
+                        return $btn;
+                    })
+                    ->addColumn('raffle', function($sale){
+                        $sale = Shopping::find($sale->id);
+                        return $sale->raffle->title;
+                    })
+                    ->addColumn('ticket', function($sale){
+                        $sale = Shopping::find($sale->id);
+                        return   $sale->ticket->promotion->name;
+                    })->addColumn('amount', function($sale){
+                        return   Helper::amount($sale->amount);
+                    })->addColumn('date', function($sale){
+                        $date = Carbon::parse($sale->date)->format('d/m/Y H:i:s');
+                        return   $date;
+                    })
+                    ->rawColumns(['action', 'status', 'raffle', 'ticket', 'amount', 'date'])
+                    ->make(true);
             } elseif($request->mod == 'paymentHistory') {
                 $payment = PaymentHistory::select(
                     'id',
@@ -395,6 +461,17 @@ class CompetitorController extends Controller
             }
         }
 
+        if(\Request::wantsJson()) {
+            if ($request->has('type') && $request->type =='become_seller') {
+                $competitor  = Competitor::find($id);
+                $competitor->seller_at  = now();
+                if($competitor->save()){
+                    $competitor->syncRoles(3,4);
+                    return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Usuario dado de alta como vendedor exitosamente.'], 200);
+                }
+            }
+        }
+
         return view('panel.competitors.show', [
             'title'              => 'Participantes',
             'title_header'       => 'Participante detalles',
@@ -483,7 +560,7 @@ class CompetitorController extends Controller
         } */
         $saved = $competitor->save();
         if($saved)
-            $competitor->syncRoles($request->role);
+            //$competitor->syncRoles($request->role);
             return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: participante actualizado exitosamente.'], 200);
     }
 

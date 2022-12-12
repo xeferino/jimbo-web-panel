@@ -85,10 +85,19 @@ class SellerController extends Controller
                     ->addColumn('role', function($seller){
                         $btn = '';
                         $seller = Seller::find($seller->id);
-                        $btn .= '<span class="badge badge-inverse">'.$seller->getRoleNames()->join('').'</span>';
+                        $btn .= '<span class="badge badge-inverse">'.$seller->getRoleNames()->join(', ').'</span>';
                         return   $btn;
+                    })->addColumn('become_seller', function($seller){
+                        $btn = '';
+                        $user = Seller::find($seller->id);
+                        if($user->type == 1 && $user->become_seller == 1 && $user->seller_at != null){
+                            $btn .= '<a href="'.route('panel.competitors.show', ['competitor' => $user->id]).'" > <span class="badge badge-success">Usuario - Vendedor</span></a>';
+                        }else{
+                            $btn .= '<span class="badge badge-primary">Vendedor</span>';
+                        }
+                        return $btn;
                     })
-                    ->rawColumns(['action','active', 'role', 'image'])
+                    ->rawColumns(['action','active', 'role', 'image', 'become_seller'])
                     ->make(true);
         }
         return view('panel.sellers.index', [
@@ -136,6 +145,8 @@ class SellerController extends Controller
         $seller->address_city       = $request->address_city;
         $seller->code_referral      = substr(sha1(time()), 0, 8);
         $seller->type               = 2;
+        $seller->become_seller      = 1;
+        $seller->seller_at          = now();
         $seller->country_id         = $request->country_id;
         $seller->active             = $request->active;
         $seller->password           = Hash::make($request->password);
@@ -168,7 +179,7 @@ class SellerController extends Controller
         if($saved) {
 
             $user = User::where('code_referral', $request->code_referral_user)->first();
-            if ($user && $user->type == 1) {
+            if ($user && $user->type == 2) {
                 $balance = SettingController::bonus()['bonus']['user_to_seller'] ?? 0;
                 BalanceController::store('Bono de '.$balance.' jib por convertirse en vendedor de jimbo', 'credit', $balance, 'jib', $user->id);
                 NotificationController::store('Has recibido nuevos Jibs', 'Bono de '.$balance.' jib por convertirse en vendedor de jimbo', $user->id);
@@ -313,8 +324,6 @@ class SellerController extends Controller
             }
         }
 
-
-
         return view('panel.sellers.show', [
             'title'              => 'Vendedores',
             'title_header'       => 'Vendedor detalles',
@@ -406,7 +415,7 @@ class SellerController extends Controller
         }
         $saved = $seller->save();
         if($saved)
-            $seller->syncRoles($request->role);
+            //$seller->syncRoles($request->role);
             return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Vendedor actualizado exitosamente.'], 200);
     }
 
