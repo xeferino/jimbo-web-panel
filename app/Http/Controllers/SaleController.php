@@ -290,56 +290,55 @@ class SaleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function receipt(Request $request)
+    public function receipt(Request $request, $id)
     {
-        $operation = $request->operation;
-        $data = [];
-        $seller = null;
-        $buyer = null;
-        $user = User::findOrFail($request->user);
-        $jib_unit = Setting::where('name', 'jib_unit_x_usd')->first();
-        $jib_usd = Setting::where('name', 'jib_usd')->first();
-        $amout_jib = null;
-
-        $sale = null;
-
-        if($operation == 'shopping'){
-            $sale = Sale::where('id', $request->id)->where('user_id', $request->user)->first();
-            if($sale){
-                $buyer = $sale->Buyer->names. ' ' .$sale->Buyer->surnames;
-                $amout_jib = ($sale->ticket->promotion->price*$jib_unit->value)/$jib_usd->value;
-
+        try {
+            //code...
+            $id = decrypt($id);
+            $sale = Sale::findOrFail($id);
+            $operation = null;
+            if($sale->user_id > 0 ){
+                $operation = 'shopping';
+            }elseif($sale->seller_id>0){
+                $operation = 'sale';
             }
-        }else {
-            $sale = Sale::where('id', $request->id)->where('seller_id', $request->user)->first();
-            if($sale) {
-                $seller = $sale->Seller->names. ' ' .$sale->Seller->surnames;
-                $buyer = $sale->name;
-                $amout_jib = ($sale->ticket->promotion->price*$jib_unit->value)/$jib_usd->value;
 
+            $data = [];
+            $seller = null;
+            $buyer = null;
+            $jib_unit = Setting::where('name', 'jib_unit_x_usd')->first();
+            $jib_usd = Setting::where('name', 'jib_usd')->first();
+            $amout_jib = null;
+
+            if($operation == 'shopping'){
+                if($sale){
+                    $buyer = $sale->Buyer->names. ' ' .$sale->Buyer->surnames;
+                    $amout_jib = ($sale->ticket->promotion->price*$jib_unit->value)/$jib_usd->value;
+
+                }
+            }else {
+                if($sale) {
+                    $seller = $sale->Seller->names. ' ' .$sale->Seller->surnames;
+                    $buyer = $sale->name;
+                    $amout_jib = ($sale->ticket->promotion->price*$jib_unit->value)/$jib_usd->value;
+                }
             }
+
+            $data = [
+                'sale' => $sale,
+                'type' => $operation == 'shopping' ? 'Compra' : 'Venta',
+                'buyer' => $buyer,
+                'seller' => $seller,
+                'operation' => $operation,
+                'amout_jib' => $amout_jib,
+                'receipt'   => null
+            ];
+
+            $pdf = Pdf::loadView('panel.sales.receipt', $data);
+            $name = "Recibo-de-".$data['type']."-".str_pad($sale->id,6,"0",STR_PAD_LEFT).".pdf";
+            return $pdf->stream($name);
+        } catch (\Throwable $th) {
+            abort(400);
         }
-
-        if($operation != 'shopping' or $operation == 'sale') {
-            abort(404);
-        }
-
-        if ($sale == null) {
-            abort(404);
-        }
-
-        $data = [
-            'sale' => $sale,
-            'type' => $operation == 'shopping' ? 'Compra' : 'Venta',
-            'buyer' => $buyer,
-            'seller' => $seller,
-            'operation' => $operation,
-            'amout_jib' => $amout_jib
-
-        ];
-
-        $pdf = Pdf::loadView('panel.sales.receipt', $data);
-        $name = "Recibo-de-".$data['type']."-".str_pad($sale->id,6,"0",STR_PAD_LEFT).".pdf";
-        return $pdf->download($name);
     }
 }

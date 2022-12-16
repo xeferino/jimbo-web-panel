@@ -21,6 +21,8 @@ use App\Models\User;
 use App\Helpers\Helper;
 use App\Models\Setting;
 use Illuminate\Support\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 class SaleController extends Controller
 {
     /**
@@ -77,21 +79,6 @@ class SaleController extends Controller
                                 $saleUpdate->method = 'card';
                                 $saleUpdate->save();
                                 TicketUser::insert($tickets);
-
-                                $payment_receipt = [
-                                    'fullname'          => $saleUpdate->name,
-                                    'date'              => $saleUpdate->created_at,
-                                    'code_ticket'       => $ticket->serial,
-                                    'tickets'           => $saleUpdate->TicketsUsers,
-                                    'quantity'          => $ticket->promotion->quantity,
-                                    'number_operation'  => $saleUpdate->number,
-                                    'amount'            => Helper::amount($ticket->promotion->price),
-                                    "description"       => 'Compra '.$ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
-                                    'raffle'            => $ticket->raffle->title,
-                                    'type'              => 'card'
-
-                                ];
-                                Mail::to($user->email)->send(new ReceiptPayment($payment_receipt));
                             }
 
                             $type = null;
@@ -140,20 +127,6 @@ class SaleController extends Controller
                             $saleUpdate->save();
                             TicketUser::insert($tickets);
 
-                            $payment_receipt = [
-                                'fullname'          => $saleUpdate->name,
-                                'date'              => $saleUpdate->created_at,
-                                'code_ticket'       => $ticket->serial,
-                                'tickets'           => $saleUpdate->TicketsUsers,
-                                'quantity'          => $ticket->promotion->quantity,
-                                'number_operation'  => $saleUpdate->number,
-                                'amount'            => Helper::jib($amout_jib),
-                                "description"       => 'Compra '.$ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
-                                'raffle'            => $ticket->raffle->title,
-                                'type'              => 'jib'
-                            ];
-                            Mail::to($user->email)->send(new ReceiptPayment($payment_receipt));
-
                             $data = [
                                 'sale_id'        => $saleUpdate->id,
                                 'user_id'        => $user->id,
@@ -187,20 +160,6 @@ class SaleController extends Controller
                             $saleUpdate->save();
                             TicketUser::insert($tickets);
 
-                            $payment_receipt = [
-                                'fullname'          => $saleUpdate->name,
-                                'date'              => $saleUpdate->created_at,
-                                'code_ticket'       => $ticket->serial,
-                                'tickets'           => $saleUpdate->TicketsUsers,
-                                'quantity'          => $ticket->promotion->quantity,
-                                'number_operation'  => $saleUpdate->number,
-                                'amount'            => Helper::jib($amout_jib),
-                                "description"       => 'Compra '.$ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
-                                'raffle'            => $ticket->raffle->title,
-                                'type'              => 'Efectivo'
-                            ];
-                            Mail::to($user->email)->send(new ReceiptPayment($payment_receipt));
-
                             $data = [
                                 'sale_id'        => $saleUpdate->id,
                                 'user_id'        => $user->id,
@@ -228,16 +187,22 @@ class SaleController extends Controller
                             if($operation == 1){
                                 $notification = NotificationController::store('Nueva Compra!', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
                                 $buyer = $saleUpdate->Buyer->names. ' ' .$saleUpdate->Buyer->surnames;
+                                $this->receipt($saleUpdate->id, $user->email, 'buyer');
                             }else {
-                                $notification = NotificationController::store('Nueva Venta!', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
                                 $seller = $saleUpdate->Seller->names. ' ' .$saleUpdate->Seller->surnames;
                                 $buyer = $saleUpdate->name;
+                                $this->receipt($saleUpdate->id, $user->email, 'seller');
+                                $notification = NotificationController::store('Nueva Venta!', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
+                                $this->receipt($saleUpdate->id, $saleUpdate->email, 'buyer');
                             }
                         } elseif ($user->type == 2) {
-                            $notification = NotificationController::store('Nueva Venta!', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
                             $seller = $saleUpdate->Seller->names. ' ' .$saleUpdate->Seller->surnames;
                             $buyer = $saleUpdate->name;
+                            $this->receipt($saleUpdate->id, $user->email, 'seller');
+                            $notification = NotificationController::store('Nueva Venta!', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
+                            $this->receipt($saleUpdate->id, $saleUpdate->email, 'buyer');
                         }
+
                         $receipt_ope = $operation == 1 ? 'shopping' : 'sale';
                         $receipt_ope_user = $operation == 1 ? $saleUpdate->user_id : $saleUpdate->seller_id;
                         return response()->json([
@@ -254,7 +219,8 @@ class SaleController extends Controller
                                 'number_operation'  => $saleUpdate->number,
                                 'amount'            => Helper::amount($ticket->promotion->price),
                                 'operation'         => $request->operation,
-                                'url_receipt'       => route('receipt', ['operation' => $receipt_ope, 'id' => $saleUpdate->id, 'user' => $receipt_ope_user])
+                                //'url_receipt'       => route('receipt', ['operation' => $receipt_ope, 'id' => $saleUpdate->id, 'user' => $receipt_ope_user])
+                                'url_receipt'       => route('receipt', ['id' => encrypt($saleUpdate->id)])
                             ]
                         ], 200);
                     }
@@ -520,6 +486,71 @@ class SaleController extends Controller
                 'status'  => 500,
                 'message' =>  $e->getMessage()
             ]);
+        }
+    }
+
+    /**
+     * Display a single graphics of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    private function receipt($id, $email, $type = null)
+    {
+        try {
+            //code...
+            $sale = Sale::findOrFail($id);
+            $operation = null;
+            if($sale->user_id > 0 ){
+                $operation = 'shopping';
+            }elseif($sale->seller_id>0){
+                $operation = 'sale';
+            }
+
+            $data = [];
+            $seller = null;
+            $buyer = null;
+            $jib_unit = Setting::where('name', 'jib_unit_x_usd')->first();
+            $jib_usd = Setting::where('name', 'jib_usd')->first();
+            $amout_jib = null;
+
+            if($operation == 'shopping'){
+                if($sale){
+                    $buyer = $sale->Buyer->names. ' ' .$sale->Buyer->surnames;
+                    $amout_jib = ($sale->ticket->promotion->price*$jib_unit->value)/$jib_usd->value;
+
+                }
+            }else {
+                if($sale) {
+                    $seller = $sale->Seller->names. ' ' .$sale->Seller->surnames;
+                    $buyer = $sale->name;
+                    $amout_jib = ($sale->ticket->promotion->price*$jib_unit->value)/$jib_usd->value;
+                }
+            }
+
+            $data = [
+                'sale' => $sale,
+                'type' => $operation == 'shopping' ? 'Compra' : 'Venta',
+                'buyer' => $buyer,
+                'seller' => $seller,
+                'operation' => $operation,
+                'amout_jib' => $amout_jib,
+                'receipt'   => $type
+            ];
+
+            $pdf = Pdf::loadView('panel.sales.receipt', $data);
+            $output = $pdf->output();
+            Mail::to($email)->send(new ReceiptPayment([
+                'pdf' => $output,
+                'number' => str_pad($sale->id,6,"0",STR_PAD_LEFT),
+                'type' => $operation == 'shopping' ? 'Compra' : 'Venta',
+                'sale' => $sale,
+                'operation' => $type,
+                'buyer' => $buyer,
+                'seller' => $seller,
+            ]));
+            return;
+        } catch (\Throwable $th) {
+            abort(400);
         }
     }
 }

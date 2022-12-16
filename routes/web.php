@@ -40,7 +40,8 @@ Route::get('/privacy_policies', [LandingPageController::class, 'privacy'])->name
 Route::get('/rules_game', [LandingPageController::class, 'game'])->name('landing.rules_game');
 Route::get('/faqs', [LandingPageController::class, 'faq'])->name('landing.faqs');
 //receipt
-Route::get('/receipt/{operation}/{id}/{user}', [SaleController::class, 'receipt'])->name('receipt');
+//Route::get('/receipt/{operation}/{id}/{user}', [SaleController::class, 'receipt'])->name('receipt');
+Route::get('/receipt/{id}', [SaleController::class, 'receipt'])->name('receipt');
 
 Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');

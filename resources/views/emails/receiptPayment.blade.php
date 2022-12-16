@@ -102,6 +102,13 @@
       }
     }
   </style>
+  <style type="text/css">
+    .page-break {page-break-after: always !important;  }
+    .tftable {font-size:16px !important; color:#333333 !important; width:100% !important; border-width: 1px !important; border-color: #fff !important; border-collapse: collapse !important; }
+    .tftable th {font-size:16px !important; background-color:#ffa726c9 !important; border-width: 1px !important; padding: 8px !important; border-style: solid !important; border-color: #fff !important; text-align:left !important; }
+    .tftable tr {background-color:#ffffff !important; }
+    .tftable td {font-size:16px !important; border-width: 1px !important; padding: 8px !important; border-style: solid !important; border-color: #fff !important; }
+    </style>
       <!--user entered Head Start--><!--End Head user entered-->
     </head>
     <body>
@@ -129,424 +136,42 @@
       </td>
     </tr>
   </table>
-
   <!-- HEADER -->
   @include('emails.includes.header', ['image' => 'logo-texto.png'])
-
   <table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="23308eb9-3685-43e8-9470-799f5caf5f3f" data-mc-module-version="2019-10-22">
     <tbody>
       <tr>
-        <td style="padding:18px 0px 15px 0px; line-height:20px; text-align:inherit; background-color:#FFFFFF;" height="100%" valign="top" bgcolor="#FFFFFF" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 26px; color: #3f4096"><strong>¡Hola, {{ $data['fullname']}}!</strong></span></div><div></div></div></td>
+        <td style="padding:18px 0px 15px 0px; line-height:20px; text-align:inherit; background-color:#FFFFFF;" height="100%" valign="top" bgcolor="#FFFFFF" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 26px; color: #3f4096"><strong>
+            @if($data['type'] == 'Compra' && $data['operation'] == 'buyer')
+                ¡Hola, {{ $data['buyer'] }}
+            @elseif ($data['type'] == 'Venta' && $data['operation'] == 'buyer')
+                ¡Hola, {{$data['buyer']}}
+            @elseif ($data['type'] == 'Venta' && $data['operation'] == 'seller')
+                ¡Hola, {{$data['seller']}}
+            @endif
+        </strong></span></div><div></div></div></td>
       </tr>
     </tbody>
   </table><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="c2fe3d16-e9c1-4492-a90e-70be0f0c31cb" data-mc-module-version="2019-10-22">
     <tbody>
       <tr>
-        <td style="padding:0px 0px 0px 0px; line-height:22px; text-align:inherit; background-color:#FFFFFF;" height="100%" valign="top" bgcolor="#FFFFFF" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 18px"><b>Recibo de compra de boleto</b></span></div><div></div></div></td>
+        <td style="padding:0px 0px 0px 0px; line-height:22px; text-align:inherit; background-color:#FFFFFF;" height="100%" valign="top" bgcolor="#FFFFFF" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 16px">
+            @if($data['type'] == 'Compra' && $data['operation'] == 'buyer')
+                Felicidades, tu operacion de compra se ha realizado exitosamente!
+            @elseif ($data['type'] == 'Venta' && $data['operation'] == 'buyer')
+                Felicidades, tu operacion de compra se ha realizado exitosamente!
+            @elseif ($data['type'] == 'Venta' && $data['operation'] == 'seller')
+                Felicidades, tu operacion de venta se ha realizado exitosamente!
+            @endif
+        </span></div><div></div></div></td>
       </tr>
     </tbody>
   </table>
-  <table id="u_body" style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #e7e7e7;width:100%" cellspacing="0" cellpadding="0">
-    <tbody>
-    <tr style="vertical-align: top">
-      <td style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-      <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background-color: #e7e7e7;"><![endif]-->
-
-
-  <div class="u-row-container" style="padding: 0px;background-image: url('images/image-10.png');background-repeat: no-repeat;background-position: center top;background-color: transparent">
-    <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-      <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-image: url('images/image-10.png');background-repeat: no-repeat;background-position: center top;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
-
-  <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-  <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-    <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-    <!--[if (!mso)&(!IE)]><!--><div style="height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-
-  <table style="font-family:arial,helvetica,sans-serif;" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-      <tr>
-
-      </tr>
-    </tbody>
-  </table>
-
-    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-    </div>
-  </div>
-  <!--[if (mso)|(IE)]></td><![endif]-->
-        <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-      </div>
-    </div>
-  </div>
-
-
-
-  <div class="u-row-container" style="padding: 0px;background-color: transparent">
-    <div class="u-row no-stack" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-      <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
-
-  <!--[if (mso)|(IE)]><td align="center" width="199" style="background-color: #ffffff;width: 199px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-  <div class="u-col u-col-33p33" style="max-width: 320px;min-width: 199.98px;display: table-cell;vertical-align: top;">
-    <div style="background-color: #ffffff;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-    <!--[if (!mso)&(!IE)]><!--><div style="height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-
-
-
-  <table id="u_content_image_4" style="font-family:arial,helvetica,sans-serif;" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-      <tr>
-        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:40px 5px 5px;font-family:arial,helvetica,sans-serif;" align="left">
-
-
-
-        <table width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody><tr>
-      <td class="v-text-align" style="padding-right: 0px;padding-left: 0px;" align="center">
-
-
-
-      </td>
-    </tr>
-  </tbody></table></td>
-      </tr>
-    </tbody>
-  </table><table style="font-family:arial,helvetica,sans-serif;" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-      <tr>
-        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:12px 10px 38px;font-family:arial,helvetica,sans-serif;" align="left">
-
-    <h1 class="v-text-align v-font-size" style="margin: 0px; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: 'Montserrat',sans-serif; font-size: 14px;">
-      Numero de Operacion: <br><strong>{{$data['number_operation']}}</strong>
-    </h1>
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-    </div>
-  </div>
-  <!--[if (mso)|(IE)]></td><![endif]-->
-  <!--[if (mso)|(IE)]><td align="center" width="210" style="background-color: #ffffff;width: 210px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-  <div class="u-col u-col-35" style="max-width: 320px;min-width: 210px;display: table-cell;vertical-align: top;">
-    <div style="background-color: #ffffff;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-    <!--[if (!mso)&(!IE)]><!--><div style="height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-
-  <table id="u_content_image_5" style="font-family:arial,helvetica,sans-serif;" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-      <tr>
-        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:40px 5px 5px;font-family:arial,helvetica,sans-serif;" align="left">
-
-  <table width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-  </tbody></table>
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <table id="u_content_heading_3" style="font-family:arial,helvetica,sans-serif;" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-      <tr>
-        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 38px;font-family:arial,helvetica,sans-serif;" align="left">
-
-    <h1 class="v-text-align v-font-size" style="margin: 0px; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: 'Montserrat',sans-serif; font-size: 14px;">Fecha de Recibo <br><strong>{{$data['date']}}</strong>
-    </h1>
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-    </div>
-  </div>
-  <!--[if (mso)|(IE)]></td><![endif]-->
-  <!--[if (mso)|(IE)]><td align="center" width="190" style="background-color: #ffffff;width: 190px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-  <div class="u-col u-col-31p67" style="max-width: 320px;min-width: 190.02px;display: table-cell;vertical-align: top;">
-    <div style="background-color: #ffffff;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-    <!--[if (!mso)&(!IE)]><!--><div style="height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-
-  <table id="u_content_image_6" style="font-family:arial,helvetica,sans-serif;" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-      <tr>
-        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:41px 5px 5px;font-family:arial,helvetica,sans-serif;" align="left">
-
-  <table width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-  </tbody></table>
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <table id="u_content_heading_4" style="font-family:arial,helvetica,sans-serif;" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-      <tr>
-        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:12px 10px 38px;font-family:arial,helvetica,sans-serif;" align="left">
-
-    <h1 class="v-text-align v-font-size" style="margin: 0px; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: 'Montserrat',sans-serif; font-size: 14px;">
-      Monto Cobrado:  <br> <strong>{{$data['amount']}}</strong>
-    </h1>
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-    </div>
-  </div>
-  <!--[if (mso)|(IE)]></td><![endif]-->
-        <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-      </div>
-    </div>
-  </div>
-
-
-
-  <div class="u-row-container" style="padding: 0px;background-color: transparent">
-    <div class="u-row no-stack" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-      <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
-
-  <!--[if (mso)|(IE)]><td align="center" width="200" style="background-color: #ffa726c9;width: 200px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-  <div class="u-col u-col-33p33" style="max-width: 320px;min-width: 200px;display: table-cell;vertical-align: top;">
-    <div style="background-color: #ffa726c9;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-    <!--[if (!mso)&(!IE)]><!--><div style="height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-
-  <table id="u_content_heading_5" style="font-family:arial,helvetica,sans-serif;" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-      <tr>
-        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
-
-    <h1 class="v-text-align v-font-size" style="margin: 0px; color: #ffffff; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: 'Montserrat',sans-serif; font-size: 18px;">
-      <strong>Descripcion</strong>
-    </h1>
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-    </div>
-  </div>
-  <!--[if (mso)|(IE)]></td><![endif]-->
-  <!--[if (mso)|(IE)]><td align="center" width="200" style="background-color: #ffa726c9;width: 200px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-  <div class="u-col u-col-33p33" style="max-width: 320px;min-width: 200px;display: table-cell;vertical-align: top;">
-    <div style="background-color: #ffa726c9;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-    <!--[if (!mso)&(!IE)]><!--><div style="height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-
-  <table id="u_content_heading_6" style="font-family:arial,helvetica,sans-serif;" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-      <tr>
-        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
-
-    <h1 class="v-text-align v-font-size" style="margin: 0px; color: #ffffff; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: 'Montserrat',sans-serif; font-size: 18px;">
-      <strong>Cantidad</strong>
-    </h1>
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-    </div>
-  </div>
-  <!--[if (mso)|(IE)]></td><![endif]-->
-  <!--[if (mso)|(IE)]><td align="center" width="200" style="background-color: #ffa726c9;width: 200px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-  <div class="u-col u-col-33p33" style="max-width: 320px;min-width: 200px;display: table-cell;vertical-align: top;">
-    <div style="background-color: #ffa726c9;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-    <!--[if (!mso)&(!IE)]><!--><div style="height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-
-  <table id="u_content_heading_7" style="font-family:arial,helvetica,sans-serif;" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-      <tr>
-        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;" align="left">
-
-    <h1 class="v-text-align v-font-size" style="margin: 0px; color: #ffffff; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: 'Montserrat',sans-serif; font-size: 18px;">
-      <strong>Boleto</strong>
-    </h1>
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-    </div>
-  </div>
-  <!--[if (mso)|(IE)]></td><![endif]-->
-        <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-      </div>
-    </div>
-  </div>
-  <div class="u-row-container" style="padding: 0px;background-color: transparent">
-    <div class="u-row no-stack" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-      <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
-
-  <!--[if (mso)|(IE)]><td align="center" width="200" style="background-color: #ffffff;width: 200px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-  <div class="u-col u-col-33p33" style="max-width: 320px;min-width: 200px;display: table-cell;vertical-align: top;">
-    <div style="background-color: #ffffff;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-    <!--[if (!mso)&(!IE)]><!--><div style="height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-
-  <table id="u_content_heading_10" style="font-family:arial,helvetica,sans-serif;" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-      <tr>
-        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 11px;font-family:arial,helvetica,sans-serif;" align="left">
-
-    <h1 class="v-text-align v-font-size" style="margin: 0px; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: 'Montserrat',sans-serif; font-size: 14px;">
-      {{$data['description']}}
-    </h1>
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-    </div>
-  </div>
-  <!--[if (mso)|(IE)]></td><![endif]-->
-  <!--[if (mso)|(IE)]><td align="center" width="200" style="background-color: #ffffff;width: 200px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-  <div class="u-col u-col-33p33" style="max-width: 320px;min-width: 200px;display: table-cell;vertical-align: top;">
-    <div style="background-color: #ffffff;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-    <!--[if (!mso)&(!IE)]><!--><div style="height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-
-  <table id="u_content_heading_11" style="font-family:arial,helvetica,sans-serif;" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-      <tr>
-        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:20px 10px;font-family:arial,helvetica,sans-serif;" align="left">
-
-    <h1 class="v-text-align v-font-size" style="margin: 0px; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: 'Montserrat',sans-serif; font-size: 14px;">
-      <strong>{{$data['quantity']}}</strong>
-    </h1>
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-    </div>
-  </div>
-  <!--[if (mso)|(IE)]></td><![endif]-->
-  <!--[if (mso)|(IE)]><td align="center" width="200" style="background-color: #ffffff;width: 200px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-  <div class="u-col u-col-33p33" style="max-width: 320px;min-width: 200px;display: table-cell;vertical-align: top;">
-    <div style="background-color: #ffffff;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-    <!--[if (!mso)&(!IE)]><!--><div style="height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-
-  <table id="u_content_heading_12" style="font-family:arial,helvetica,sans-serif;" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-      <tr>
-        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:20px 10px;font-family:arial,helvetica,sans-serif;" align="left">
-
-    <h1 class="v-text-align v-font-size" style="margin: 0px; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: 'Montserrat',sans-serif; font-size: 14px;">
-      <strong>{{$data['code_ticket']}}</strong>
-    </h1>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-    </div>
-  </div>
-  <!--[if (mso)|(IE)]></td><![endif]-->
-        <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-      </div>
-    </div>
-  </div>
-  <div class="u-row-container" style="padding: 0px;background-color: transparent">
-    <div class="u-row no-stack" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-      <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
-
-  <!--[if (mso)|(IE)]><td align="center" width="400" style="background-color: #ffffff;width: 400px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-  <div class="u-col u-col-66p67" style="max-width: 320px;min-width: 400px;display: table-cell;vertical-align: top;">
-    <div style="background-color: #ffffff;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-    <!--[if (!mso)&(!IE)]><!--><div style="height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-
-  <table id="u_content_heading_31" style="font-family:arial,helvetica,sans-serif;" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-      <tr>
-        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:20px 10px 20px 270px;font-family:arial,helvetica,sans-serif;" align="left">
-
-    <h1 class="v-text-align v-font-size" style="margin: 0px; color: #ffa726c9; line-height: 140%; text-align: left; word-wrap: break-word; font-weight: normal; font-family: 'Montserrat',sans-serif; font-size: 20px;">
-      <strong>TOTAL</strong>
-    </h1>
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-    </div>
-  </div>
-  <!--[if (mso)|(IE)]></td><![endif]-->
-  <!--[if (mso)|(IE)]><td align="center" width="200" style="background-color: #ffa726c9;width: 200px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-  <div class="u-col u-col-33p33" style="max-width: 320px;min-width: 200px;display: table-cell;vertical-align: top;">
-    <div style="background-color: #ffa726c9;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-    <!--[if (!mso)&(!IE)]><!--><div style="height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-
-  <table id="u_content_heading_15" style="font-family:arial,helvetica,sans-serif;" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-    <tbody>
-      <tr>
-        <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:20px 10px;font-family:arial,helvetica,sans-serif;" align="left">
-
-    <h1 class="v-text-align v-font-size" style="margin: 0px; color: #ffffff; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family: 'Montserrat',sans-serif; font-size: 18px;">
-      <strong>{{$data['amount']}}</strong>
-    </h1>
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-    </div>
-  </div>
-  <!--[if (mso)|(IE)]></td><![endif]-->
-        <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-      </div>
-    </div>
-  </div>
-  <div class="u-row-container" style="padding: 0px;background-color: transparent">
-    <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-      <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-        <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
-
-  <!--[if (mso)|(IE)]><td align="center" width="600" style="background-color: #ffffff;width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-  <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-    <div style="background-color: #ffffff;height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-    <!--[if (!mso)&(!IE)]><!--><div style="height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;"><!--<![endif]-->
-    <!--[if (!mso)&(!IE)]><!--></div><!--<![endif]-->
-    </div>
-  </div>
-  <!--[if (mso)|(IE)]></td><![endif]-->
-        <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-      </div>
-    </div>
-  </div>
-      <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-      </td>
-    </tr>
-    </tbody>
-    </table>
   <br>
   <table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="5dac3345-d6ac-4b65-9ab9-fbb9d0102b44" data-mc-module-version="2019-10-22">
     <tbody>
       <tr>
-        <td style="padding:0px 20px 40px 20px; line-height:22px; text-align:inherit; background-color:#FFFFFF;" height="100%" valign="top" bgcolor="#FFFFFF" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 16px">Se ha generado un recibo de compra de manera automatica.</span><br>
+        <td style="padding:0px 20px 40px 20px; line-height:22px; text-align:inherit; background-color:#FFFFFF;" height="100%" valign="top" bgcolor="#FFFFFF" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 16px">Se ha generado un recibo de tu operacion de manera automatica.</span><br>
 <span style="font-size: 18px"><strong>Gracias</strong></span>.</div><div></div></div></td>
       </tr>
     </tbody>
