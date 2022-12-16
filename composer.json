@@ -6,12 +6,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "barryvdh/laravel-dompdf": "^2.0",
+        "culqi/culqi-php": "^1.5.2",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "spatie/laravel-permission": "^5.5",
-        "culqi/culqi-php": "^1.5.2",
         "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {

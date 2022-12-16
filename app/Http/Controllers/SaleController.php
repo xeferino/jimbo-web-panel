@@ -20,6 +20,9 @@ use App\Models\Level;
 use App\Models\LevelUser;
 use App\Models\Setting;
 use App\Http\Controllers\Api\BalanceController;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Mail\ReceiptPayment;
+use Illuminate\Support\Facades\Mail;
 
 
 
@@ -32,7 +35,7 @@ class SaleController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('receipt');
     }
 
     /**
@@ -42,6 +45,10 @@ class SaleController extends Controller
      */
     public function index(Request $request)
     {
+        $sale = Sale::find(30);
+        return $sale->Buyer->names;
+
+
         if ($request->ajax()) {
             $sale = Sale::select(
                 'id',
@@ -275,5 +282,64 @@ class SaleController extends Controller
             }
         }
         abort(404);
+    }
+
+
+    /**
+     * Display a single graphics of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function receipt(Request $request)
+    {
+        $operation = $request->operation;
+        $data = [];
+        $seller = null;
+        $buyer = null;
+        $user = User::findOrFail($request->user);
+        $jib_unit = Setting::where('name', 'jib_unit_x_usd')->first();
+        $jib_usd = Setting::where('name', 'jib_usd')->first();
+        $amout_jib = null;
+
+        $sale = null;
+
+        if($operation == 'shopping'){
+            $sale = Sale::where('id', $request->id)->where('user_id', $request->user)->first();
+            if($sale){
+                $buyer = $sale->Buyer->names. ' ' .$sale->Buyer->surnames;
+                $amout_jib = ($sale->ticket->promotion->price*$jib_unit->value)/$jib_usd->value;
+
+            }
+        }else {
+            $sale = Sale::where('id', $request->id)->where('seller_id', $request->user)->first();
+            if($sale) {
+                $seller = $sale->Seller->names. ' ' .$sale->Seller->surnames;
+                $buyer = $sale->name;
+                $amout_jib = ($sale->ticket->promotion->price*$jib_unit->value)/$jib_usd->value;
+
+            }
+        }
+
+        if($operation != 'shopping' or $operation == 'sale') {
+            abort(404);
+        }
+
+        if ($sale == null) {
+            abort(404);
+        }
+
+        $data = [
+            'sale' => $sale,
+            'type' => $operation == 'shopping' ? 'Compra' : 'Venta',
+            'buyer' => $buyer,
+            'seller' => $seller,
+            'operation' => $operation,
+            'amout_jib' => $amout_jib
+
+        ];
+
+        $pdf = Pdf::loadView('panel.sales.receipt', $data);
+        $name = "Recibo-de-".$data['type']."-".str_pad($sale->id,6,"0",STR_PAD_LEFT).".pdf";
+        return $pdf->download($name);
     }
 }

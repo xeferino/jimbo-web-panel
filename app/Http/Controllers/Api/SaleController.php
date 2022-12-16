@@ -231,14 +231,15 @@ class SaleController extends Controller
                             }else {
                                 $notification = NotificationController::store('Nueva Venta!', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
                                 $seller = $saleUpdate->Seller->names. ' ' .$saleUpdate->Seller->surnames;
-                                $buyer = $saleUpdate->Buyer->names. ' ' .$saleUpdate->Buyer->surnames;
+                                $buyer = $saleUpdate->name;
                             }
                         } elseif ($user->type == 2) {
                             $notification = NotificationController::store('Nueva Venta!', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
                             $seller = $saleUpdate->Seller->names. ' ' .$saleUpdate->Seller->surnames;
-                            $buyer = $saleUpdate->Buyer->names. ' ' .$saleUpdate->Buyer->surnames;
+                            $buyer = $saleUpdate->name;
                         }
-
+                        $receipt_ope = $operation == 1 ? 'shopping' : 'sale';
+                        $receipt_ope_user = $operation == 1 ? $saleUpdate->user_id : $saleUpdate->seller_id;
                         return response()->json([
                             'success' => true,
                             'message' => 'Pago procesado exitosamente.',
@@ -252,6 +253,8 @@ class SaleController extends Controller
                                 'quantity'          => $ticket->promotion->quantity,
                                 'number_operation'  => $saleUpdate->number,
                                 'amount'            => Helper::amount($ticket->promotion->price),
+                                'operation'         => $request->operation,
+                                'url_receipt'       => route('receipt', ['operation' => $receipt_ope, 'id' => $saleUpdate->id, 'user' => $receipt_ope_user])
                             ]
                         ], 200);
                     }
