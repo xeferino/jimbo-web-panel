@@ -107,7 +107,7 @@ class DashboardController extends Controller
                 ->groupBy('sales.seller_id')
                 ->whereNotNull('sales.seller_id')
                 ->offset(0)->limit(10)
-                ->orderBy('sales.id','DESC')
+                ->orderBy('sales.amount','DESC')
                 ->get();
         return [
             'top'  => $top ?? []

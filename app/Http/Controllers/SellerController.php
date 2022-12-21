@@ -15,6 +15,7 @@ use App\Http\Requests\FormSellerRequest;
 use App\Http\Requests\FormRechargeRequest;
 use App\Http\Controllers\Api\BalanceController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\SettingController;
 use App\Models\Country;
 use App\Models\Sale;
 use App\Models\Customer;
@@ -52,10 +53,17 @@ class SellerController extends Controller
                     ->addColumn('action', function($seller){
                            $btn = '';
                         if(auth()->user()->can('edit-seller')){
-
-                            $btn .= '<a href="'.route('panel.sellers.edit',['seller' => $seller->id]).'" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$seller->id.'" id="edit_'.$seller->id.'" class="btn btn-warning btn-sm mr-1 editSeller">
-                                            <i class="ti-pencil"></i>
-                                    </a>';
+                            $user = Seller::find($seller->id);
+                            if($user->type == 2){
+                                $btn .= '<a href="'.route('panel.sellers.edit',['seller' => $user->id]).'" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$user->id.'" id="edit_'.$user->id.'" class="btn btn-warning btn-sm mr-1 editSeller">
+                                                <i class="ti-pencil"></i>
+                                        </a>';
+                            } elseif ($user->type == 1) {
+                                # code...
+                                $btn .= '<a href="'.route('panel.competitors.edit',['competitor' => $user->id]).'" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$user->id.'" id="edit_'.$user->id.'" class="btn btn-warning btn-sm mr-1 editSeller">
+                                                <i class="ti-pencil"></i>
+                                        </a>';
+                            }
                         }
                         if(auth()->user()->can('show-seller')){
                             $btn .= '<a href="'.route('panel.sellers.show',['seller' => $seller->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$seller->id.'" id="det_'.$seller->id.'" class="btn btn-inverse btn-sm  mr-1 detailSeller">
@@ -79,7 +87,15 @@ class SellerController extends Controller
                         return $btn;
                     })
                     ->addColumn('image', function($seller){
-                        $img = $seller->image != 'avatar.svg' ? asset('assets/images/sellers/'.$seller->image): asset('assets/images/avatar.svg');
+                        $img = null;
+                        $user = Seller::find($seller->id);
+
+                        if($user->type == 2){
+                            $img = $user->image != 'avatar.svg' ? asset('assets/images/sellers/'.$user->image): asset('assets/images/avatar.svg');
+                        } elseif ($user->type == 1) {
+                            # code...
+                            $img = $user->image != 'avatar.svg' ? asset('assets/images/competitors/'.$user->image): asset('assets/images/avatar.svg');
+                        }
                         return '<img src="'.$img.'" class="img-50 img-radius" alt="User-Profile-Image">';
                     })
                     ->addColumn('role', function($seller){

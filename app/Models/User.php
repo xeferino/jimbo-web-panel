@@ -44,6 +44,7 @@ class User extends Authenticatable
         'become_seller',
         'balance_usd',
         'balance_jib',
+        'seller_at'
     ];
 
     /**

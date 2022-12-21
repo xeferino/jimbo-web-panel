@@ -547,6 +547,23 @@ class AuthController extends Controller
     {
         try {
             $user                    = User::findOrFail($id);
+            if ($user->type == 2) {
+                return response()->json([
+                    'status'   => 422,
+                    'message'  =>  $user->names.' '.$user->surnames.', actualmente eres vendedor de jimbo'
+                ], 422);
+            } elseif ($user->type == 1 && $user->become_seller == 1 && $user->seller_at == null) {
+                return response()->json([
+                    'status'   => 422,
+                    'message'  =>  $user->names.' '.$user->surnames.', tienes una solicitud para convertirte en vendedor de jimbo pendiente'
+                ], 422);
+            } elseif ($user->type == 1 && $user->become_seller == 1 && $user->seller_at != null) {
+                return response()->json([
+                    'status'   => 422,
+                    'message'  =>  $user->names.' '.$user->surnames.', actualmente eres vendedor de jimbo'
+                ], 422);
+            }
+
             $user->become_seller     = 1;
 
             if ($user->type == 2) {

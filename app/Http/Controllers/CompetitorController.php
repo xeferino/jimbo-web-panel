@@ -21,6 +21,9 @@ use App\Helpers\Helper;
 use Illuminate\Support\Facades\File;
 use App\Mail\Notify;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Api\BalanceController;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\SettingController;
 
 
 class CompetitorController extends Controller
@@ -469,6 +472,11 @@ class CompetitorController extends Controller
                 $competitor->seller_at  = now();
                 if($competitor->save()){
                     $competitor->syncRoles(3,4);
+                    $balance = SettingController::bonus()['bonus']['user_to_seller'] ?? 0;
+                    BalanceController::store('Bono de '.$balance.' jib por convertirse en vendedor de jimbo', 'credit', $balance, 'jib', $competitor->id);
+                    NotificationController::store('Has recibido nuevos Jibs', 'Bono de '.$balance.' jib por convertirse en vendedor de jimbo', $competitor->id);
+                    NotificationController::store('Solicitud de vendedor, Aprobada!','Hola, '.$competitor->email.' Felicidades, ahora forma parte de nuestra familia Jimbo', $competitor->id);
+
                     $data = [
                         'user'      =>  $competitor,
                         'title'     => 'Nuevo vendedor',
