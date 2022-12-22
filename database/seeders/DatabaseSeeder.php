@@ -19,12 +19,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([UserSeeder::class]);
+
         $this->call([CountrySeeder::class]);
         $this->call([LevelSeeder::class]);
         $this->call([SettingSeeder::class]);
         $this->call([PaymentMethodSeeder::class]);
-        //$this->call([PromotionSeeder::class]);
+        $this->call([UserSeeder::class]);
 
         // \App\Models\User::factory(500)->create();
 

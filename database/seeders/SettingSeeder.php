@@ -78,6 +78,13 @@ class SettingSeeder extends Seeder
             'value'  => '10',
         ],
 
+
+        //POR CONVERTIRCE EN VENDEDOR
+        [
+            'name'      => 'user_to_seller',
+            'value'  => '50',
+        ],
+
         //POR CONVERTIRCE EN VENDEDOR X UNICA VEZ  + 1 VENTA MIN. GANA
         [
             'name'      => 'level_classic_seller_percent',

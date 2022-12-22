@@ -18,12 +18,14 @@ class SliderObserver
      */
     public function created(Slider $slider)
     {
-        $action = Action::insert([
-            'title'         => 'Nuevo Slider',
-            'description'   => 'se ha creado un slider de imagen '.$slider->name,
-            'user_id'       => Auth::user()->id,
-            'created_at'    => now()
-        ]);
+        if (Auth::check()) {
+            $action = Action::insert([
+                'title'         => 'Nuevo Slider',
+                'description'   => 'se ha creado un slider de imagen '.$slider->name,
+                'user_id'       => Auth::user()->id,
+                'created_at'    => now()
+            ]);
+        }
     }
 
     /**
@@ -34,11 +36,13 @@ class SliderObserver
      */
     public function deleted(Slider $slider)
     {
-        $action = Action::insert([
-            'title'         => 'Slider Eliminado',
-            'description'   => 'se ha eliminado el slider de imagen '.$slider->name,
-            'user_id'       => Auth::user()->id,
-            'created_at'    => now()
-        ]);
+        if (Auth::check()) {
+            $action = Action::insert([
+                'title'         => 'Slider Eliminado',
+                'description'   => 'se ha eliminado el slider de imagen '.$slider->name,
+                'user_id'       => Auth::user()->id,
+                'created_at'    => now()
+            ]);
+        }
     }
 }

@@ -20,12 +20,14 @@ class RaffleObserver
      */
     public function created(Raffle $raffle)
     {
-        $action = Action::insert([
-            'title'         => 'Nuevo Sorteo',
-            'description'   => 'se ha creado un sorteo '.$raffle->title,
-            'user_id'       => Auth::user()->id,
-            'created_at'    => now()
-        ]);
+        if (Auth::check()) {
+            $action = Action::insert([
+                'title'         => 'Nuevo Sorteo',
+                'description'   => 'se ha creado un sorteo '.$raffle->title,
+                'user_id'       => Auth::user()->id,
+                'created_at'    => now()
+            ]);
+        }
     }
 
     /**
@@ -52,12 +54,14 @@ class RaffleObserver
      */
     public function deleted(Raffle $raffle)
     {
-        $action = Action::insert([
-            'title'         => 'Sorteo Eliminado',
-            'description'   => 'se ha eliminado el sorteo '.$raffle->title,
-            'user_id'       => Auth::user()->id,
-            'created_at'    => now()
-        ]);
+        if (Auth::check()) {
+            $action = Action::insert([
+                'title'         => 'Sorteo Eliminado',
+                'description'   => 'se ha eliminado el sorteo '.$raffle->title,
+                'user_id'       => Auth::user()->id,
+                'created_at'    => now()
+            ]);
+        }
     }
 
 }

@@ -18,12 +18,14 @@ class PromotionObserver
      */
     public function created(Promotion $promotion)
     {
-        $action = Action::insert([
-            'title'         => 'Nueva Promocion',
-            'description'   => 'se ha creado una promocion '.$promotion->name,
-            'user_id'       => Auth::user()->id,
-            'created_at'    => now()
-        ]);
+        if (Auth::check()) {
+            $action = Action::insert([
+                'title'         => 'Nueva Promocion',
+                'description'   => 'se ha creado una promocion '.$promotion->name,
+                'user_id'       => Auth::user()->id,
+                'created_at'    => now()
+            ]);
+        }
     }
 
     /**
@@ -34,12 +36,14 @@ class PromotionObserver
      */
     public function deleted(Promotion $promotion)
     {
-        $action = Action::insert([
-            'title'         => 'Promocion Eliminada',
-            'description'   => 'se ha eliminado la promocion '.$promotion->name,
-            'user_id'       => Auth::user()->id,
-            'created_at'    => now()
-        ]);
+        if (Auth::check()) {
+            $action = Action::insert([
+                'title'         => 'Promocion Eliminada',
+                'description'   => 'se ha eliminado la promocion '.$promotion->name,
+                'user_id'       => Auth::user()->id,
+                'created_at'    => now()
+            ]);
+        }
     }
 
 }

@@ -18,12 +18,14 @@ class RoleObserver
      */
     public function created(Role $role)
     {
-        $action = Action::insert([
-            'title'         => 'Nuevo Rol',
-            'description'   => 'se ha creado un Rol '.$role->name,
-            'user_id'       => Auth::user()->id,
-            'created_at'    => now()
-        ]);
+        if (Auth::check()) {
+            $action = Action::insert([
+                'title'         => 'Nuevo Rol',
+                'description'   => 'se ha creado un Rol '.$role->name,
+                'user_id'       => Auth::user()->id,
+                'created_at'    => now()
+            ]);
+        }
     }
 
     /**
@@ -34,11 +36,13 @@ class RoleObserver
      */
     public function deleted(Role $role)
     {
-        $action = Action::insert([
-            'title'         => 'Rol Eliminado',
-            'description'   => 'se ha eliminado el Rol '.$role->name,
-            'user_id'       => Auth::user()->id,
-            'created_at'    => now()
-        ]);
+        if (Auth::check()) {
+            $action = Action::insert([
+                'title'         => 'Rol Eliminado',
+                'description'   => 'se ha eliminado el Rol '.$role->name,
+                'user_id'       => Auth::user()->id,
+                'created_at'    => now()
+            ]);
+        }
     }
 }

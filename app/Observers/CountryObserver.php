@@ -18,12 +18,14 @@ class CountryObserver
      */
     public function created(Country $country)
     {
-        $action = Action::insert([
-            'title'         => 'Nuevo Pais',
-            'description'   => 'se ha creado un pais '.$country->name,
-            'user_id'       => Auth::user()->id,
-            'created_at'    => now()
-        ]);
+        if (Auth::check()) {
+            $action = Action::insert([
+                'title'         => 'Nuevo Pais',
+                'description'   => 'se ha creado un pais '.$country->name,
+                'user_id'       => Auth::user()->id,
+                'created_at'    => now()
+            ]);
+        }
     }
 
     /**
