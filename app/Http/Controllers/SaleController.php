@@ -125,8 +125,11 @@ class SaleController extends Controller
                     })->addColumn('date', function($sale){
                         $date = Carbon::parse($sale->date)->format('d/m/Y H:i:s');
                         return   $date;
+                    })->addColumn('id', function($sale){
+                        $sale = Sale::find($sale->id);
+                        return str_pad($sale->id,6,"0",STR_PAD_LEFT);
                     })
-                    ->rawColumns(['action', 'status', 'raffle', 'ticket', 'amount', 'date', 'method'])
+                    ->rawColumns(['action', 'status', 'raffle', 'ticket', 'amount', 'date', 'method', 'id'])
                     ->make(true);
         }
 
@@ -167,6 +170,11 @@ class SaleController extends Controller
             $sale->status = 'approved';
 
             if($sale->save()) {
+                if ($sale->status == 'approved') {
+                    $this->sendReceiptSale($sale->id, $sale->Seller->email, 'seller');
+                    $this->sendReceiptSale($sale->id, $sale->email, 'buyer');
+                }
+
                 return response()->json([
                     'success'    => true,
                     'message' => 'Jimbo panel notifica: Venta aprobada exitosamente.'
@@ -350,6 +358,10 @@ class SaleController extends Controller
         $sale->country_id   = $request->country_id;
         $sale->status       = $request->status;
         if ($sale->save()){
+            if ($sale->status == 'approved') {
+                $this->sendReceiptSale($sale->id, $sale->Seller->email, 'seller');
+                $this->sendReceiptSale($sale->id, $sale->email, 'buyer');
+            }
             return response()->json([
                 'success' => true,
                 'message' => 'Jimbo panel notifica: Venta actualizada exitosamente.',
@@ -357,6 +369,71 @@ class SaleController extends Controller
             ], 200);
         }
         return response()->json(['success' => false, 'message' => 'Jimbo panel notifica: Error! al actualizar la venta.'], 200);
+    }
+
+    /**
+     * Send email receipt sale.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    private function sendReceiptSale($id, $email, $type = null)
+    {
+        try {
+            //code...
+            $sale = Sale::findOrFail($id);
+            $operation = null;
+            if($sale->user_id > 0 ){
+                $operation = 'shopping';
+            }elseif($sale->seller_id>0){
+                $operation = 'sale';
+            }
+
+            $data = [];
+            $seller = null;
+            $buyer = null;
+            $jib_unit = Setting::where('name', 'jib_unit_x_usd')->first();
+            $jib_usd = Setting::where('name', 'jib_usd')->first();
+            $amout_jib = null;
+
+            if($operation == 'shopping'){
+                if($sale){
+                    $buyer = $sale->Buyer->names. ' ' .$sale->Buyer->surnames;
+                    $amout_jib = ($sale->ticket->promotion->price*$jib_unit->value)/$jib_usd->value;
+
+                }
+            }else {
+                if($sale) {
+                    $seller = $sale->Seller->names. ' ' .$sale->Seller->surnames;
+                    $buyer = $sale->name;
+                    $amout_jib = ($sale->ticket->promotion->price*$jib_unit->value)/$jib_usd->value;
+                }
+            }
+
+            $data = [
+                'sale' => $sale,
+                'type' => $operation == 'shopping' ? 'Compra' : 'Venta',
+                'buyer' => $buyer,
+                'seller' => $seller,
+                'operation' => $operation,
+                'amout_jib' => $amout_jib,
+                'receipt'   => $type
+            ];
+
+            $pdf = Pdf::loadView('panel.sales.receipt', $data);
+            $output = $pdf->output();
+            Mail::to($email)->send(new ReceiptPayment([
+                'pdf' => $output,
+                'number' => str_pad($sale->id,6,"0",STR_PAD_LEFT),
+                'type' => $operation == 'shopping' ? 'Compra' : 'Venta',
+                'sale' => $sale,
+                'operation' => $type,
+                'buyer' => $buyer,
+                'seller' => $seller,
+            ]));
+            return;
+        } catch (\Throwable $th) {
+            abort(400);
+        }
     }
 
     public function test()

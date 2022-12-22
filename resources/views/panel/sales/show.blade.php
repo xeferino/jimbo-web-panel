@@ -9,7 +9,7 @@
                 <div class="card-header">
                     <i class="ti-money"></i>
                     <div class="d-inline-block">
-                        <h5>Datos de la venta</h5>
+                        <h5>Datos de la venta {{"#".str_pad($sale->id,6,"0",STR_PAD_LEFT)}}</h5>
                         <span>Detalles</span>
                     </div>
                 </div>

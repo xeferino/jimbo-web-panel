@@ -32,6 +32,16 @@
            </tr>
         </thead>
     <tbody>
+        @php
+            $method = null;
+            if ($sale->method == 'jib') {
+                $method = 'Jibs';
+            }elseif ($sale->method == 'card') {
+                $method = 'Tarjeta';
+            } else {
+                $method = 'Otro';
+            }
+        @endphp
 
         @if($type == 'Compra' && $receipt == 'buyer')
             <tr>
@@ -52,7 +62,7 @@
             </tr>
             <tr>
                 <td colspan="3"> <b>Tipo operacion: </b></td>
-                <td colspan="3" align="right">{{$sale->method == 'card' ? 'Tarjeta': 'Jib'}}</td>
+                <td colspan="3" align="right">{{$method}}</td>
             </tr>
             <tr>
                 <td colspan="3"> <b>Fecha: </b></td>
@@ -82,6 +92,10 @@
                 <td colspan="3" align="right">{{$buyer}}</td>
             </tr>
             <tr>
+                <td colspan="3"> <b> Vendedor: </b></td>
+                <td colspan="3" align="right">{{$seller}}</td>
+            </tr>
+            <tr>
                 <td colspan="3"> <b>Codigo de la promocion de boletos: </b></td>
                 <td colspan="3" align="right">{{$sale->Ticket->serial}}</td>
             </tr>
@@ -95,7 +109,7 @@
             </tr>
             <tr>
                 <td colspan="3"> <b>Tipo operacion: </b></td>
-                <td colspan="3" align="right">{{$sale->method == 'card' ? 'Tarjeta': 'Jib'}}</td>
+                <td colspan="3" align="right">{{$method}}</td>
             </tr>
             <tr>
                 <td colspan="3"> <b>Fecha: </b></td>
@@ -142,7 +156,7 @@
             </tr>
             <tr>
                 <td colspan="3"> <b>Tipo operacion: </b></td>
-                <td colspan="3" align="right">{{$sale->method == 'card' ? 'Tarjeta': 'Jib'}}</td>
+                <td colspan="3" align="right">{{$method}}</td>
             </tr>
             <tr>
                 <td colspan="3"> <b>Fecha: </b></td>
@@ -186,7 +200,7 @@
                 </tr>
                 <tr>
                     <td colspan="3"> <b>Tipo operacion: </b></td>
-                    <td colspan="3" align="right">{{$sale->method == 'card' ? 'Tarjeta': 'Jib'}}</td>
+                    <td colspan="3" align="right">{{$method}}</td>
                 </tr>
                 <tr>
                     <td colspan="3"> <b>Fecha: </b></td>
@@ -233,7 +247,7 @@
                 </tr>
                 <tr>
                     <td colspan="3"> <b>Tipo operacion: </b></td>
-                    <td colspan="3" align="right">{{$sale->method == 'card' ? 'Tarjeta': 'Jib'}}</td>
+                    <td colspan="3" align="right">{{$method}}</td>
                 </tr>
                 <tr>
                     <td colspan="3"> <b>Fecha: </b></td>

@@ -25,7 +25,7 @@
                 <table class="table table-hover table-sale">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th>Codigo</th>
                             <th>Numero de operacion</th>
                             <th>Refencia de culqi</th>
                             <th>Monto</th>

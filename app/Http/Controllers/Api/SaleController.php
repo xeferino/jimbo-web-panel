@@ -95,7 +95,7 @@ class SaleController extends Controller
                                 "description"    => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
                                 'payment_method' => 'Jib',
                                 'total_paid'     => Helper::amount($ticket->promotion->price),
-                                'response'       => ($status == 'approved') ? 'Su compra ha sido exitosa.' : 'Error: '.$type,
+                                'response'       => ($status == 'approved') ? 'Su pago ha sido procesado exitosamente.' : 'Error: '.$type,
                                 'code_response'  => ($status == 'approved') ? $reference_code : $merchant_message,
                                 'status'         => $status,
                                 'created_at'     => now(),
@@ -133,7 +133,7 @@ class SaleController extends Controller
                                 "description"    => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
                                 'payment_method' => 'Card',
                                 'total_paid'     => Helper::jib($amout_jib),
-                                'response'       => ($status == 'approved') ? 'Su compra ha sido exitosa.' : 'Error: Su compra no ha sido exitosa',
+                                'response'       => ($status == 'approved') ? 'Su pago ha sido procesado exitosamente.' : 'Error: Su pago no ha sido procesado exitosamente.',
                                 'code_response'  => ($status == 'approved') ? $reference_code : 'Error',
                                 'status'         => $status,
                                 'created_at'     => now(),
@@ -166,14 +166,14 @@ class SaleController extends Controller
                                 "description"    => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
                                 'payment_method' => 'Cash',
                                 'total_paid'     => Helper::jib($amout_jib),
-                                'response'       => ($status == 'approved') ? 'Su compra ha sido exitosa.' : 'Error: Su compra no ha sido exitosa',
+                                'response'       => ($status == 'approved') ? 'Su pago ha sido procesado exitosamente.' : 'Error: Su pago no ha sido procesado exitosamente',
                                 'code_response'  => ($status == 'approved') ? $reference_code : 'Error',
                                 'status'         => $status,
                                 'created_at'     => now(),
                                 'updated_at'     => now()
                             ];
                             $PaymentHistory     = PaymentController::paymentHistoryStore($data);
-                            $user->balance_usd  =  intval($user->balance_usd)-$ticket->promotion->price;
+                            $user->balance_usd  =  $user->balance_usd-$ticket->promotion->price;
                             $user->save();
                             BalanceController::store($data['description'], 'debit', $ticket->promotion->price, 'usd', $user->id);
                         }
