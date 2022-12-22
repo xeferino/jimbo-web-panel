@@ -18,11 +18,14 @@ use App\Models\TicketUser;
 use App\Http\Controllers\Api\NotificationController;
 use App\Models\Level;
 use App\Models\LevelUser;
+use App\Models\Ticket;
 use App\Models\Setting;
+Use App\Models\Raffle;
 use App\Http\Controllers\Api\BalanceController;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Mail\ReceiptPayment;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\FormSaleRequest;
 
 
 
@@ -45,10 +48,6 @@ class SaleController extends Controller
      */
     public function index(Request $request)
     {
-        $sale = Sale::find(30);
-        return $sale->Buyer->names;
-
-
         if ($request->ajax()) {
             $sale = Sale::select(
                 'id',
@@ -70,9 +69,36 @@ class SaleController extends Controller
                            $btn = '';
 
                         if(auth()->user()->can('show-sale')){
-                            $btn .= '<a href="'.route('panel.sales.show',['sale' => $sale->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$sale->id.'" id="det_'.$sale->id.'" class="btn btn-warning btn-sm  mr-1 detailSale">
+                            $btn .= '<a href="'.route('panel.sales.show',['sale' => $sale->id]).'" data-toggle="tooltip" data-placement="right" title="Detalles"  data-id="'.$sale->id.'" id="det_'.$sale->id.'" class="btn btn-inverse btn-sm  mr-1 detailSale">
                                         <i class="ti-eye"></i>
                                     </a>';
+                        }
+                        if(auth()->user()->can('edit-sale')){
+                            $sale = Sale::find($sale->id);
+                            if($sale->method == 'other' && $sale->status != 'approved') {
+                                $btn .= '<a href="'.route('panel.sales.edit',['sale' => $sale->id]).'" data-toggle="tooltip" data-placement="right" title="Editar"  data-id="'.$sale->id.'" id="det_'.$sale->id.'" class="btn btn-warning btn-sm  mr-1 editSale">
+                                            <i class="ti-pencil"></i>
+                                        </a>';
+                            }
+                        }
+                        if(auth()->user()->can('delete-sale')){
+                            $sale = Sale::find($sale->id);
+                            if($sale->method == 'other' && $sale->status != 'approved') {
+                                $btn .= '<a href="javascript:void(0)" data-toggle="tooltip" data-placement="right" title="Eliminar"  data-url="'.route('panel.sales.destroy',['sale' => $sale->id]).'" class="btn btn-danger btn-sm deleteSale">
+                                            <i class="ti-trash"></i>
+                                        </a>';
+                            }
+                        }
+                        return $btn;
+                    })
+                    ->addColumn('method', function($sale){
+                        $btn = '';
+                        if($sale->method=='Tarjeta'){
+                            $btn .= '<span class="badge badge-danger" title="Tarjeta">Tarjeta</span>';
+                        }elseif($sale->method=='Jibs'){
+                            $btn .= '<span class="badge badge-warning" title="Jibs">Jibs</span>';
+                        } else{
+                            $btn .= '<span class="badge badge-inverse" title="Otro">Otro</span>';
                         }
                         return $btn;
                     })
@@ -83,7 +109,7 @@ class SaleController extends Controller
                         }elseif($sale->status=='refused'){
                             $btn .= '<span class="badge badge-danger" title="Rechazada">Rechazada</span>';
                         } else{
-                            $btn .= '<span class="badge badge-warning" title="Pendiente">Pendiente</span>';
+                            $btn .= '<span class="badge badge-danger" title="Pendiente">Pendiente</span>';
                         }
                         return $btn;
                     })
@@ -100,7 +126,7 @@ class SaleController extends Controller
                         $date = Carbon::parse($sale->date)->format('d/m/Y H:i:s');
                         return   $date;
                     })
-                    ->rawColumns(['action', 'status', 'raffle', 'ticket', 'amount', 'date'])
+                    ->rawColumns(['action', 'status', 'raffle', 'ticket', 'amount', 'date', 'method'])
                     ->make(true);
         }
 
@@ -135,6 +161,23 @@ class SaleController extends Controller
                     ->make(true);
         }
 
+        if(\Request::wantsJson()){
+
+            $sale = Sale::findOrFail($id);
+            $sale->status = 'approved';
+
+            if($sale->save()) {
+                return response()->json([
+                    'success'    => true,
+                    'message' => 'Jimbo panel notifica: Venta aprobada exitosamente.'
+                ], 200);
+            }
+            return response()->json([
+                'success'    => false,
+                'message' => 'Jimbo panel notifica: Error! la venta no se ha aprobado exitosamente.'
+            ], 200);
+        }
+
         return view('panel.sales.show', [
             'title'              => 'Ventas',
             'title_header'       => 'Detalles de la venta',
@@ -150,16 +193,52 @@ class SaleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        if(\Request::wantsJson()){
+            $promotions = [];
+
+            foreach (Raffle::find($request->raffle_id)->Tickets->where('total', '<>', '0') as $key => $value) {
+                # code...
+                array_push($promotions, [
+                    'id'        => $value->id,
+                    'name'      => $value->promotion->name,
+                    'code'      => $value->promotion->code,
+                    'price'     => Helper::amount($value->promotion->price),
+                    'quantity'  => $value->promotion->quantity,
+                ]);
+            }
+
+            return response()->json([
+                'success'    => true,
+                'promotions' => $promotions
+            ], 200);
+        }
+
+        $raffles = Raffle::select(
+            'raffles.id',
+            'raffles.title',
+            'raffles.cash_to_draw',
+            'raffles.date_start',
+            'raffles.date_end',
+            'raffles.date_release',
+            DB::raw("TIMESTAMPDIFF(DAY, now(), raffles.date_end) AS remaining_days"),
+            'type')
+            ->where('raffles.active', 1)
+            ->where('raffles.public', 1)
+            ->where('raffles.finish', 0)
+            ->whereNull('raffles.deleted_at')
+            ->orderBy('raffles.id', 'DESC')
+            ->get();
+
         return view('panel.sales.create', [
-            'title'              => 'Vendedores',
-            'title_header'       => 'Registrar vendedores',
-            'description_module' => 'Registrar nuevos vendedores en el sistema.',
+            'title'              => 'Ventas',
+            'title_header'       => 'Registrar venta',
+            'description_module' => 'Registrar nuevas en el sistema.',
             'title_nav'          => 'Registrar',
-            'icon'               => 'icofont-users',
-            'roles'              => Role::whereIn('name', ['sale'])->get(),
-            'countries'          => Country::where('active', 1)->whereNull('deleted_at')->get()
+            'icon'               => 'icofont-bars',
+            'countries'          => Country::where('active', 1)->whereNull('deleted_at')->get(),
+            'raffles'            => $raffles
         ]);
     }
 
@@ -169,32 +248,52 @@ class SaleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Sale $sale)
+    public function store(FormSaleRequest $request, Sale $sale)
     {
-        $sale                   = new Sale();
-        $sale->name             = $request->name;
-        $sale->email            = $request->email;
-        $sale->dni              = $request->dni;
-        $sale->phone            = $request->phone;
-        $sale->balance_jib      = $request->balance_jib;
-        $sale->country_id       = $request->country_id;
-        $sale->active           = $request->active;
-        $sale->password         = Hash::make($request->password);
+        $ticket = Ticket::where('id', $request->ticket_id)->where('raffle_id', $request->raffle_id)->first();
 
-        if($request->file('image')){
-            $file           = $request->file('image');
-            $extension      = $file->getClientOriginalExtension();
-            $fileName       = time().uniqid() . '.' . $extension;
-            $sale->image      = $fileName;
-            $file->move(public_path('assets/images/sales/'), $fileName);
-        }else{
-            $sale->image = 'avatar.svg';
+        if ($ticket) {
+            $sale               = new Sale();
+            $sale->name         = $request->fullnames;
+            $sale->email        = $request->email;
+            $sale->dni          = $request->dni;
+            $sale->phone        = $request->phone;
+            $sale->address      = $request->address;
+            $sale->country_id   = $request->country_id;
+            $sale->amount       = $ticket->promotion->price;
+            $sale->number       = time();
+            $sale->quantity     = $ticket->promotion->quantity;
+            $sale->ticket_id    = $ticket->id;
+            $sale->seller_id    = Auth::user()->id;
+            $sale->user_id      = null;
+            $sale->raffle_id    = $ticket->raffle_id;
+            $sale->status       = $request->status;
+            $sale->method       = 'other';
+
+            if ($sale->save()){
+                $tickets = [];
+                for ($i = 1; $i <= $ticket->promotion->quantity; $i++) {
+                    array_push($tickets, [
+                        'serial'        =>  substr(sha1($ticket->id.$i.time()), 0, 8),
+                        'ticket_id'     =>  $ticket->id,
+                        'raffle_id'     =>  $ticket->raffle_id,
+                        'user_id'       =>  null,
+                        'sale_id'       =>  $sale->id,
+                        'created_at'    =>  now(),
+                        'updated_at'    =>  now(),
+                    ]);
+                }
+                $ticket->total = $ticket->total-$ticket->promotion->quantity;
+                $ticket->save();
+                TicketUser::insert($tickets);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Jimbo panel notifica: Nueva venta registrada exitosamente.',
+                    'url'     => route('panel.sales.show',['sale' => $sale->id])
+                ], 200);
+            }
         }
-
-        $saved = $sale->save();
-        if($saved)
-        $sale->assignRole($request->role);
-            return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Vendedor registrado exitosamente.'], 200);
+        return response()->json(['success' => false, 'message' => 'Jimbo panel notifica: Error! al registrar la nueva venta.'], 200);
     }
 
     /**
@@ -203,19 +302,33 @@ class SaleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        $saleRole = DB::table('model_has_roles')->select('role_id')->where('model_id',  $id)->pluck('role_id')->toArray();
+        $raffles = Raffle::select(
+            'raffles.id',
+            'raffles.title',
+            'raffles.cash_to_draw',
+            'raffles.date_start',
+            'raffles.date_end',
+            'raffles.date_release',
+            DB::raw("TIMESTAMPDIFF(DAY, now(), raffles.date_end) AS remaining_days"),
+            'type')
+            ->where('raffles.active', 1)
+            ->where('raffles.public', 1)
+            ->where('raffles.finish', 0)
+            ->whereNull('raffles.deleted_at')
+            ->orderBy('raffles.id', 'DESC')
+            ->get();
+
         return view('panel.sales.edit', [
-            'title'              => 'Vendedores',
-            'title_header'       => 'Editar vendedores',
-            'description_module' => 'Actualice la informacion del usuario en el formulario de Edicion.',
+            'title'              => 'Ventas',
+            'title_header'       => 'Editar venta',
+            'description_module' => 'Editar nuevas en el sistema.',
             'title_nav'          => 'Editar',
-            'icon'               => 'icofont-users',
-            'sale'             => Sale::find($id),
-            'saleRole'         => $saleRole,
-            'roles'              => Role::whereIn('name', ['sale'])->get(),
-            'countries'          => Country::where('active', 1)->whereNull('deleted_at')->get()
+            'icon'               => 'icofont-bars',
+            'countries'          => Country::where('active', 1)->whereNull('deleted_at')->get(),
+            'raffles'            => $raffles,
+            'sale'               => Sale::find($id)
         ]);
     }
 
@@ -226,37 +339,88 @@ class SaleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(FormUserEditRequest $request, Sale $sale)
+    public function update(FormSaleRequest $request, Sale $sale)
     {
-        $sale                   = Sale::find($sale->id);
-        $sale->name             = $request->name;
-        $sale->email            = $request->email;
-        $sale->dni              = $request->dni;
-        $sale->phone            = $request->phone;
-        $sale->balance_jib      = $request->balance_jib;
-        $sale->country_id       = $request->country_id;
-        $sale->active           = $request->active==1 ? 1 : 0;
-        if($request->password){
-            $sale->password     = Hash::make($request->password);
+        $sale               = Sale::find($sale->id);
+        $sale->name         = $request->fullnames;
+        $sale->email        = $request->email;
+        $sale->dni          = $request->dni;
+        $sale->phone        = $request->phone;
+        $sale->address      = $request->address;
+        $sale->country_id   = $request->country_id;
+        $sale->status       = $request->status;
+        if ($sale->save()){
+            return response()->json([
+                'success' => true,
+                'message' => 'Jimbo panel notifica: Venta actualizada exitosamente.',
+                'url'     => route('panel.sales.show',['sale' => $sale->id])
+            ], 200);
         }
+        return response()->json(['success' => false, 'message' => 'Jimbo panel notifica: Error! al actualizar la venta.'], 200);
+    }
 
-        if($request->file('image')){
-            if ($sale->image != "avatar.svg") {
-                if (File::exists(public_path('assets/images/sales/' . $sale->image))) {
-                    File::delete(public_path('assets/images/sales/' . $sale->image));
+    public function test()
+    {
+        /* $ticket = Ticket::where('id', $request->ticket_id)->where('raffle_id', $request->raffle_id)->first();
+
+        if ($ticket) {
+            $sale               = Sale::find($sale->id);
+
+            $delete = false; */
+            /* if ($sale->raffle_id == $request->raffle_id) {
+                if ($sale->ticket_id != $request->ticket_id) {
+                    $sale->TicketsUsers()->delete();
+                    $ticket = Ticket::find($sale->ticket_id);
+                    $ticket->total = $ticket->total + $sale->quantity;
+                    $ticket->save();
+                    $delete = true;
+
                 }
-            }
+            } elseif ($sale->raffle_id != $request->raffle_id) {
+                $sale->TicketsUsers()->delete();
+                $ticket = Ticket::find($sale->ticket_id);
+                $ticket->total = $ticket->total + $sale->quantity;
+                $ticket->save();
+                $delete = true;
+            } */
 
-            $file           = $request->file('image');
-            $extension      = $file->getClientOriginalExtension();
-            $fileName       = time() . '.' . $extension;
-            $sale->image      = $fileName;
-            $file->move(public_path('assets/images/sales/'), $fileName);
-        }
-        $saved = $sale->save();
-        if($saved)
-            $sale->syncRoles($request->role);
-            return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Vendedor actualizado exitosamente.'], 200);
+           /*  $sale->name         = $request->fullnames;
+            $sale->email        = $request->email;
+            $sale->dni          = $request->dni;
+            $sale->phone        = $request->phone;
+            $sale->address      = $request->address;
+            $sale->country_id   = $request->country_id; */
+            //$sale->amount       = $ticket->promotion->price;
+            //$sale->number       = time();
+            //$sale->quantity     = $ticket->promotion->quantity;
+            //$sale->ticket_id    = $ticket->id;
+            //$sale->seller_id    = Auth::user()->id;
+            //$sale->user_id      = null;
+            //$sale->raffle_id    = $ticket->raffle_id;
+            //$sale->status       = $request->status;
+
+            /*if ($sale->save()){
+               if ($delete) {
+                    $tickets = [];
+                    for ($i = 1; $i <= $ticket->promotion->quantity; $i++) {
+                        array_push($tickets, [
+                            'serial'        =>  substr(sha1($ticket->id.$i.time()), 0, 8),
+                            'ticket_id'     =>  $ticket->id,
+                            'raffle_id'     =>  $ticket->raffle_id,
+                            'user_id'       =>  null,
+                            'sale_id'       =>  $sale->id,
+                            'created_at'    =>  now(),
+                            'updated_at'    =>  now(),
+                        ]);
+                    }
+
+                    $ticket->total = $ticket->total-$ticket->promotion->quantity;
+                    $ticket->save();
+                    TicketUser::insert($tickets);
+                }
+                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Venta actualizada exitosamente.'], 200);
+            }*/
+        //}
     }
 
     /**
@@ -269,16 +433,16 @@ class SaleController extends Controller
     {
         if(\Request::wantsJson()){
             $sale = Sale::findOrFail($id);
-            /* if ($sale->image != "avatar.svg") {
-                if (File::exists(public_path('assets/images/sales/' . $sale->image))) {
-                    File::delete(public_path('assets/images/sales/' . $sale->image));
-                }
-            } */
+            $sale->TicketsUsers()->delete();
+            $ticket = Ticket::find($sale->ticket_id);
+            $ticket->total = $ticket->total + $sale->quantity;
+            $ticket->save();
+
             $delete = $sale->delete();
             if ($delete) {
-                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Vendedor eliminado exitosamente.'], 200);
+                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Venta eliminada exitosamente.'], 200);
             } else {
-                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: El Vendedor no se elimino correctamente. Intente mas tarde.'], 200);
+                return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: La venta no se elimino correctamente. Intente mas tarde.'], 200);
             }
         }
         abort(404);

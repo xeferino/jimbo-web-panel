@@ -360,8 +360,8 @@
                                         <td>{{$data->quantity}}</td>
                                         <td>{{$data->quantity/$data->promotion->quantity}}</td>
                                         <td>{{Helper::amount($data->promotion->price)}}</td>
-                                        <td>{{$data->total}}</td>
                                         <td>{{$data->quantity}}</td>
+                                        <td>{{$data->total}}</td>
                                     </tr>
                                     @php
                                         $total+=($data->quantity/$data->promotion->quantity)*$data->promotion->price;

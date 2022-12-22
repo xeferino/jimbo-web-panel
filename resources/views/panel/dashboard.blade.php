@@ -132,10 +132,9 @@
                         <h5 class="text-warning">{{Helper::amount($sales['sale_month'] - $sales['competitor_sale_month'])}}</h5>
                     </div>
                     <div class="col-sm-4 ">
-                        <h5>{{$sales['sale_total']}}</h5>
+                        <h5>{{$sales['sale_total_month']}}</h5>
                         <p class="text-muted">Ventas</p>
                         <h5 class="text-warning">{{Helper::amount($sales['sale_month'])}}</h5>
-
                     </div>
                 </div>
             </div>

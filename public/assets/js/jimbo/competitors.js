@@ -4,6 +4,7 @@ const JIMBO = { url : '/panel/competitors' };
 //alert(JIMBO.url)
 $(function () {
     var id = $('#competitor_id').val();
+    var competitor = $('#competitor').val();
     /*DataTables*/
     var table = $('.table-competitor').DataTable({
         processing: true,
@@ -161,6 +162,29 @@ $(function () {
                 "sortDescending": ": activate to sort column descending"
             }
         },
+        dom: 'lBfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6,7,8,9 ]
+                },
+                filename: function() {
+                    return "Reporte-de-compras-"+competitor
+                },
+                title: "Reporte de compras - "+competitor
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6,7,8,9 ]
+                },
+                filename: function() {
+                    return "Reporte-de-compras-"+competitor
+                },
+                title: "Reporte de compras - "+competitor
+            }
+        ],
         ajax: APP_URL+JIMBO.url+'/'+id+'?mod=shopping',
         columns: [
             {data: 'id', name: 'id'},
@@ -220,6 +244,29 @@ $(function () {
                 "sortDescending": ": activate to sort column descending"
             }
         },
+        dom: 'lBfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6,7,8,9 ]
+                },
+                filename: function() {
+                    return "Reporte-de-ventas-"+competitor
+                },
+                title: "Reporte de ventas-"+competitor
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6,7,8,9 ]
+                },
+                filename: function() {
+                    return "Reporte-de-ventas-"+competitor
+                },
+                title: "Reporte de ventas - "+competitor
+            }
+        ],
         ajax: APP_URL+JIMBO.url+'/'+id+'?mod=shopping',
         columns: [
             {data: 'id', name: 'id'},
@@ -279,6 +326,29 @@ $(function () {
                 "sortDescending": ": activate to sort column descending"
             }
         },
+        dom: 'lBfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6,7,8 ]
+                },
+                filename: function() {
+                    return "Reporte-de-compras-"+competitor
+                },
+                title: "Reporte de compras - "+competitor
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6,7,8 ]
+                },
+                filename: function() {
+                    return "Reporte-de-compras-"+competitor
+                },
+                title: "Reporte de compras - "+competitor
+            }
+        ],
         ajax: APP_URL+JIMBO.url+'/'+id+'?mod=paymentHistory',
         columns: [
             {data: 'id', name: 'id'},
@@ -336,6 +406,29 @@ $(function () {
                 "sortDescending": ": activate to sort column descending"
             }
         },
+        dom: 'lBfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6 ]
+                },
+                filename: function() {
+                    return "Reporte-de-solicitud-de-efectivo-"+competitor
+                },
+                title: "Reporte de solicitud de efectivo - "+competitor
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6 ]
+                },
+                filename: function() {
+                    return "Reporte-de-solicitud-de-efectivo-"+competitor
+                },
+                title: "Reporte de solicitud de efectivo - "+competitor
+            }
+        ],
         ajax: APP_URL+JIMBO.url+'/'+id+'?mod=cash',
         columns: [
             {data: 'id', name: 'id'},
@@ -392,6 +485,29 @@ $(function () {
                 "sortDescending": ": activate to sort column descending"
             }
         },
+        dom: 'lBfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6,7 ]
+                },
+                filename: function() {
+                    return "Reporte-de-balance-"+competitor
+                },
+                title: "Reporte de balance - "+competitor
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6,7 ]
+                },
+                filename: function() {
+                    return "Reporte-de-balance-"+competitor
+                },
+                title: "Reporte de balance - "+competitor
+            }
+        ],
         ajax: APP_URL+JIMBO.url+'/'+id+'?mod=balance',
         columns: [
             {data: 'id', name: 'id'},

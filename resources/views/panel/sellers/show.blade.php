@@ -100,6 +100,8 @@
                 </div>
                 <div class="card-block p-b-10">
                     <input type="hidden" name="seller_id" id="seller_id" value="{{$seller->id}}">
+                    <input type="hidden" name="seller" id="seller" value="{{$seller->names.'-'.$seller->surnames}}">
+
                     <div class="table-responsive">
                         <table class="table table-hover table-seller-sales">
                             <thead>

@@ -24,9 +24,13 @@
                             if($sale->status=='approved'){
                                 $btn .= '<h4 class="text-success">Aprobada</h4>';
                             }elseif($sale->status=='refused'){
-                                $btn .= '<h4 class="text-danger">Rechazada</h4>';
+                                $btn .= '<h4 class="text-danger">Rechazada</h4>
+                                            <p class="text-muted"><button class="btn btn-inverse btn-sm change-sale" data-status="Rechazada">Actualizar</button></p>
+                                        ';
                             } else{
-                                $btn .= '<h4 class="text-warning">Pendiente</h4>';
+                                $btn .= '<h4 class="text-danger">Pendiente</h4>
+                                        <p class="text-muted"><button class="btn btn-inverse btn-sm change-sale" data-status="Pendiente">Actualizar</button></p>
+                                        ';
                             }
                         @endphp
                         <div class="col-sm-4 b-r-default">

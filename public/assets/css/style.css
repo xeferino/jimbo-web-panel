@@ -72,6 +72,26 @@ p {
     float: right !important;
 }
 
+#DataTables_Table_1_filter {
+    float: right !important;
+}
+
+#DataTables_Table_2_filter {
+    float: right !important;
+}
+
+#DataTables_Table_3_filter {
+    float: right !important;
+}
+
+#DataTables_Table_5_filter {
+    float: right !important;
+}
+
+#DataTables_Table_5_filter {
+    float: right !important;
+}
+
 .dataTables_wrapper .dataTables_processing {
     position: absolute;
     width: 50%;

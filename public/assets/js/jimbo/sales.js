@@ -4,6 +4,10 @@ const JIMBO = { url : '/panel/sales' };
 //alert(JIMBO.url)
 $(function () {
     var id = $('#sale_id').val();
+    var raffle_id = $('#raffle_id').val();
+    var ticket_id = $('#ticket').val();
+
+    raffleTicket();
 
     /*DataTables*/
     var table = $('.table-sale').DataTable({
@@ -57,9 +61,9 @@ $(function () {
                     columns: [ 0,1,2,3,4,5,6,7,8,9 ]
                 },
                 filename: function() {
-                    return "Reportes-de-ventas"
+                    return "Reporte-de-ventas"
                 },
-                title: "Reportes de ventas"
+                title: "Reporte de ventas"
             },
             {
                 extend: 'csvHtml5',
@@ -67,9 +71,9 @@ $(function () {
                     columns: [ 0,1,2,3,4,5,6,7,8,9 ]
                 },
                 filename: function() {
-                    return "Reportes-de-ventas"
+                    return "Reporte-de-ventas"
                 },
-                title: "Reportes de ventas"
+                title: "Reporte de ventas"
             }
         ],
         ajax: APP_URL+JIMBO.url,
@@ -130,6 +134,29 @@ $(function () {
                 "sortDescending": ": activate to sort column descending"
             }
         },
+        dom: 'lBfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 1 ]
+                },
+                filename: function() {
+                    return "Reporte-de-ventas-boletos"
+                },
+                title: "Reporte de ventas de boletos"
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 1 ]
+                },
+                filename: function() {
+                    return "Reporte-de-ventas-boletos"
+                },
+                title: "Reporte de ventas de boletos"
+            }
+        ],
         ajax: APP_URL+JIMBO.url+'/'+id,
         columns: [
             {data: 'id', name: 'id'},
@@ -149,6 +176,96 @@ $(function () {
 	    }else{
             $('#avatar').hide();
         }
+    });
+
+    $("#raffle_id").change(function( event ) {
+        event.preventDefault();
+        if ($(this).val() > 0 ){
+            $('.has-danger-raffle_id').text('');
+            $('.jimbo-loader').show();
+            $('.load-text').text('cargango...');
+
+            axios.get(APP_URL+JIMBO.url+'/create?raffle_id='+$(this).val())
+            .then(response => {
+                if(response.data.success){
+                    $('#ticket_id').html(function(){
+                        var items = '';
+
+                        items +=`<option value="">.::Seleccione::.</option>`;
+                        $.each(response.data.promotions, function(key, value) {
+                            items +=`<option value="${value.id}">${value.name}</option>`;
+                        });
+                        return items;
+                    });
+                    setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+
+                }
+            }).catch(error => {
+                if (error.response) {
+
+                }else{
+                    notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
+                }
+                setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+            });
+        } else {
+            $('#ticket_id').html(function(){
+                var items = '';
+                items +=`<option value="">.::Seleccione::.</option>`;
+                return items;
+            });
+            $('.has-danger-raffle_id').text('debe seleccionar un sorteo disponible').css("color", "#dc3545e3");
+        }
+    });
+
+    $('body').on('click', '.change-sale', function () {
+        swal({
+            title: 'La venta esta '+$(this).data("status")+'!',
+            text: "Recuerde que esta acción no tiene revera.",
+            type: 'error',
+            icon : APP_URL+"/assets/images/jimbo-logo.png",
+            buttons:{
+                confirm: {
+                    text : 'Aprobar',
+                    className : 'btn btn-warning',
+                    showLoaderOnConfirm: true,
+                },
+                cancel: {
+                    visible: true,
+                    text : 'Cancelar',
+                    className : 'btn btn-inverse',
+                }
+            },
+        }).then((confirm) => {
+            if (confirm) {
+                $('.jimbo-loader').show();
+                axios.get(APP_URL+JIMBO.url+'/'+id)
+                .then(response => {
+                    if(response.data.success){
+                        setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+                        notify(response.data.message, 'success', '3000', 'top', 'right');
+                        setTimeout(() => {location.reload()}, 3000);
+                    }else {
+                        setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+                        notify(response.data.message, 'danger', '3000', 'top', 'right');
+                        setTimeout(() => {location.reload()}, 3000);
+                    }
+                }).catch(error => {
+                    if (error.response) {
+                        if(error.response.status === 403){
+                            notify(error.response.data.message, 'success', '3000', 'top', 'right');
+                        }else{
+                            notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
+                        }
+                    }else{
+                        notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
+                    }
+                    setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+                });
+            } else {
+                swal.close();
+            }
+        });
     });
 
     /*sale-register*/
@@ -171,7 +288,13 @@ $(function () {
                 $('.btn-sale').prop("disabled", false).text('Registrar');
                 $('div.col-form-label').text('');
                 setTimeout(() => {$('.jimbo-loader').hide();}, 500);
-                setTimeout(() => {location.href = APP_URL+JIMBO.url;}, 3000);
+                setTimeout(() => {location.href = response.data.url;}, 3000);
+            } else {
+                notify(response.data.message, 'danger', '3000', 'top', 'right');
+                setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+                $('#form-sale-create').trigger("reset");
+                $('.btn-sale').prop("disabled", false).text('Registrar');
+                setTimeout(() => {location.reload();}, 3000);
             }
         }).catch(error => {
             if (error.response) {
@@ -180,16 +303,12 @@ $(function () {
                     /* $.each(err, function( key, value) {
                         notify(value, 'danger', '5000', 'bottom', 'right');
                     }); */
-                    if (error.response.data.errors.names) {
-                        $('.has-danger-names').text('' + error.response.data.errors.names + '').css("color", "#dc3545e3");
+                    if (error.response.data.errors.fullnames) {
+                        $('.has-danger-fullnames').text('' + error.response.data.errors.fullnames + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-names').text('');
+                        $('.has-danger-fullnames').text('');
                     }
-                    if (error.response.data.errors.surnames) {
-                        $('.has-danger-surnames').text('' + error.response.data.errors.surnames + '').css("color", "#dc3545e3");
-                    }else{
-                        $('.has-danger-surnames').text('');
-                    }
+
                     if (error.response.data.errors.email) {
                         $('.has-danger-email').text('' + error.response.data.errors.email + '').css("color", "#dc3545e3");
                     }else{
@@ -205,41 +324,43 @@ $(function () {
                     }else{
                         $('.has-danger-phone').text('');
                     }
-                    if (error.response.data.errors.balance_jib) {
-                        $('.has-danger-balance_jib').text('' + error.response.data.errors.balance_jib + '').css("color", "#dc3545e3");
-                    }else{
-                        $('.has-danger-balance_jib').text('');
-                    }
+
                     if (error.response.data.errors.country_id) {
                         $('.has-danger-country_id').text('' + error.response.data.errors.country_id + '').css("color", "#dc3545e3");
                     }else{
                         $('.has-danger-country_id').text('');
                     }
-                    if (error.response.data.errors.role) {
-                        $('.has-danger-role').text('' + error.response.data.errors.role + '').css("color", "#dc3545e3");
+
+                    if (error.response.data.errors.status) {
+                        $('.has-danger-status').text('' + error.response.data.errors.status + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-role').text('');
+                        $('.has-danger-status').text('');
                     }
-                    if (error.response.data.errors.active) {
-                        $('.has-danger-active').text('' + error.response.data.errors.active + '').css("color", "#dc3545e3");
+
+                    if (error.response.data.errors.address) {
+                        $('.has-danger-address').text('' + error.response.data.errors.address + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-active').text('');
+                        $('.has-danger-address').text('');
                     }
-                    if (error.response.data.errors.image) {
-                        $('.has-danger-image').text('' + error.response.data.errors.image + '').css("color", "#dc3545e3");
+
+                    if (error.response.data.errors.address_city) {
+                        $('.has-danger-address_city').text('' + error.response.data.errors.address_city + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-image').text('');
+                        $('.has-danger-address_city').text('');
                     }
-                    if (error.response.data.errors.password) {
-                        $('.has-danger-password').text('' + error.response.data.errors.password + '').css("color", "#dc3545e3");
+
+                    if (error.response.data.errors.raffle_id) {
+                        $('.has-danger-raffle_id').text('' + error.response.data.errors.raffle_id + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-password').text('');
+                        $('.has-danger-raffle_id').text('');
                     }
-                    if (error.response.data.errors.cpassword) {
-                        $('.has-danger-cpassword').text('' + error.response.data.errors.cpassword + '').css("color", "#dc3545e3");
+
+                    if (error.response.data.errors.ticket_id) {
+                        $('.has-danger-ticket_id').text('' + error.response.data.errors.ticket_id + '').css("color", "#dc3545e3");
                     }else{
-                        $('.has-danger-cpassword').text('');
+                        $('.has-danger-ticket_id').text('');
                     }
+
                 }else{
                     notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
                 }
@@ -275,7 +396,13 @@ $(function () {
                 $('#form-sale-edit').trigger("reset");
                 $('.btn-sale').prop("disabled", false).text('Actualizar');
                 $('div.col-form-label').text('');
-                setTimeout(() => {location.href = APP_URL+JIMBO.url;}, 3000);
+                setTimeout(() => {location.href = response.data.url;}, 3000);
+            } else {
+                notify(response.data.message, 'danger', '3000', 'top', 'right');
+                setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+                $('#form-sale-edit').trigger("reset");
+                $('.btn-sale').prop("disabled", false).text('Actualizar');
+                setTimeout(() => {location.reload();}, 3000);
             }
         }).catch(error => {
             if (error.response) {
@@ -357,10 +484,10 @@ $(function () {
     /*sale-edit*/
 
     /*alert-sale-delete*/
-    $('body').on('click', '.deleteSeller', function () {
+    $('body').on('click', '.deleteSale', function () {
         var url = $(this).data("url");
         swal({
-                title: '¿Desea eliminar el vendedor?',
+                title: '¿Desea eliminar la venta?',
                 text: "Recuerde que esta acción no tiene revera.",
                 type: 'error',
                 icon : APP_URL+"/assets/images/jimbo-logo.png",
@@ -408,3 +535,34 @@ $(function () {
     });
     /*alert-sale-delete*/
 });
+
+function raffleTicket()
+{
+    var raffle = $('#raffle_id').val();
+    var ticket = $('#ticket').val();
+    axios.get(APP_URL+JIMBO.url+'/create?raffle_id='+raffle)
+        .then(response => {
+            if(response.data.success){
+                $('#ticket_id').html(function(){
+                    var items = '';
+                    $.each(response.data.promotions, function(key, value) {
+                        if(ticket == value.id) {
+                            items +=`<option value="${value.id}" selected>${value.name}</option>`;
+                        } else {
+                            items +=`<option value="${value.id}">${value.name}</option>`;
+                        }
+                    });
+                    return items;
+                });
+                setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+
+            }
+        }).catch(error => {
+            if (error.response) {
+
+            }else{
+                notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
+            }
+            setTimeout(() => {$('.jimbo-loader').hide();}, 500);
+        });
+}

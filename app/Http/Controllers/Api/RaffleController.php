@@ -253,7 +253,7 @@ class RaffleController extends Controller
                         'price'     => Helper::amount($value->promotion->price),
                         'quantity'  => $value->promotion->quantity,
                         'active'    => $value->promotion->active,
-                        'available' => ($value->quantity>0) ? true : false
+                        'available' => ($value->total>0) ? true : false
                     ]
                 ]);
             }

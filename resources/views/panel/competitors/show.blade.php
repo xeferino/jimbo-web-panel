@@ -112,6 +112,7 @@
                 </div>
                 <div class="card-block p-b-10">
                     <input type="hidden" name="competitor_id" id="competitor_id" value="{{$competitor->id}}">
+                    <input type="hidden" name="competitor" id="competitor" value="{{$competitor->names.'-'.$competitor->surnames}}">
                     <div class="table-responsive">
                         <table class="table table-hover table-competitor-shoppings">
                             <thead>

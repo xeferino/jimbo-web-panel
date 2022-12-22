@@ -117,10 +117,12 @@ class DashboardController extends Controller
 
     private function sales()
     {
-        $sale_approved  = Sale::where('status', 'approved')->sum('amount');
-        $sale_pending   = Sale::select('amount')->where('status', 'pending')->sum('amount');
-        $sale_month     = Sale::select('amount')->where('status', 'approved')->whereMonth('created_at', date('m'))->sum('amount');
-        $sale_total     = Sale::where('status', 'approved')->whereMonth('created_at', date('m'))->count();
+        $sale_approved      = Sale::where('status', 'approved')->sum('amount');
+        $sale_pending       = Sale::select('amount')->where('status', 'pending')->sum('amount');
+        $sale_month         = Sale::select('amount')->where('status', 'approved')->whereMonth('created_at', date('m'))->sum('amount');
+        $sale_total_month   = Sale::where('status', 'approved')->whereMonth('created_at', date('m'))->count();
+        $sale_total         = Sale::count();
+
 
         $competitor_sale_month = User::whereHas("roles", function ($q) {
             $q->whereIn('name', ['competitor']);
@@ -1205,6 +1207,7 @@ class DashboardController extends Controller
             'sale_total'                        =>  $sale_approved+$sale_pending,
             'sale_month'                        =>  $sale_month,
             'sale_total'                        =>  $sale_total,
+            'sale_total_month'                  =>  $sale_total_month,
             'competitor_sale_month'             =>  $competitor_sale_month,
             'seller_sale_month'                 =>  $seller_sale_month,
             'seller_sale_month'                 =>  $seller_sale_month,

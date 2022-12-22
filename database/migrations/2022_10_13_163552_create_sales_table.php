@@ -37,6 +37,7 @@ return new class extends Migration
             $table->enum('status',['approved', 'refused', 'pending']);
             $table->enum('method',['jib', 'card', 'cash', 'other']);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

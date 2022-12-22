@@ -15,8 +15,8 @@
                 <span>Informacion</span>
             </div>
             @can('create-sale')
-                <div class="card-header-right">
-                    <a href="{{ route('panel.sales.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nueva Venta"><i class="ti-plus"></i></a>
+                <div class="float-right">
+                    <a href="{{ route('panel.sales.create') }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Nueva Venta">Nueva</a>
                 </div>
             @endcan
         </div>

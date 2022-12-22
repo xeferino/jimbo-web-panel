@@ -5,6 +5,8 @@ const JIMBO = { url : '/panel/sellers' };
 $(function () {
     $('#form-recharge').hide();
     var id = $('#seller_id').val();
+    var seller = $('#seller').val();
+
     /*DataTables*/
     var table = $('.table-seller').DataTable({
         processing: true,
@@ -105,6 +107,29 @@ $(function () {
                 "sortDescending": ": activate to sort column descending"
             }
         },
+        dom: 'lBfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6,7,8,9 ]
+                },
+                filename: function() {
+                    return "Reporte-de-ventas-"+seller
+                },
+                title: "Reporte de ventas-"+seller
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6,7,8,9 ]
+                },
+                filename: function() {
+                    return "Reporte-de-ventas-"+seller
+                },
+                title: "Reporte de ventas - "+seller
+            }
+        ],
         ajax: APP_URL+JIMBO.url+'/'+id+'?mod=sales',
         columns: [
             {data: 'id', name: 'id'},
@@ -164,6 +189,29 @@ $(function () {
                 "sortDescending": ": activate to sort column descending"
             }
         },
+        dom: 'lBfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6,7 ]
+                },
+                filename: function() {
+                    return "Reporte-de-balance-"+seller
+                },
+                title: "Reporte de balance - "+seller
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 0,1,2,3,4,5,6,7 ]
+                },
+                filename: function() {
+                    return "Reporte-de-balance-"+seller
+                },
+                title: "Reporte de balance - "+seller
+            }
+        ],
         ajax: APP_URL+JIMBO.url+'/'+id+'?mod=balance',
         columns: [
             {data: 'id', name: 'id'},

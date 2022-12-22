@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => $title ?? 'Usuarios'])
+@extends('layouts.app', ['title' => $title ?? 'Ventas'])
 
 @section('page-content')
     <!-- Basic Form Inputs card start -->
@@ -14,20 +14,13 @@
         </div>
         <div class="card-block">
             <h4 class="sub-title">Informacion requerida</h4>
-            <form method="POST" action="{{ route('panel.sellers.store') }}" name="form-seller-create" id="form-seller-create" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('panel.sales.store') }}" name="form-sale-create" id="form-sale-create" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group row">
-                    <div class="col-sm-12">
-                        <img src="{{asset('assets/images/avatar.svg')}}" style= "margin: 0px 0 5px 0;" width="100px" height="100px" alt="avatar" id="avatar" class="img-radius">
-                        <br>
-                        <label for="exampleFormControlFile1"><b>Imagen <i class="ti ti-info-alt" data-toggle="tooltip" data-placement="top" title="El formato de imagen debe ser (jpg, jpeg, png o svg). El peso maximo de la imagen es de 512 KB"></i></b></label>
-                        <input type="file" name="image" id="image" file="true" class="form-control-file" id="exampleFormControlFile1">
-                        <div class="col-form-label has-danger-image"></div>
-                    </div>
                     <div class="col-sm-6">
                         <label class="col-form-label">Nombres y Apellidos</label>
-                        <input type="text" name="name" id="name" class="form-control">
-                        <div class="col-form-label has-danger-name"></div>
+                        <input type="text" name="fullnames" id="fullnames" class="form-control">
+                        <div class="col-form-label has-danger-fullnames"></div>
                     </div>
                     <div class="col-sm-6">
                         <label class="col-form-label">Email</label>
@@ -39,30 +32,21 @@
                         <input type="text" name="dni" id="dni" class="form-control">
                         <div class="col-form-label has-danger-dni"></div>
                     </div>
-
                     <div class="col-sm-6">
                         <label class="col-form-label">Telefono</label>
                         <input type="text" name="phone" id="phone" class="form-control">
                         <div class="col-form-label has-danger-phone"></div>
                     </div>
-
                     <div class="col-sm-6">
-                        <label class="col-form-label">Balance Jib</label>
-                        <input type="text" name="balance_jib" id="balance_jib" class="form-control">
-                        <div class="col-form-label has-danger-balance_jib"></div>
-                    </div>
-
-                    <div class="col-sm-6">
-                        <label class="col-form-label">Role</label>
-                        <select name="role" id="role" class="form-control">
+                        <label class="col-form-label">Estatus</label>
+                        <select name="status" id="status" class="form-control">
                             <option value="">.::Seleccione::.</option>
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->id }}">{{ $role->name }}</option>
-                            @endforeach
+                            <option value="pending">Pendiente</option>
+                            <option value="approved">Aprobada</option>
+                            <option value="refused">Rechazada</option>
                         </select>
-                        <div class="col-form-label has-danger-role"></div>
+                        <div class="col-form-label has-danger-status"></div>
                     </div>
-
                     <div class="col-sm-6">
                         <label class="col-form-label">Pais</label>
                         <select name="country_id" id="country_id" class="form-control">
@@ -73,31 +57,36 @@
                         </select>
                         <div class="col-form-label has-danger-country_id"></div>
                     </div>
-
+                    <div class="col-sm-12">
+                        <label class="col-form-label">Direccion</label>
+                        <textarea name="address" id="address" class="form-control" cols="10" rows="5"></textarea>
+                        <div class="col-form-label has-danger-address"></div>
+                    </div>
+                    <div class="col-sm-12 mt-4">
+                        <div class="alert alert-warning" role="alert"><b>Configuracion del sorteo y promocion de boleteria a vender</b></div>
+                    </div>
                     <div class="col-sm-6">
-                        <label class="col-form-label">Estatus</label>
-                        <select name="active" id="active" class="form-control">
+                        <label class="col-form-label">Sorteos disponibles</label>
+                        <select name="raffle_id" id="raffle_id" class="form-control">
                             <option value="">.::Seleccione::.</option>
-                            <option value="1">Activo</option>
-                            <option value="0">Inactivo</option>
+                            @foreach ($raffles as $key => $item)
+                            <option value="{{$item->id}}">{{$item->title}}</option>
+                            @endforeach
                         </select>
-                        <div class="col-form-label has-danger-active"></div>
+                        <div class="col-form-label has-danger-raffle_id"></div>
                     </div>
                     <div class="col-sm-6">
-                        <label class="col-form-label">Contrase&ntilde;a</label>
-                        <input type="password" name="password" id="password" class="form-control">
-                        <div class="col-form-label has-danger-password"></div>
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="col-form-label">Confirmar Contrase&ntilde;a</label>
-                        <input type="password" name="cpassword" id="cpassword" class="form-control">
-                        <div class="col-form-label has-danger-cpassword"></div>
+                        <label class="col-form-label">Promociones de boletos</label>
+                        <select name="ticket_id" id="ticket_id" class="form-control">
+                            <option value="">.::Seleccione::.</option>
+                        </select>
+                        <div class="col-form-label has-danger-ticket_id"></div>
                     </div>
                 </div>
                 <div class="col-md-12 text-right">
-                    <a href="{{route('panel.sellers.index')}}" type="submit" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="cancelar"><i class="ti-back-left"></i></a>
+                    <a href="{{route('panel.sales.index')}}" type="submit" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="cancelar"><i class="ti-back-left"></i></a>
                     {{-- <button type="reset" class="btn btn-inverse" data-toggle="tooltip" data-placement="top" title="Limpiar"><i class="ti-reload"></i></button> --}}
-                    <button type="submit" class="btn btn-warning  btn-seller">Registrar</button>
+                    <button type="submit" class="btn btn-warning  btn-sale">Registrar</button>
                 </div>
 
             </form>
@@ -107,5 +96,5 @@
 @endsection
 
 @section('script-content')
-<script src="{{ asset('assets/js/jimbo/sellers.js') }}"></script>
+<script src="{{ asset('assets/js/jimbo/sales.js') }}"></script>
 @endsection
