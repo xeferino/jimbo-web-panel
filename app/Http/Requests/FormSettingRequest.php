@@ -24,11 +24,12 @@ class FormSettingRequest extends FormRequest
     public function rules()
     {
         return [
-            'jib_usd'               => $this->type == 'jib' ? 'required|numeric|between:0.0,100' : 'nullable',
+            'jib_usd'               => $this->type == 'bonus' ? 'required|numeric|between:0.0,100' : 'nullable',
             'register'              => $this->type == 'bonus' ? 'required|integer' : 'nullable',
             'referrals'             => $this->type == 'bonus' ? 'required|integer' : 'nullable',
             'to_access'             => $this->type == 'bonus' ? 'required|integer' : 'nullable',
             'user_to_seller'        => $this->type == 'bonus' ? 'required|integer' : 'nullable',
+            'diary'                 => $this->type == 'bonus' ? 'required|integer' : 'nullable',
             'level_single_junior'   => $this->type == 'seller_single' ? 'required|integer' : 'nullable',
             'level_single_middle'   => $this->type == 'seller_single' ? 'required|integer' : 'nullable',
             'level_single_master'   => $this->type == 'seller_single' ? 'required|integer' : 'nullable',

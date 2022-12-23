@@ -24,6 +24,7 @@ $(function () {
         $('.load-text').text('Enviando...');
         $('.btn-setting-jib').prop("disabled", true).text('Enviando...');
         $('.btn-setting-bonu').prop("disabled", true).text('Enviando...');
+        $('.btn-setting-diary').prop("disabled", true).text('Enviando...');
         $('.btn-setting-seller').prop("disabled", true).text('Enviando...');
         $('.btn-setting-seller-pencert').prop("disabled", true).text('Enviando...');
         $('.btn-setting-seller-pencert-group').prop("disabled", true).text('Enviando...');
@@ -46,6 +47,7 @@ $(function () {
                 notify(response.data.message, 'success', '3000', 'top', 'right');
                 $('.btn-setting-jib').prop("disabled", false).text('Configurar');
                 $('.btn-setting-bonu').prop("disabled", false).text('Configurar');
+                $('.btn-setting-diary').prop("disabled", false).text('Configurar');
                 $('.btn-setting-seller').prop("disabled", false).text('Configurar');
                 $('.btn-setting-seller-pencent').prop("disabled", false).text('Configurar');
                 $('.btn-setting-seller-group').prop("disabled", false).text('Configurar');
@@ -89,6 +91,12 @@ $(function () {
                         $('.has-danger-to_access').text('' + error.response.data.errors.to_access + '').css("color", "#dc3545e3");
                     }else{
                         $('.has-danger-to_access').text('');
+                    }
+
+                    if (error.response.data.errors.diary) {
+                        $('.has-danger-diary').text('' + error.response.data.errors.diary + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-diary').text('');
                     }
 
                     if (error.response.data.errors.level_single_junior) {
@@ -236,6 +244,7 @@ $(function () {
             }
             $('.btn-setting-jib').prop("disabled", false).text('Configurar');
             $('.btn-setting-bonu').prop("disabled", false).text('Configurar');
+            $('.btn-setting-diary').prop("disabled", false).text('Configurar');
             $('.btn-setting-seller').prop("disabled", false).text('Configurar');
             $('.btn-setting-seller-percent').prop("disabled", false).text('Configurar');
             $('.btn-setting-seller-group').prop("disabled", false).text('Configurar');

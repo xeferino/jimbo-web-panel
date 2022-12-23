@@ -2,38 +2,7 @@
 
 @section('page-content')
 <div class="row">
-    <div class="col-sm-6">
-        <div class="card fb-card">
-            <div class="card-header">
-                <i class="ti-money"></i>
-                <div class="d-inline-block">
-                    <h5>Jibs</h5>
-                    <span>Equivalencia en USD</span>
-                </div>
-            </div>
-            <div class="card-block">
-                <form method="POST" class="form-setting" action="{{ route('panel.settings.update') }}" name="form-setting" id="form-setting">
-                    @csrf
-                    <input type="hidden" name="type" value="jib">
-                    <div class="form-group row">
-                        <div class="col-sm-12">
-                            <label class="col-form-label">Jib en USD</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="jib_usd" name="jib_usd" value="{{$settings['jib_usd']}}" placeholder="0.10">
-                                <span class="input-group-addon">$</span>
-                            </div>
-                            <div class="col-form-label has-danger-jib_usd"></div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 text-right">
-                        <button type="submit" class="btn btn-warning btn-sm  btn-setting-jib">Configurar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-sm-6">
+    <div class="col-sm-12">
         <div class="card fb-card">
             <div class="card-header">
                 <i class="ti-money"></i>
@@ -47,6 +16,14 @@
                     @csrf
                     <input type="hidden" name="type" value="bonus">
                     <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label class="col-form-label">Jib en USD</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="jib_usd" name="jib_usd" value="{{$settings['jib_usd']}}" placeholder="0.10">
+                                <span class="input-group-addon">$</span>
+                            </div>
+                            <div class="col-form-label has-danger-jib_usd"></div>
+                        </div>
                         <div class="col-sm-6">
                             <label class="col-form-label">Jib al registrarse</label>
                             <div class="input-group">
@@ -78,14 +55,22 @@
                             <label class="col-form-label">Por convertirse en vendedor</label>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="user_to_seller" name="user_to_seller" value="{{$settings['user_to_seller']}}" placeholder="1">
-                                <span class="input-group-addon">jib</span>
+                                <span class="input-group-addon">#</span>
                             </div>
                             <div class="col-form-label has-danger-user_to_seller"></div>
                         </div>
 
-                        <div class="col-sm-12 text-right">
-                            <button type="submit" class="btn btn-warning btn-sm btn-setting-bonu">Configurar</button>
+                        <div class="col-sm-6">
+                            <label class="col-form-label">Acceso diarios al app</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="diary" name="diary" value="{{$settings['diary']}}" placeholder="1">
+                                <span class="input-group-addon">#</span>
+                            </div>
+                            <div class="col-form-label has-danger-diary"></div>
                         </div>
+                    </div>
+                    <div class="col-sm-12 text-right">
+                        <button type="submit" class="btn btn-warning btn-sm btn-setting-diary">Configurar</button>
                     </div>
                 </form>
             </div>

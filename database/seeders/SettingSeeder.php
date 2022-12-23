@@ -11,7 +11,7 @@ class SettingSeeder extends Seeder
     private $items = [
         [
             'name'      => 'jib_usd',
-            'value'     => '0.10',
+            'value'     => '0.001',
         ],
         [
             'name'      => 'jib_unit_x_usd',
@@ -28,6 +28,10 @@ class SettingSeeder extends Seeder
         [
             'name'      => 'to_access',
             'value'  => '100',
+        ],
+        [
+            'name'      => 'diary',
+            'value'  => '50',
         ],
 
         //niveles de vendedores metas individuales
@@ -82,12 +86,6 @@ class SettingSeeder extends Seeder
         //POR CONVERTIRCE EN VENDEDOR
         [
             'name'      => 'user_to_seller',
-            'value'  => '50',
-        ],
-
-        //POR CONVERTIRCE EN VENDEDOR X UNICA VEZ  + 1 VENTA MIN. GANA
-        [
-            'name'      => 'level_classic_seller_percent',
             'value'  => '50',
         ],
 

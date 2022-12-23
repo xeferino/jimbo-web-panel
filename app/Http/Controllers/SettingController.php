@@ -40,11 +40,10 @@ class SettingController extends Controller
     public function update(FormSettingRequest $request, Setting $setting)
     {
         $type = $request->type;
-        if($type == 'jib') {
-                $setting = Setting::where('name', 'jib_usd')->first();
-                $setting->value = $request->jib_usd;
-                $setting->save();
-        } elseif($type == 'bonus'){
+        if($type == 'bonus'){
+            $setting = Setting::where('name', 'jib_usd')->first();
+            $setting->value = $request->jib_usd;
+            $setting->save();
             $register  = Setting::where('name', 'register')->first();
             $register->value = $request->register;
             $register->save();
@@ -57,6 +56,9 @@ class SettingController extends Controller
             $user_to_seller = Setting::where('name', 'user_to_seller')->first();
             $user_to_seller->value = $request->user_to_seller;
             $user_to_seller->save();
+            $diary = Setting::where('name', 'diary')->first();
+            $diary->value = $request->diary;
+            $diary->save();
         } elseif($type == 'seller_single'){
             $level_single_junior  = Setting::where('name', 'level_single_junior')->first();
             $level_single_junior->value = $request->level_single_junior;
@@ -144,6 +146,7 @@ class SettingController extends Controller
         $to_access              = Setting::where('name', 'to_access')->first();
         $user_to_seller         = Setting::where('name', 'user_to_seller')->first();
         $referral_bonus_seller  = Setting::where('name', 'level_classic_referral_bonus')->first();
+        $diary                  = Setting::where('name', 'diary')->first();
 
         return [
             /*
@@ -156,7 +159,8 @@ class SettingController extends Controller
                 'referrals'             =>  $referrals->value,
                 'to_access'             =>  $to_access->value,
                 'user_to_seller'        =>  $user_to_seller->value,
-                'referral_bonus_seller' => $referral_bonus_seller
+                'referral_bonus_seller' => $referral_bonus_seller->value,
+                'diary'                 => $diary->value
             ]
         ];
 
