@@ -89,12 +89,12 @@
           <div>
             <h1>Somos tu mejor opción para ganar</h1>
             <h2>Aquí encontrarás una variedad de sorteos, con los que podras ganas premios en efectivo y mucho mas...</h2>
-            <a href="#" class="download-btn"><i class="bx bxl-play-store"></i> Google Play</a>
-            <a href="#" class="download-btn"><i class="bx bxl-apple"></i> App Store</a>
+            <a href="https://play.google.com/store/apps/details?id=com.jimbosorteos.app" target="blank" class="download-btn"><i class="bx bxl-play-store"></i> Google Play</a>
+            {{-- <a href="#" class="download-btn"><i class="bx bxl-apple"></i> App Store</a> --}}
           </div>
         </div>
         <div class="col-lg-6 d-lg-flex flex-lg-column align-items-stretch order-1 order-lg-2 hero-img" data-aos="fade-up">
-          <img src="{{asset('landing/img/hero-img.png')}}" class="img-fluid" alt="">
+          <img src="{{asset('landing/img/jimbo.jpeg')}}" class="img-fluid" alt="" style="border-radius: 25px; border: 3px solid #ffc107;">
         </div>
       </div>
     </div>
@@ -150,7 +150,7 @@
             </div>
           </div>
           <div class="image col-xl-5 d-flex align-items-stretch justify-content-center order-1 order-lg-2" data-aos="fade-left" data-aos-delay="100">
-            <img src="{{asset('landing/img/features.svg')}}" class="img-fluid" alt="">
+            <img src="{{asset('landing/img/feature.jpg')}}" class="img-fluid" alt="" style="height: 500px; border-radius:25px; border: 3px solid #ffc107; margin-top: 40px;">
           </div>
         </div>
 
@@ -265,18 +265,23 @@
       <div class="container-fluid" data-aos="fade-up">
         <div class="gallery-slider swiper">
           <div class="swiper-wrapper">
-            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/gallery-1.png')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/gallery-1.png')}}" class="img-fluid" alt=""></a></div>
-            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/gallery-2.png')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/gallery-2.png')}}" class="img-fluid" alt=""></a></div>
-            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/gallery-3.png')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/gallery-3.png')}}" class="img-fluid" alt=""></a></div>
-            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/gallery-4.png')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/gallery-4.png')}}" class="img-fluid" alt=""></a></div>
-            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/gallery-5.png')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/gallery-5.png')}}" class="img-fluid" alt=""></a></div>
-            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/gallery-6.png')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/gallery-6.png')}}" class="img-fluid" alt=""></a></div>
-            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/gallery-7.png')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/gallery-7.png')}}" class="img-fluid" alt=""></a></div>
-            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/gallery-8.png')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/gallery-8.png')}}" class="img-fluid" alt=""></a></div>
-            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/gallery-9.png')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/gallery-9.png')}}" class="img-fluid" alt=""></a></div>
-            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/gallery-10.png')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/gallery-10.png')}}" class="img-fluid" alt=""></a></div>
-            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/gallery-11.png')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/gallery-11.png')}}" class="img-fluid" alt=""></a></div>
-            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/gallery-12.png')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/gallery-12.png')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/1.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/1.jpeg')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/2.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/2.jpeg')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/3.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/3.jpeg')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/4.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/4.jpeg')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/5.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/5.jpeg')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/6.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/6.jpeg')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/7.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/7.jpeg')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/8.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/8.jpeg')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/9.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/9.jpeg')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/10.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/10.jpeg')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/11.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/11.jpeg')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/12.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/12.jpeg')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/13.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/13.jpeg')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/14.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/14.jpeg')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/15.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/15.jpeg')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/16.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/16.jpeg')}}" class="img-fluid" alt=""></a></div>
+            <div class="swiper-slide"><a href="{{asset('landing/img/gallery/17.jpeg')}}" class="gallery-lightbox" data-gall="gallery-carousel"><img src="{{asset('landing/img/gallery/17.jpeg')}}" class="img-fluid" alt=""></a></div>
           </div>
           <div class="swiper-pagination"></div>
         </div>
@@ -285,7 +290,7 @@
     </section><!-- End Gallery Section -->
 
     <!-- ======= Testimonials Section ======= -->
-    <section id="testimonials" class="testimonials section-bg">
+    {{-- <section id="testimonials" class="testimonials section-bg">
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
@@ -366,7 +371,7 @@
         </div>
 
       </div>
-    </section><!-- End Testimonials Section -->
+    </section> --}}<!-- End Testimonials Section -->
 
     <!-- ======= Pricing Section ======= -->
     {{-- <section id="pricing" class="pricing">
@@ -610,7 +615,7 @@
            {{--  <p>Cras fermentum odio eu feugiat lide par naso tierra videa magna derita valies</p> --}}
             <div class="social-links mt-3">
               <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-              <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+              <a href="https://www.facebook.com/profile.php?id=100083867204382&mibextid=ZbWKwL" target="blank" class="facebook"><i class="bx bxl-facebook"></i></a>
               <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
               <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
               <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>

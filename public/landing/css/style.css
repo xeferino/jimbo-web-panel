@@ -694,13 +694,13 @@ section {
   }
 
   .gallery .swiper-slide-active {
-    border: 6px solid #ffc107;
+    border: 3px solid #ffc107;
     padding: 4px;
     background: #fff;
     z-index: 1;
     transform: scale(1.2);
     margin-top: 10px;
-    border-radius: 25px;
+    border-radius: 5px;
   }
 }
 
