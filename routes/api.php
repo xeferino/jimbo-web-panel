@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\CardController;
 use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\LegalityController;
+use App\Http\Controllers\Api\RouletteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -95,6 +96,11 @@ Route::middleware(['auth:sanctum', 'check.user'])->group(function () {
     //cash request
     Route::post('/cash/request', [PaymentController::class, 'cashRequest']);
     Route::get('/cash/request/{user}', [PaymentController::class, 'cashRequestUser']);
+
+     //roulettes
+     Route::get('/roulettes', [RouletteController::class, 'index']);
+     Route::post('/roulettes/wager', [RouletteController::class, 'wager']);
+     //Route::post('/roulettes/exchange', [RouletteController::class, 'exchange']);
 });
 
 /*Route::get('/foo', function () {

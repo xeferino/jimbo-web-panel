@@ -9,6 +9,7 @@ use Exception;
 use App\Models\BalanceHistory;
 use App\Models\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class BalanceController extends Controller
 {
@@ -89,6 +90,8 @@ class BalanceController extends Controller
                 $operation = $type;
             } elseif ($type == 'credit' && $currency == 'jib'){
                 $operation = 'bonus';
+            }elseif ($type == 'debit' or $type == 'credit'){
+                $operation = 'wager';
             }
 
             $data = [
@@ -112,6 +115,24 @@ class BalanceController extends Controller
                 $user->balance_jib  =  $user->balance_jib+$data['balance'];
                 $user->save();
                 return true;
+            } elseif ($type == 'debit' && $operation = 'wager') {
+                $user               =  User::find($data['user_id']);
+                $user->balance_usd  =  $user->balance_usd-$data['balance'];
+                $user->save();
+                return [
+                    'balance_jib' => $user->balance_jib,
+                    'balance_usd' => $user->balance_usd,
+                    'user'        => $user->id
+                ];
+            }elseif ($type == 'credit' && $operation = 'wager' && $currency == 'usd') {
+                $user               =  User::find($data['user_id']);
+                $user->balance_usd  =  $user->balance_usd+$data['balance'];
+                $user->save();
+                return [
+                    'balance_jib' => $user->balance_jib,
+                    'balance_usd' => $user->balance_usd,
+                    'user'        => $user->id
+                ];
             }
             if ($balanceHitory)
                 return true;
@@ -121,5 +142,15 @@ class BalanceController extends Controller
                 'message' =>  $e->getMessage()
             ], 500);
         }
+    }
+
+    public static function getBalance()
+    {
+        $user = Auth::user();
+        return [
+            'balance_jib' => $user->balance_jib,
+            'balance_usd' => $user->balance_usd,
+            'user'        => $user->id
+        ];
     }
 }

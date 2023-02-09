@@ -103,6 +103,10 @@ class AuthController extends Controller
                         $level = 'Semi Senior';
                     }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'master') {
                         $level = 'Senior';
+                    } elseif($user->type == 2) {
+                        $level = 'Vendedor';
+                    }elseif(($user->type == 1 or $user->type == 2) && $user->become_seller == 1 && $user->seller_at != null ) {
+                        $level = 'Usuario - Vendedor';
                     }
 
                     $image = $this->asset.'avatar.svg';
@@ -234,6 +238,10 @@ class AuthController extends Controller
                 $level = 'Semi Senior';
             }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'master') {
                 $level = 'Senior';
+            } elseif($user->type == 2) {
+                $level = 'Vendedor';
+            }elseif(($user->type == 1 or $user->type == 2) && $user->become_seller == 1 && $user->seller_at != null ) {
+                $level = 'Usuario - Vendedor';
             }
 
 
@@ -317,6 +325,10 @@ class AuthController extends Controller
                     $level = 'Semi Senior';
                 }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'master') {
                     $level = 'Senior';
+                } elseif($user->type == 2) {
+                    $level = 'Vendedor';
+                }elseif(($user->type == 1 or $user->type == 2) && $user->become_seller == 1 && $user->seller_at != null ) {
+                    $level = 'Usuario - Vendedor';
                 }
 
                 $image = $this->asset.'avatar.svg';
@@ -444,6 +456,10 @@ class AuthController extends Controller
                 $level = 'Semi Senior';
             }elseif(isset($user->LevelSeller->level->name) && $user->LevelSeller->level->name == 'master') {
                 $level = 'Senior';
+            } elseif($user->type == 2) {
+                $level = 'Vendedor';
+            }elseif(($user->type == 1 or $user->type == 2) && $user->become_seller == 1 && $user->seller_at != null ) {
+                $level = 'Usuario - Vendedor';
             }
 
             $data =    [

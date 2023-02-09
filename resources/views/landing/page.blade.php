@@ -36,7 +36,7 @@
 </head>
 
 <body>
-
+<script src="https://checkout.culqi.com/js/v4"></script>
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top  header-transparent ">
     <div class="container d-flex align-items-center justify-content-between">
@@ -52,6 +52,7 @@
           <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
           <li><a class="nav-link scrollto" href="#features">Nosotros</a></li>
           <li><a class="nav-link scrollto" href="#gallery">Galer&iacute;a</a></li>
+          <li><a class="nav-link scrollto" href="#raffles">Sorteos</a></li>
           {{-- <li><a class="nav-link scrollto" href="#faq">F.A.Q</a></li> --}}
          {{--  <li><a class="nav-link scrollto" href="">T&eacute;rminos y Condiciones</a></li> --}}
           {{-- <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
@@ -288,7 +289,46 @@
 
       </div>
     </section><!-- End Gallery Section -->
-
+      <section id="raffles" class="contact">
+        <div class="container" data-aos="fade-up">
+          <div class="section-title">
+            <h2>Sorteos</h2>
+            <p>Participa y unete a nuestra familia Jimbo, es tu oportunidad de generar ingresos extras.</p>
+          </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="row">
+                @foreach ($raffles as $raffle)
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-6 info">
+                        <img src="{{$raffle->logo}}" alt="">
+                        <h4 class="mt-3">{{$raffle->title}} - {{$raffle->remaining_days}} Restantes</h4>
+                        <p>{{$raffle->description}}</p>
+                        @foreach ($raffle->Tickets as $ticket)
+                            @if($ticket->promotion->price>=5)
+                                <div style="
+                                border: 1px #ff9800 solid;
+                                border-radius: 30px;
+                                padding: 3px;
+                                cursor:pointer;
+                                " class="mt-2 ticket"
+                                data-price="{{$ticket->promotion->price*100}}"
+                                data-raffle="{{$raffle->id}}"
+                                >
+                                    {{$ticket->promotion->name}}
+                                </div>
+                            @endif
+                        @endforeach
+                        <button class="btn btn-warning mt-2 btn_pagar btn-comprar_{{$raffle->id}}" disabled>Comprar Boleto</button>
+                    </div>
+                    <div class="col-lg-3"></div>
+                @endforeach
+              </div>
+              {{ $raffles->links() }}
+            </div>
+          </div>
+        </div>
+      </section>
     <!-- ======= Testimonials Section ======= -->
     {{-- <section id="testimonials" class="testimonials section-bg">
       <div class="container" data-aos="fade-up">
@@ -639,19 +679,155 @@
       </div>
     </div>
   </footer><!-- End Footer -->
-
+<input type="hidden" name="id" id="id">
+<input type="hidden" name="id" id="id">
+<input type="hidden" name="id" id="id">
+<input type="hidden" name="id" id="id">
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
   <script src="{{ asset('landing/vendor/aos/aos.js')}}"></script>
   <script src="{{ asset('landing/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script type="text/javascript" src="{{ asset('assets/js/jquery/jquery.min.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('assets/js/jquery-ui/jquery-ui.min.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('assets/js/popper.js/popper.min.js') }}"></script>
+  <!-- Sweet Alert -->
+  <script src="{{ asset('assets/js/sweetalert/sweetalert.min.js') }}"></script>
+  <script src="{{ asset('assets/js/axios.js') }}"></script>
   <script src="{{ asset('landing/vendor/glightbox/js/glightbox.min.js')}}"></script>
   <script src="{{ asset('landing/vendor/swiper/swiper-bundle.min.js')}}"></script>
   <script src="{{ asset('landing/vendor/php-email-form/validate.js')}}"></script>
 
   <!-- Template Main JS File -->
   <script src="{{ asset('landing/js/main.js')}}"></script>
+  <script>
+    Culqi.publicKey = 'pk_test_f4383204e49dc6b3';
 
+    $('.ticket').on('click', function(){
+        var raffle = $(this).data('raffle');
+        $(this).addClass('ticket-select');
+        $(this).siblings().removeClass('ticket-select');
+        $('.btn-comprar_'+raffle).prop("disabled", false);
+        var id = $('#id').val(raffle);
+
+        Culqi.settings({
+            title: 'Jimbo',
+            currency: 'USD',  // Este parámetro es requerido para realizar pagos yape
+            amount: $(this).data('price'),  // Este parámetro es requerido para realizar pagos yape
+            order: '' // Este parámetro es requerido para realizar pagos con pagoEfectivo, billeteras y Cuotéalo
+        });
+        console.log($(this).data('price'));
+    });
+
+    $('.btn_pagar').on('click', function(e){
+        Culqi.open();
+        e.preventDefault();
+    });
+
+    Culqi.options({
+      style: {
+        logo: 'https://www.jimbosorteos.com/landing/img/logo-icon.png',
+        bannerColor: '#ff9800', // hexadecimal
+        buttonBackground: '#ff9800', // hexadecimal
+        menuColor: '', // hexadecimal
+        linksColor: '', // hexadecimal
+        buttonText: '', // texto que tomará el botón
+        buttonTextColor: '#f3f9800', // hexadecimal
+        priceColor: '#ff9800' // hexadecimal
+      }
+  });
+
+    function culeeqi() {
+        /*axios.post($(this).attr('action'), {
+            data:{
+                    'raffle_id':$('#raffle_id').val(),
+                    'promotion_id' : $("#promotions").select2('val'),
+                    'quantity': $("#quantity").val()
+                }
+        }).then(response => {
+            console.log('success : ',Culqi);
+
+        }).catch(error => {
+            console.log('Error : ',Culqi.error);
+        });*/
+
+        if (Culqi.token) {  // ¡Objeto Token creado exitosamente!
+        const token = Culqi.token.id;
+        console.log('Se ha creado un Token: ', token);
+        $('.toolbar-banner__icon').click();
+        var SweetAlert2Polls = function() {
+            //== Demos
+            var initDemos = function() {
+
+                swal({
+                        title: 'dfggdgfgg',
+                        text: "Desea salir del panel administrativo de Jimbo!",
+                        type: 'info',
+                        icon : "{{ asset('assets/images/jimbo-logo.png') }}",
+                        buttons:{
+                            confirm: {
+                                text : 'Salir',
+                                className : 'btn btn-warning',
+                                showLoaderOnConfirm: true,
+                            },
+                            cancel: {
+                                visible: true,
+                                text : 'Cancelar',
+                                className : 'btn btn-inverse',
+                            }
+                        },
+                    }).then((confirm) => {
+                        if (confirm) {
+                            $('.jimbo-loader').show();
+
+                            axios.post('{{ route('logout')}}', {
+                            }).then(response => {
+                                if(response.data.success){
+                                    //notify(response.data.message, 'success', '2000', 'bottom', 'right');
+                                    $('.load-text').text(''+response.data.message+'');
+                                    setTimeout(function () {location.href = response.data.url}, 2000);
+                                }
+                            }).catch(error => {
+                                if (error.response) {
+                                    if(error.response.status === 502){
+                                        notify(error.response.data.message, 'danger', '5000', 'bottom', 'right');
+                                    }else{
+                                        notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
+                                    }
+                                }else{
+                                    notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
+                                }
+                                $('.jimbo-loader').hide();
+                                setTimeout(function () {location.reload()}, 5000);
+                            });
+                        } else {
+                            swal.close();
+                        }
+                    });
+            };
+            return {
+                //== Init
+                init: function() {
+                    initDemos();
+                },
+            };
+        }();
+        //== Class Initialization
+        jQuery(document).ready(function() {
+            SweetAlert2Polls.init();
+        });
+        //En esta linea de codigo debemos enviar el "Culqi.token.id"
+        //hacia tu servidor con Ajax
+        } else if (Culqi.order) {  // ¡Objeto Order creado exitosamente!
+        const order = Culqi.order;
+        console.log('Se ha creado el objeto Order: ', order);
+
+        } else {
+        // Mostramos JSON de objeto error en consola
+        console.log('Error : ',Culqi.error);
+        }
+    };
+  </script>
 </body>
 
 </html>

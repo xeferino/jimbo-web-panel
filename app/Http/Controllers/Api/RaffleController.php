@@ -11,6 +11,8 @@ use App\Models\Raffle;
 use App\Models\FavoriteDraw;
 use App\Helpers\Helper;
 use App\Models\Ticket;
+use App\Models\Setting;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -66,18 +68,18 @@ class RaffleController extends Controller
             if($favorite) {
                 $raffle_favorite = true;
             }
-            # code...
-            array_push($data, [
-                'id'                => $value->id,
-                'title'             => $value->title,
-                'cash_to_draw'      => $value->type == 'raffle' ? Helper::amount($value->cash_to_draw) : $value->title,
-                'date_start'        => $value->date_start->format('d/m/Y'),
-                'date_end'          => $value->date_end->format('d/m/Y'),
-                'date_release'      => $value->date_release->format('d/m/Y'),
-                'remaining_days'    => $value->remaining_days,
-                'logo'              => $value->logo,
-                'favorite'          => $raffle_favorite
-            ]);
+                # code...
+                array_push($data, [
+                    'id'                => $value->id,
+                    'title'             => $value->title,
+                    'cash_to_draw'      => $value->type == 'raffle' ? Helper::amount($value->cash_to_draw) : $value->title,
+                    'date_start'        => $value->date_start->format('d/m/Y'),
+                    'date_end'          => $value->date_end->format('d/m/Y'),
+                    'date_release'      => $value->date_release->format('d/m/Y'),
+                    'remaining_days'    => $value->remaining_days,
+                    'logo'              => $value->logo,
+                    'favorite'          => $raffle_favorite
+                ]);
         }
 
         foreach ($data as $clave => $fila) {
@@ -133,8 +135,6 @@ class RaffleController extends Controller
                 'raffles.date_release',
                 DB::raw("TIMESTAMPDIFF(DAY, raffles.date_release, now()) AS days_ago"),
                 DB::raw("CONCAT('".$this->asset."',raffles.image) AS logo"))
-                ->where('raffles.active', 0)
-                ->where('raffles.public', 1)
                 ->where('raffles.finish', 1)
                 ->whereNull('raffles.deleted_at')
                 ->orderBy('raffles.id', 'DESC')
@@ -143,18 +143,19 @@ class RaffleController extends Controller
             $data = [];
 
             foreach ($raffles as $key => $value) {
-                # code...
-                array_push($data, [
-                    'id'                => $value->id,
-                    'title'             => $value->title,
-                    'cash_to_draw'      => Helper::amount($value->cash_to_draw),
-                    'date_start'        => $value->date_start->format('d/m/Y'),
-                    'date_end'          => $value->date_end->format('d/m/Y'),
-                    'date_release'      => $value->date_release->format('d/m/Y'),
-                    'days_ago'          => $value->days_ago,
-                    'logo'              => $value->logo,
-                    'winners'           => Raffle::Winners($value->id)
-                ]);
+                if($value->days_ago >= 0) {
+                    # code...
+                    array_push($data, [
+                        'id'                => $value->id,
+                        'title'             => $value->title,
+                        'cash_to_draw'      => Helper::amount($value->cash_to_draw),
+                        'date_start'        => $value->date_start->format('d/m/Y'),
+                        'date_end'          => $value->date_end->format('d/m/Y'),
+                        'date_release'      => $value->date_release->format('d/m/Y'),
+                        'days_ago'          => $value->days_ago,
+                        'logo'              => $value->logo
+                    ]);
+                }
             }
 
             return response()->json(['raffles' => $data], 200);
@@ -196,7 +197,7 @@ class RaffleController extends Controller
             $days  = $end->diffInDays($start);
 
             return response()->json([
-                'raflle' => [
+                'raffle' => [
                     'id'            => $raffle->id,
                     'title'         => $raffle->title,
                     'description'   => $raffle->description,
@@ -212,7 +213,7 @@ class RaffleController extends Controller
                     'active'        => $raffle->active == 1 ? 'Activo' : 'Inactivo',
                     'public'        => $raffle->public == 1 ? 'Publico' : null,
                     'finish'        => $raffle->finish == 1 ? 'Finalizado' : 'Abierto',
-                    'type'          => ($raffle->type == 'raffle') ? 'Sorteo' : 'Producto',
+                    'type'          => ($raffle->type == 'raffle') ? 'Efectivo' : 'Producto',
                     'days_ago'      => $days,
                     'winners' =>    Raffle::Winners($raffle->id)
                 ]
@@ -238,7 +239,12 @@ class RaffleController extends Controller
             $data = [];
             $tickets = [];
 
+            $jib_unit = Setting::where('name', 'jib_unit_x_usd')->first();
+            $jib_usd = Setting::where('name', 'jib_usd')->first();
+
+
             foreach ($raffle->tickets as $key => $value) {
+                $amout_jib = ($value->promotion->price*$jib_unit->value)/$jib_usd->value;
                 array_push($tickets, [
                     'id'            => $value->id,
                     'serial'        => $value->serial,
@@ -251,6 +257,7 @@ class RaffleController extends Controller
                         'name'      => $value->promotion->name,
                         'code'      => $value->promotion->code,
                         'price'     => Helper::amount($value->promotion->price),
+                        'price_jib' => Helper::jib($amout_jib),
                         'quantity'  => $value->promotion->quantity,
                         'active'    => $value->promotion->active,
                         'available' => ($value->total>0) ? true : false
@@ -291,7 +298,7 @@ class RaffleController extends Controller
                     'days_extend'       => $raffle->days_extend != null ? $raffle->days_extend : 'No hay dias de prorroga',
                     'active'            => $raffle->active,
                     'public'            => $raffle->public,
-                    'type'              => ($raffle->type == 'raffle') ? 'Sorteo' : 'Producto',
+                    'type'              => ($raffle->type == 'raffle') ? 'Efectivo' : 'Producto',
                     'progress'          => $percent == 100 ?  100 : sprintf("%.2f", $percent),
                     'remaining_days'    => $days,
                     'awards' => [
@@ -332,9 +339,13 @@ class RaffleController extends Controller
             ->where('promotion_id', $request->promotion_id)
             ->first();
 
+            $jib_unit = Setting::where('name', 'jib_unit_x_usd')->first();
+            $jib_usd = Setting::where('name', 'jib_usd')->first();
+
             $data = [];
 
             if($ticket) {
+                $amout_jib = ($ticket->promotion->price*$jib_unit->value)/$jib_usd->value;
                 array_push($data, [
                     'raflle' => [
                         'id'            => $ticket->raffle->id,
@@ -352,17 +363,20 @@ class RaffleController extends Controller
                         'days_extend'   => $ticket->raffle->days_extend != null ? $ticket->raffle->days_extend : 'No hay dias de prorroga',
                         'active'        => $ticket->raffle->active,
                         'public'        => $ticket->raffle->public,
-                        'type'          => ($ticket->raffle->type == 'raffle') ? 'Sorteo' : 'Producto',
+                        'type'          => ($ticket->raffle->type == 'raffle') ? 'Efectivo' : 'Producto',
                         'promotion' => [
                             'id'        => $ticket->promotion->id,
                             'name'      => $ticket->promotion->name,
                             'code'      => $ticket->promotion->code,
                             'price'     =>Helper::amount($ticket->promotion->price),
+                            'price_jib' => Helper::jib($amout_jib),
                             'quantity'  => $ticket->promotion->quantity,
                         ],
-                    ]
+                    ],
+                    'balance_jib'   => Helper::jib(Auth::user()->balance_jib),
                 ]);
             }
+            $amout_jib = ($ticket->promotion->price*$jib_unit->value)/$jib_usd->value;
             return response()->json([
                 'raflle' => [
                     'id'            => $ticket->raffle->id,
@@ -380,15 +394,17 @@ class RaffleController extends Controller
                     'days_extend'   => $ticket->raffle->days_extend != null ? $ticket->raffle->days_extend : 'No hay dias de prorroga',
                     'active'        => $ticket->raffle->active,
                     'public'        => $ticket->raffle->public,
-                    'type'          => ($ticket->raffle->type == 'raffle') ? 'Sorteo' : 'Producto',
+                    'type'          => ($ticket->raffle->type == 'raffle') ? 'Efectivo' : 'Producto',
                     'promotion' => [
                         'id'        => $ticket->promotion->id,
                         'name'      => $ticket->promotion->name,
                         'code'      => $ticket->promotion->code,
                         'price'     =>Helper::amount($ticket->promotion->price),
+                        'price_jib' => Helper::jib($amout_jib),
                         'quantity'  => $ticket->promotion->quantity,
                     ],
-                ]
+                ],
+                'balance_jib'   => Helper::jib(Auth::user()->balance_jib),
             ], 200);
         } catch (Exception $e) {
 

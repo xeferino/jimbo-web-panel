@@ -1310,3 +1310,19 @@ section {
     padding: 5px 0;
   }
 }
+
+/*customize*/
+.ticket:hover {
+   background: #ff9800;
+   color:#fff;
+}
+.ticket-select {
+    background: #ff9800;
+    color:#fff;
+ }
+
+ #raffles .container nav {
+    margin-top: 5px;
+    margin-left:440px;
+ }
+

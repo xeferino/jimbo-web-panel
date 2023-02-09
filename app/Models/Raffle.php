@@ -38,9 +38,33 @@ class Raffle extends Model
     public static function Winners($id)
     {
         $winners = [];
+        $winner = null;
         foreach (Winner::where('raffle_id', $id)->orderBy('amount','DESC')->get() as $key => $value) {
 
             $country = Country::find($value->country_id);
+            $raffle = Raffle::find($value->raffle_id);
+
+            if((($raffle->prize_1*$raffle->cash_to_draw)/100) == $value->amount) {
+                $winner = 1;
+            }else if((($raffle->prize_2*$raffle->cash_to_draw)/100) == $value->amount) {
+                $winner = 2;
+            }else if((($raffle->prize_3*$raffle->cash_to_draw)/100) == $value->amount) {
+                $winner = 3;
+            }else if((($raffle->prize_4*$raffle->cash_to_draw)/100) == $value->amount) {
+                $winner = 4;
+            }else if((($raffle->prize_5*$raffle->cash_to_draw)/100) == $value->amount) {
+                $winner = 5;
+            }else if((($raffle->prize_6*$raffle->cash_to_draw)/100) == $value->amount) {
+                $winner = 6;
+            }else if((($raffle->prize_7*$raffle->cash_to_draw)/100) == $value->amount) {
+                $winner = 7;
+            }else if((($raffle->prize_8*$raffle->cash_to_draw)/100) == $value->amount) {
+                $winner = 8;
+            }else if((($raffle->prize_9*$raffle->cash_to_draw)/100) == $value->amount) {
+                $winner = 9;
+            }else if((($raffle->prize_10*$raffle->cash_to_draw)/100) == $value->amount) {
+                $winner = 10;
+            }
 
             $image = config('app.url').'/assets/images/avatar.svg';
 
@@ -64,6 +88,7 @@ class Raffle extends Model
                     'raffle_id'            => $value->raffle_id,
                     'created_at'           => $value->created_at,
                     'image'                => $image,
+                    'winner'               => $winner,
                 'country'   => [
                     'id'    => $country->id,
                     'name'  => $country->name,

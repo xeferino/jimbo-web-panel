@@ -14,7 +14,7 @@ use App\Models\ExtendGiveaway;
 use App\Models\Sale;
 use App\Models\TicketUser;
 use Illuminate\Support\Carbon;
-
+use File;
 class RaffleController extends Controller
 {
    /**

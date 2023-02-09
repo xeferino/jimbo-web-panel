@@ -61,7 +61,7 @@ class RaffleCompleted extends Command
             } elseif ($value->date_release_end == 0) {
                 $raffle->active = 0;
                 foreach ($users as $key => $user) {
-                    NotificationController::store('Sorteo Finalizado!', 'se ha finalizado sorteo en jimbo! '.$raffle->title, $user->id);
+                    NotificationController::store('Sorteo Realizado!', 'se ha lanzado el sorteo en jimbo! '.$raffle->title, $user->id);
                 }
                 //array_push($ids, $value->id);
                 $save+=1;

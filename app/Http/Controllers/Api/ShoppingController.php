@@ -83,7 +83,7 @@ class ShoppingController extends Controller
                     'date_extend' => $shopping->Raffle->date_extend,
                 ],
                 'quantity' => $shopping->quantity,
-                'amount' => $shopping->amount,
+                'amount' => Helper::amount($shopping->amount),
                 'number_operation' => $shopping->number,
                 'date'  => $shopping->created_at->format('d/m/y'),
                 'hour'  => $shopping->created_at->format('H:i:s')

@@ -25,6 +25,20 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class SaleController extends Controller
 {
+    private $asset;
+    private $data;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->asset  = config('app.url').'/assets/images/';
+        $this->data = [];
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -40,6 +54,8 @@ class SaleController extends Controller
                 if(count($tickets)>0){
                     $ticket = Ticket::where('id', $request->ticket_id)->where('raffle_id', $request->raffle_id)->first();
                     if($ticket) {
+                        $jib_unit = Setting::where('name', 'jib_unit_x_usd')->first();
+                        $jib_usd = Setting::where('name', 'jib_usd')->first();
                         $user = isset($request->user_id) ? User::find($request->user_id) : null;
                         $status  = 'refused';
                         $reference_code = null;
@@ -104,11 +120,7 @@ class SaleController extends Controller
                             $PaymentHistory = PaymentController::paymentHistoryStore($data);
                         }elseif ($request->method_type == 'jib') {
                             # code...
-                            $jib_unit = Setting::where('name', 'jib_unit_x_usd')->first();
-                            $jib_usd = Setting::where('name', 'jib_usd')->first();
-
                             $amout_jib = ($ticket->promotion->price*$jib_unit->value)/$jib_usd->value;
-
                             $available_jib = $user->balance_jib-$amout_jib;
 
                             if ($user->balance_jib<$amout_jib) {
@@ -205,6 +217,8 @@ class SaleController extends Controller
 
                         $receipt_ope = $operation == 1 ? 'shopping' : 'sale';
                         $receipt_ope_user = $operation == 1 ? $saleUpdate->user_id : $saleUpdate->seller_id;
+                        $amout_jib = ($ticket->promotion->price*$jib_unit->value)/$jib_usd->value;
+
                         return response()->json([
                             'success' => true,
                             'message' => 'Pago procesado exitosamente.',
@@ -218,7 +232,9 @@ class SaleController extends Controller
                                 'quantity'          => $ticket->promotion->quantity,
                                 'number_operation'  => $saleUpdate->number,
                                 'amount'            => Helper::amount($ticket->promotion->price),
+                                'amount_jib'        => Helper::jib($amout_jib),
                                 'operation'         => $request->operation,
+                                'method'            => $request->method_type,
                                 //'url_receipt'       => route('receipt', ['operation' => $receipt_ope, 'id' => $saleUpdate->id, 'user' => $receipt_ope_user])
                                 'url_receipt'       => route('receipt', ['id' => encrypt($saleUpdate->id)])
                             ]
@@ -360,7 +376,7 @@ class SaleController extends Controller
                     'date_release' => $sale->Raffle->date_release->format('d/m/y'),
                 ],
                 'quantity' => $sale->quantity,
-                'amount' => $sale->amount,
+                'amount' => Helper::amount($sale->amount),
                 'number_operation' => $sale->number,
                 'date'  => $sale->created_at->format('d/m/y'),
                 'hour'  => $sale->created_at->format('H:i:s'),
@@ -402,7 +418,8 @@ class SaleController extends Controller
                                 WHEN levels.name = "master" and SUM(sales.amount)>='.$level_single_master->value.' THEN "Senior"
                                 ELSE "Usuario"
                                 END) AS level'),
-                'users.image'
+                'users.image',
+                'users.type'
                 )
                 ->join('users', 'users.id', '=', 'sales.seller_id')
                 ->leftJoin('level_users', 'level_users.seller_id', '=', 'sales.seller_id')
@@ -411,23 +428,30 @@ class SaleController extends Controller
                 ->whereNotNull('sales.seller_id')
                 ->whereNull('sales.user_id')
                 ->offset(0)->limit(10)
-                ->orderBy('sales.id','DESC')
+                ->orderBy('amount','DESC')
                 ->get();
 
             $data = [];
+            $image = $this->asset.'avatar.svg';
             $i = 1;
             foreach ($top as $key => $value) {
-
+                if ($value->image != 'avatar.svg') {
+                    if ($value->type == 2) {
+                        $image = $this->asset.'sellers/'.$value->image;
+                    } elseif ($value->type == 1) {
+                        $image = $this->asset.'competitors/'.$value->image;
+                    }
+                }
                array_push($data, [
                 'id'            => $i++,
                 'fullnames'     => $value->fullnames,
                 'amount'        => Helper::amount($value->amount),
                 'level'         => $value->level,
-                'image'         => $value->image != 'avatar.svg' ? config('app.url').'/assets/images/sellers/'.$value->Seller->image : config('app.url').'/assets/images/avatar.svg',
+                'image'         => $image,
                ]);
             }
             return response()->json([
-                'sellers' => $data,
+                'sellers' => $top,
                 'status'   => 200
             ], 200);
         }catch (Exception $e) {

@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Requests\Api\FormRechargeRequest;
 use App\Http\Requests\Api\FormExchangeRequest;
+use App\Http\Controllers\Api\BalanceController;
 use App\Models\CardUser as Card;
 use App\Mail\ReceiptPayment;
 use Illuminate\Support\Facades\Mail;
@@ -18,9 +19,9 @@ use Exception;
 use App\Models\User;
 use App\Helpers\Helper;
 use App\Models\Setting;
+use Illuminate\Support\Facades\Auth;
 
-
-class JibController extends Controller
+class RouletteController extends Controller
 {
 
     /**
@@ -31,41 +32,130 @@ class JibController extends Controller
     public function index(Request $request)
     {
         try {
-            $jib_usd = SettingController::jib()['value']['jib_usd'];
-            $jib_unit_x_usd = SettingController::jib()['value']['jib_unit_x_usd'];
 
-            return response()->json(['jibs' => [
-                /* [
-                    'jib' => 10,
-                    'usd' => (10/$jib_unit_x_usd)*$jib_usd // 1 usd
-                ], */
-                [
-                    'jib' => 5000,
-                    'usd' => (5000/$jib_unit_x_usd)*$jib_usd // 5 usd
+            $roulette = [
+                'outerRadius'     => 125, // Set outer radius so wheel fits inside the background.
+                'innerRadius'     => 55,  // Make wheel hollow so segments don't go all way to center.
+                'textFontSize'    => 8,   // Set default font size for the segments.
+                'textOrientation' => 'vertical', // Make text vertial so goes down from the outside of wheel.
+                'textAlignment'   => 'outer', // Align text to outside of wheel.
+                'numSegments'     => 54, //count segments roulette
+                'segments'        => [
+                    [
+                        'fillStyle'  => '#00aef0',
+                        'text'  => 'Ñ',
+                        'textFontSize'  => 10,
+                        'opcion' => 1,
+                        'value' => 1
+                    ]
                 ],
-                [
-                    'jib' => 10000,
-                    'usd' => (10000/$jib_unit_x_usd)*$jib_usd // 10 usd
+                'animation' => [
+                    'type'     => 'spinToStop',
+                    //'stopAngle'=> 100,
+                    'duration'      => 8,   // Duration in seconds.
+                    'spins'         => 3,   // Default number of complete spins.
+                    'soundTrigger'  => 'pin'// Specify pins are to trigger the sound, the other option is 'segment'.
                 ],
-                [
-                    'jib' => 15000,
-                    'usd' => (15000/$jib_unit_x_usd)*$jib_usd // 15 usd
-                ],
-                [
-                    'jib' => 20000,
-                    'usd' => (20000/$jib_unit_x_usd)*$jib_usd // 20 usd
-                ],
-                [
-                    'jib' => 50000,
-                    'usd' => (50000/$jib_unit_x_usd)*$jib_usd // 50 usd
-                ]
-            ]], 200);
+                  'pins' => [
+                    'number'      => 54,   // Number of pins. They space evenly around the wheel.
+                    'fillStyle'   => 'silver',
+                    'outerRadius' => 2,
+                  ]
+            ];
+
+            return response()->json($roulette, 200);
 
         } catch (Exception $e) {
             return response()->json([
                 'status'   => 400,
                 'message' =>  $e->getMessage()
             ], 400);
+        }
+    }
+
+    public function wager(Request $request)
+    {
+        $balance = BalanceController::getBalance();
+        $number = [1, 2, 3, 5, 10, 20, 'X2', 'X5', '1000 JIB', '5000 JIB'];
+        $roulette = in_array($request->result, $number);
+        $amount = 0;
+        $type = null;
+
+        $multiplier = $request->multiplier ? $request->multiplier : 1;
+
+        if ($roulette && $request->result == 'X2') {
+            return response()->json([
+                'success' => true,
+                'title'   => 'Aumento de probabilidad X2',
+                'message' => 'Has ganado una nueva oportunidad de girar la ruleta y multiplicar tus ganancias.',
+                'balance_usd' => $balance['balance_usd'],
+                'balance_jib' => $balance['balance_jib']
+            ], 200);
+        }else if ($roulette && $request->result == 'X5') {
+            return response()->json([
+                'success' => true,
+                'title'   => 'Aumento de probabilidad X5',
+                'message' => 'Has ganado una nueva oportunidad de girar la ruleta y multiplicar tus ganancias.',
+                'balance_usd' => $balance['balance_usd'],
+                'balance_jib' => $balance['balance_jib']
+            ], 200);
+        } elseif ($roulette && $request->result == 1) {
+            if ($request->bet[0] > 0) {
+                $amount =  ((1 * $multiplier) *  $request->bet[0] ) + $request->bet[0];
+            }
+        } else if ($roulette && $request->result == 2) {
+            if ($request->bet[1] > 0) {
+                $amount =  ((2 * $multiplier) *  $request->bet[1] ) + $request->bet[1];
+            }
+        }else if ($roulette && $request->result == 3) {
+            if ($request->bet[2] > 0) {
+                $amount =  ((3 * $multiplier) *  $request->bet[2] ) + $request->bet[2];
+            }
+        } else if ($roulette && $request->result == 5) {
+            if ($request->bet[3] > 0) {
+                $amount =  ((5 * $multiplier) *  $request->bet[3] ) + $request->bet[3];
+            }
+        } else if ($roulette && $request->result == 10) {
+            if ($request->bet[4] > 0) {
+                $amount =  ((10 * $multiplier) *  $request->bet[4] ) + $request->bet[4];
+            }
+        } else if ($roulette && $request->result == 20) {
+            if ($request->bet[5] > 0) {
+                $amount =  ((20 * $multiplier) *  $request->bet[5] ) + $request->bet[5];
+            }
+        }else if ($roulette && $request->result == '1000 JIB') {
+            $type =  '1000JIB';
+        }else if ($roulette && $request->result == '5000 JIB') {
+            $type =  '5000JIB';
+        }
+
+        $prize =  $amount;
+        if ($type == '1000JIB') {
+            $jib_usd = Setting::where('name', 'jib_usd')->first();
+            $prize = $jib_usd->value*1000;
+        } else if($type == '5000JIB') {
+            $jib_usd = Setting::where('name', 'jib_usd')->first();
+            $prize = $jib_usd->value*5000;
+        }
+        $debit = BalanceController::store('Apuesta en ruleta por un monto en usd '.Helper::amount($request->strake), 'debit', $request->strake, 'usd', Auth::user()->id);
+
+        if ($prize > 0) {
+            $credit = BalanceController::store('Has ganado en la ruleta un monto en usd '.Helper::amount($prize), 'credit', $prize, 'usd', Auth::user()->id);
+            return response()->json([
+                'success' => true,
+                'title'   => 'GANO '.Helper::amount($prize),
+                'message' => 'Felicidades! has ganado, estas de suerte',
+                'balance_usd' => $credit['balance_usd'],
+                'balance_jib' => $credit['balance_jib']
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => true,
+                'title'   => 'PERDIO '.Helper::amount(($request->strake)),
+                'message' => 'Vuelva a intentar hacer una nueva apuesta, suerte ',
+                'balance_usd' => $debit['balance_usd'],
+                'balance_jib' => $debit['balance_jib']
+            ], 200);
         }
     }
 
