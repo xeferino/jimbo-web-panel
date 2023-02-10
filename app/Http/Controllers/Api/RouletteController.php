@@ -32,38 +32,32 @@ class RouletteController extends Controller
     public function index(Request $request)
     {
         try {
-
-            $roulette = [
-                'outerRadius'     => 125, // Set outer radius so wheel fits inside the background.
-                'innerRadius'     => 55,  // Make wheel hollow so segments don't go all way to center.
-                'textFontSize'    => 8,   // Set default font size for the segments.
-                'textOrientation' => 'vertical', // Make text vertial so goes down from the outside of wheel.
-                'textAlignment'   => 'outer', // Align text to outside of wheel.
-                'numSegments'     => 54, //count segments roulette
-                'segments'        => [
-                    [
-                        'fillStyle'  => '#00aef0',
-                        'text'  => 'Ñ',
-                        'textFontSize'  => 10,
-                        'opcion' => 1,
-                        'value' => 1
-                    ]
+            return response()->json(['apuestas' => [
+                [
+                    'jib' => Helper::amountJib(0.10),
+                    'usd' => 0.10
                 ],
-                'animation' => [
-                    'type'     => 'spinToStop',
-                    //'stopAngle'=> 100,
-                    'duration'      => 8,   // Duration in seconds.
-                    'spins'         => 3,   // Default number of complete spins.
-                    'soundTrigger'  => 'pin'// Specify pins are to trigger the sound, the other option is 'segment'.
+                [
+                    'jib' => Helper::amountJib(0.25),
+                    'usd' => 0.25
                 ],
-                  'pins' => [
-                    'number'      => 54,   // Number of pins. They space evenly around the wheel.
-                    'fillStyle'   => 'silver',
-                    'outerRadius' => 2,
-                  ]
-            ];
-
-            return response()->json($roulette, 200);
+                [
+                    'jib' => Helper::amountJib(0.50),
+                    'usd' => 0.50
+                ],
+                [
+                    'jib' => Helper::amountJib(1),
+                    'usd' => 1
+                ],
+                [
+                    'jib' => Helper::amountJib(5),
+                    'usd' => 5
+                ],
+                [
+                    'jib' => Helper::amountJib(10),
+                    'usd' => 10
+                ],
+            ]], 200);
 
         } catch (Exception $e) {
             return response()->json([
@@ -137,10 +131,10 @@ class RouletteController extends Controller
             $jib_usd = Setting::where('name', 'jib_usd')->first();
             $prize = $jib_usd->value*5000;
         }
-        $debit = BalanceController::store('Apuesta en ruleta por un monto en usd '.Helper::amount($request->strake), 'debit', $request->strake, 'usd', Auth::user()->id);
+        $debit = BalanceController::store('Apuesta en ruleta por un monto en usd '.Helper::amount($request->strake), 'debit', $request->strake, 'usd', Auth::user()->id, 1);
 
         if ($prize > 0) {
-            $credit = BalanceController::store('Has ganado en la ruleta un monto en usd '.Helper::amount($prize), 'credit', $prize, 'usd', Auth::user()->id);
+            $credit = BalanceController::store('Has ganado en la ruleta un monto en usd '.Helper::amount($prize), 'credit', $prize, 'usd', Auth::user()->id, 1);
             return response()->json([
                 'success' => true,
                 'title'   => 'GANO '.Helper::amount($prize),

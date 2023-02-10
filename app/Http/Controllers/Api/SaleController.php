@@ -64,7 +64,7 @@ class SaleController extends Controller
                             if ($ticket->promotion->price<5) {
                                 return response()->json([
                                     'error'    => true,
-                                    'message'  => 'Para realizar una compra con tu tarjeta, el monto debe ser mayor o igual '. Helper::amount(5)
+                                    'message'  => 'Para realizar una compra con tu tarjeta, el monto debe ser mayor o igual a'. Helper::amountJib(5). ' equivalentes a'.Helper::amount(5)
                                 ], 422);
                             }
                             //id de la tarjeta a pagar
@@ -74,7 +74,7 @@ class SaleController extends Controller
                                 "amount" => $ticket->promotion->price*100,
                                 "capture" => true,
                                 "currency_code" => "USD",
-                                "description" => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
+                                "description" => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price).' equivalentes a '.Helper::amountJib($ticket->promotion->price),
                                 "email" => $user->email,
                                 "installments" => 0,
                                 "source_id" => $cardUser->culqi_card_id
@@ -108,9 +108,9 @@ class SaleController extends Controller
                             $data = [
                                 'sale_id'        => $saleUpdate->id,
                                 'user_id'        => $user->id,
-                                "description"    => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
-                                'payment_method' => 'Jib',
-                                'total_paid'     => Helper::amount($ticket->promotion->price),
+                                "description"    => $ticket->promotion->quantity.' Boltetos por '.Helper::amountJib($ticket->promotion->price). ' equivalentes a '.Helper::amountJib($ticket->promotion->price),
+                                'payment_method' => 'Card',
+                                'total_paid'     => Helper::amountJib($ticket->promotion->price),
                                 'response'       => ($status == 'approved') ? 'Su pago ha sido procesado exitosamente.' : 'Error: '.$type,
                                 'code_response'  => ($status == 'approved') ? $reference_code : $merchant_message,
                                 'status'         => $status,
@@ -126,7 +126,7 @@ class SaleController extends Controller
                             if ($user->balance_jib<$amout_jib) {
                                 return response()->json([
                                     'error'    => true,
-                                    'message'  => 'Balance en jib '.$user->balance_jib.', es insuficiente, usted requiere de un saldo mayor o igual a '.$amout_jib.'.00 jib',
+                                    'message'  => 'Balance en JIB '.$user->balance_jib.', es insuficiente, usted requiere de un saldo mayor o igual a '.$amout_jib.'.00 JIB',
                                 ], 422);
                             }
                             $saleUpdate = Sale::find($sale->id);
@@ -142,8 +142,8 @@ class SaleController extends Controller
                             $data = [
                                 'sale_id'        => $saleUpdate->id,
                                 'user_id'        => $user->id,
-                                "description"    => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
-                                'payment_method' => 'Card',
+                                "description"    => $ticket->promotion->quantity.' Boltetos por '.Helper::amountJib($ticket->promotion->price),
+                                'payment_method' => 'JIB',
                                 'total_paid'     => Helper::jib($amout_jib),
                                 'response'       => ($status == 'approved') ? 'Su pago ha sido procesado exitosamente.' : 'Error: Su pago no ha sido procesado exitosamente.',
                                 'code_response'  => ($status == 'approved') ? $reference_code : 'Error',
@@ -197,21 +197,21 @@ class SaleController extends Controller
                         $buyer = null;
                         if($user->type == 1) {
                             if($operation == 1){
-                                $notification = NotificationController::store('Nueva Compra!', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
+                                $notification = NotificationController::store('Nueva Compra!', $ticket->promotion->quantity.' Boltetos por '.Helper::amountJib($ticket->promotion->price), $user->id);
                                 $buyer = $saleUpdate->Buyer->names. ' ' .$saleUpdate->Buyer->surnames;
                                 $this->receipt($saleUpdate->id, $user->email, 'buyer');
                             }else {
                                 $seller = $saleUpdate->Seller->names. ' ' .$saleUpdate->Seller->surnames;
                                 $buyer = $saleUpdate->name;
                                 $this->receipt($saleUpdate->id, $user->email, 'seller');
-                                $notification = NotificationController::store('Nueva Venta!', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
+                                $notification = NotificationController::store('Nueva Venta!', $ticket->promotion->quantity.' Boltetos por '.Helper::amountJib($ticket->promotion->price), $user->id);
                                 $this->receipt($saleUpdate->id, $saleUpdate->email, 'buyer');
                             }
                         } elseif ($user->type == 2) {
                             $seller = $saleUpdate->Seller->names. ' ' .$saleUpdate->Seller->surnames;
                             $buyer = $saleUpdate->name;
                             $this->receipt($saleUpdate->id, $user->email, 'seller');
-                            $notification = NotificationController::store('Nueva Venta!', $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price), $user->id);
+                            $notification = NotificationController::store('Nueva Venta!', $ticket->promotion->quantity.' Boltetos por '.Helper::amountJib($ticket->promotion->price), $user->id);
                             $this->receipt($saleUpdate->id, $saleUpdate->email, 'buyer');
                         }
 
@@ -226,16 +226,15 @@ class SaleController extends Controller
                                 'fullname'          => $saleUpdate->name,
                                 'buyer'             => $buyer,
                                 'seller'            => $seller,
-                                'date'              =>  Carbon::parse($saleUpdate->created_at)->format('d/m/Y H:i:s'),
+                                'date'              => Carbon::parse($saleUpdate->created_at)->format('d/m/Y H:i:s'),
                                 'code_ticket'       => $ticket->serial,
                                 'tickets'           => $saleUpdate->TicketsUsers,
                                 'quantity'          => $ticket->promotion->quantity,
                                 'number_operation'  => $saleUpdate->number,
-                                'amount'            => Helper::amount($ticket->promotion->price),
-                                'amount_jib'        => Helper::jib($amout_jib),
+                                'amount'            => Helper::amountJib($ticket->promotion->price),
+                                'amount_jib'        => '-----',
                                 'operation'         => $request->operation,
                                 'method'            => $request->method_type,
-                                //'url_receipt'       => route('receipt', ['operation' => $receipt_ope, 'id' => $saleUpdate->id, 'user' => $receipt_ope_user])
                                 'url_receipt'       => route('receipt', ['id' => encrypt($saleUpdate->id)])
                             ]
                         ], 200);
@@ -329,7 +328,7 @@ class SaleController extends Controller
                    "email" =>  $value->email,
                    "address" =>  $value->address,
                    "country_id" =>  $value->country_id,
-                   "amount" =>  $value->amount,
+                   "amount" =>  Helper::amountJib($value->amount),
                    "number" =>  $value->number,
                    "number_culqi" =>  $value->number_culqi,
                    "quantity" =>  $value->quantity,
@@ -366,7 +365,7 @@ class SaleController extends Controller
             $sale = [
                 'raffle' => [
                     'title' => $sale->Raffle->title,
-                    'first_prize'  => Helper::amount($sale->Raffle->cash_to_draw),
+                    'first_prize'  => $sale->Raffle->type == 'raffle' ?  Helper::amountJib($sale->Raffle->cash_to_draw) : $sale->Raffle->title,
                     'status' => $sale->Raffle->active == 1 ? 'Activo' : 'Inactivo',
                     'finish' => $sale->Raffle->finish == 1 ? 'Finalizado' : 'Abierto',
                     'code_ticket' => $sale->Ticket->serial,
@@ -376,7 +375,7 @@ class SaleController extends Controller
                     'date_release' => $sale->Raffle->date_release->format('d/m/y'),
                 ],
                 'quantity' => $sale->quantity,
-                'amount' => Helper::amount($sale->amount),
+                'amount' => Helper::amountJib($sale->amount),
                 'number_operation' => $sale->number,
                 'date'  => $sale->created_at->format('d/m/y'),
                 'hour'  => $sale->created_at->format('H:i:s'),
@@ -445,13 +444,13 @@ class SaleController extends Controller
                array_push($data, [
                 'id'            => $i++,
                 'fullnames'     => $value->fullnames,
-                'amount'        => Helper::amount($value->amount),
+                'amount'        => Helper::amountJib($value->amount),
                 'level'         => $value->level,
                 'image'         => $image,
                ]);
             }
             return response()->json([
-                'sellers' => $top,
+                'sellers' => $data,
                 'status'   => 200
             ], 200);
         }catch (Exception $e) {

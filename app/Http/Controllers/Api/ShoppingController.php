@@ -33,7 +33,7 @@ class ShoppingController extends Controller
                    "email" =>  $value->email,
                    "address" =>  $value->address,
                    "country_id" =>  $value->country_id,
-                   "amount" =>  $value->amount,
+                   "amount" =>  Helper::amountJib($value->amount),
                    "number" =>  $value->number,
                    "number_culqi" =>  $value->number_culqi,
                    "quantity" =>  $value->quantity,
@@ -72,7 +72,7 @@ class ShoppingController extends Controller
             $shopping = [
                 'raffle' => [
                     'title' => $shopping->Raffle->title,
-                    'first_prize'  => Helper::amount($shopping->Raffle->cash_to_draw),
+                    'first_prize'  => $shopping->Raffle->type == 'raffle' ?  Helper::amountJib($shopping->Raffle->cash_to_draw) : $shopping->Raffle->title,
                     'status' => $shopping->Raffle->active == 1 ? 'Activo' : 'Inactivo',
                     'finish' => $shopping->Raffle->finish == 1 ? 'Finalizado' : 'Abierto',
                     'code_ticket' => $shopping->Ticket->serial,
@@ -83,7 +83,7 @@ class ShoppingController extends Controller
                     'date_extend' => $shopping->Raffle->date_extend,
                 ],
                 'quantity' => $shopping->quantity,
-                'amount' => Helper::amount($shopping->amount),
+                'amount' => Helper::amountJib($shopping->amount),
                 'number_operation' => $shopping->number,
                 'date'  => $shopping->created_at->format('d/m/y'),
                 'hour'  => $shopping->created_at->format('H:i:s')

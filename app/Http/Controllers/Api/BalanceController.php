@@ -78,7 +78,7 @@ class BalanceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public static function store($description, $type, $amount, $currency, $user_id)
+    public static function store($description, $type, $amount, $currency, $user_id, $roulette = null)
     {
         try {
             $operation = null;
@@ -115,7 +115,7 @@ class BalanceController extends Controller
                 $user->balance_jib  =  $user->balance_jib+$data['balance'];
                 $user->save();
                 return true;
-            } elseif ($type == 'debit' && $operation = 'wager') {
+            } elseif ($type == 'debit' && $operation == 'wager' && $roulette == 1) {
                 $user               =  User::find($data['user_id']);
                 $user->balance_usd  =  $user->balance_usd-$data['balance'];
                 $user->save();
@@ -124,7 +124,7 @@ class BalanceController extends Controller
                     'balance_usd' => $user->balance_usd,
                     'user'        => $user->id
                 ];
-            }elseif ($type == 'credit' && $operation = 'wager' && $currency == 'usd') {
+            }elseif ($type == 'credit' && $operation == 'wager' && $currency == 'usd' && $roulette == 1) {
                 $user               =  User::find($data['user_id']);
                 $user->balance_usd  =  $user->balance_usd+$data['balance'];
                 $user->save();

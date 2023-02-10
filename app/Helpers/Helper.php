@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use NumberFormatter;
 use App\Models\Action;
 use App\Models\User;
+use App\Models\Setting;
 class Helper
 {
     /**
@@ -16,6 +17,20 @@ class Helper
     public static function amount($value)
 	{
 		return NumberFormatter::create( 'en_US', NumberFormatter::CURRENCY )->formatCurrency($value, 'USD');
+	}
+
+
+    /**
+     * Return amount formated
+     *
+     * @param float $amount
+     * @return string
+     */
+    public static function amountJib($value)
+	{
+        $jib_unit = Setting::where('name', 'jib_unit_x_usd')->first();
+        $jib_usd = Setting::where('name', 'jib_usd')->first();
+        return  (($value*$jib_unit->value)/$jib_usd->value).' JIB';
 	}
 
     /**
@@ -37,7 +52,7 @@ class Helper
      */
     public static function jib($value)
 	{
-        return $value.' jib';
+        return $value.' JIB';
 	}
 
     /**
