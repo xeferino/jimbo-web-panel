@@ -40,24 +40,24 @@ class JibController extends Controller
                     'usd' => (10/$jib_unit_x_usd)*$jib_usd // 1 usd
                 ], */
                 [
-                    'jib' => 5000,
-                    'usd' => (5000/$jib_unit_x_usd)*$jib_usd // 5 usd
+                    'jib' => 5,
+                    'usd' => (5/$jib_unit_x_usd)*$jib_usd // 5 usd
                 ],
                 [
-                    'jib' => 10000,
-                    'usd' => (10000/$jib_unit_x_usd)*$jib_usd // 10 usd
+                    'jib' => 10,
+                    'usd' => (10/$jib_unit_x_usd)*$jib_usd // 10 usd
                 ],
                 [
-                    'jib' => 15000,
-                    'usd' => (15000/$jib_unit_x_usd)*$jib_usd // 15 usd
+                    'jib' => 15,
+                    'usd' => (15/$jib_unit_x_usd)*$jib_usd // 15 usd
                 ],
                 [
-                    'jib' => 20000,
-                    'usd' => (20000/$jib_unit_x_usd)*$jib_usd // 20 usd
+                    'jib' => 20,
+                    'usd' => (20/$jib_unit_x_usd)*$jib_usd // 20 usd
                 ],
                 [
-                    'jib' => 50000,
-                    'usd' => (50000/$jib_unit_x_usd)*$jib_usd // 50 usd
+                    'jib' => 50,
+                    'usd' => (50/$jib_unit_x_usd)*$jib_usd // 50 usd
                 ]
             ]], 200);
 

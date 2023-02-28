@@ -80,7 +80,7 @@ class Raffle extends Model
                     'email'                => $value->email,
                     'address'              => $value->address,
                     'country_id'           => $value->country_id,
-                    'amount'               => Helper::amount($value->amount),
+                    'amount'               => Helper::amountJib($value->amount),
                     'ticket_id_parent'     => $value->Ticket->serial,
                     'ticket_id_winner'     => $value->TicketWinner->serial,
                     'seller_id'            => $value->seller_id,

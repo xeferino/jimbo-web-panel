@@ -184,4 +184,39 @@ class SettingController extends Controller
         ];
 
     }
+
+    public static function moduleViewMenu()
+    {
+        $mod_views = DB::table('settings')->where('name', 'like',"%view_%")->get();
+        $mod_menus = DB::table('settings')->where('name', 'like',"%menu_%")->get();
+        $views = [];
+        foreach ($mod_views as $key => $data) {
+            # code...
+            array_push($views, [
+                'id' => $data->id,
+                'name' => $data->name,
+                'visibility' => $data->value == 1 ? true : false,
+            ]);
+        }
+        $menus = [];
+        foreach ($mod_menus as $key => $data) {
+            # code...
+            array_push($menus, [
+                'id' => $data->id,
+                'name' => $data->name,
+                'visibility' => $data->value == 1 ? true : false,
+            ]);
+        }
+        return [
+            /*
+            |--------------------------------------------------------------------------
+            | Jibs set config value
+            |--------------------------------------------------------------------------
+            */
+            'modules' => [
+                'views'  =>  $views,
+                'menus'  =>  $menus
+            ]
+        ];
+    }
 }

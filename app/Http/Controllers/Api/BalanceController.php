@@ -81,7 +81,7 @@ class BalanceController extends Controller
     public static function store($description, $type, $amount, $currency, $user_id, $roulette = null)
     {
         try {
-            $operation = null;
+            $operation = 'null';
             if($type == 'recharge') {
                 $operation = $type;
             } elseif ($type == 'exchange') {
@@ -114,8 +114,23 @@ class BalanceController extends Controller
                 $user               =  User::find($data['user_id']);
                 $user->balance_jib  =  $user->balance_jib+$data['balance'];
                 $user->save();
-                return true;
-            } elseif ($type == 'debit' && $operation == 'wager' && $roulette == 1) {
+                return [
+                    'balance_jib' => $user->balance_jib,
+                    'balance_usd' => $user->balance_usd,
+                    'user'        => $user->id
+                ];
+            }
+            if ($type == 'debit' && $operation == 'wager' && $roulette == 1) {
+                $user               =  User::find($data['user_id']);
+                $user->balance_jib  =  $user->balance_jib-$data['balance'];
+                $user->save();
+                return [
+                    'balance_jib' => $user->balance_jib,
+                    'balance_usd' => $user->balance_usd,
+                    'user'        => $user->id
+                ];
+            }
+            /*elseif ($type == 'debit' && $operation == 'wager' && $roulette == 1) {
                 $user               =  User::find($data['user_id']);
                 $user->balance_usd  =  $user->balance_usd-$data['balance'];
                 $user->save();
@@ -133,7 +148,7 @@ class BalanceController extends Controller
                     'balance_usd' => $user->balance_usd,
                     'user'        => $user->id
                 ];
-            }
+            }*/
             if ($balanceHitory)
                 return true;
         } catch (Exception $e) {

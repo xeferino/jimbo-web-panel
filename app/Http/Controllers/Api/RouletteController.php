@@ -32,31 +32,40 @@ class RouletteController extends Controller
     public function index(Request $request)
     {
         try {
-            return response()->json(['apuestas' => [
+            $jib_unit = Setting::where('name', 'jib_unit_x_usd')->first();
+            $jib_usd = Setting::where('name', 'jib_usd')->first();
+
+            return response()->json(['wagers' => [
                 [
                     'jib' => Helper::amountJib(0.10),
-                    'usd' => 0.10
+                    'usd' => 0.10,
+                    'jib_money' => ((0.10*$jib_unit->value)/$jib_usd->value)
                 ],
                 [
                     'jib' => Helper::amountJib(0.25),
-                    'usd' => 0.25
+                    'usd' => 0.25,
+                    'jib_money' => ((0.25*$jib_unit->value)/$jib_usd->value)
                 ],
                 [
                     'jib' => Helper::amountJib(0.50),
-                    'usd' => 0.50
+                    'usd' => 0.50,
+                    'jib_money' => ((0.50*$jib_unit->value)/$jib_usd->value)
                 ],
                 [
                     'jib' => Helper::amountJib(1),
-                    'usd' => 1
+                    'usd' => 1,
+                    'jib_money' => ((1*$jib_unit->value)/$jib_usd->value)
                 ],
                 [
                     'jib' => Helper::amountJib(5),
-                    'usd' => 5
+                    'usd' => 5,
+                    'jib_money' => ((5*$jib_unit->value)/$jib_usd->value)
                 ],
                 [
                     'jib' => Helper::amountJib(10),
-                    'usd' => 10
-                ],
+                    'usd' => 10,
+                    'jib_money' => ((10*$jib_unit->value)/$jib_usd->value)
+                ]
             ]], 200);
 
         } catch (Exception $e) {
@@ -80,7 +89,7 @@ class RouletteController extends Controller
         if ($roulette && $request->result == 'X2') {
             return response()->json([
                 'success' => true,
-                'title'   => 'Aumento de probabilidad X2',
+                'title'   => 'Multiplicador X2',
                 'message' => 'Has ganado una nueva oportunidad de girar la ruleta y multiplicar tus ganancias.',
                 'balance_usd' => $balance['balance_usd'],
                 'balance_jib' => $balance['balance_jib']
@@ -88,7 +97,7 @@ class RouletteController extends Controller
         }else if ($roulette && $request->result == 'X5') {
             return response()->json([
                 'success' => true,
-                'title'   => 'Aumento de probabilidad X5',
+                'title'   => 'Multiplicador X5',
                 'message' => 'Has ganado una nueva oportunidad de girar la ruleta y multiplicar tus ganancias.',
                 'balance_usd' => $balance['balance_usd'],
                 'balance_jib' => $balance['balance_jib']
@@ -124,20 +133,20 @@ class RouletteController extends Controller
         }
 
         $prize =  $amount;
-        if ($type == '1000JIB') {
+        if ($type == '1JIB') {
             $jib_usd = Setting::where('name', 'jib_usd')->first();
-            $prize = $jib_usd->value*1000;
-        } else if($type == '5000JIB') {
+            $prize = 1;
+        } else if($type == '5JIB') {
             $jib_usd = Setting::where('name', 'jib_usd')->first();
-            $prize = $jib_usd->value*5000;
+            $prize = 5;
         }
-        $debit = BalanceController::store('Apuesta en ruleta por un monto en usd '.Helper::amount($request->strake), 'debit', $request->strake, 'usd', Auth::user()->id, 1);
+        $debit = BalanceController::store('Apuesta en ruleta por un monto de '.Helper::amountJib($request->strake), 'debit', $request->strake, 'jib', Auth::user()->id, 1);
 
         if ($prize > 0) {
-            $credit = BalanceController::store('Has ganado en la ruleta un monto en usd '.Helper::amount($prize), 'credit', $prize, 'usd', Auth::user()->id, 1);
+            $credit = BalanceController::store('Has ganado en la ruleta un monto de '.Helper::amountJib($prize), 'credit', $prize, 'jib', Auth::user()->id, 1);
             return response()->json([
                 'success' => true,
-                'title'   => 'GANO '.Helper::amount($prize),
+                'title'   => 'GANO '.Helper::amountJib($prize),
                 'message' => 'Felicidades! has ganado, estas de suerte',
                 'balance_usd' => $credit['balance_usd'],
                 'balance_jib' => $credit['balance_jib']
@@ -145,7 +154,7 @@ class RouletteController extends Controller
         } else {
             return response()->json([
                 'success' => true,
-                'title'   => 'PERDIO '.Helper::amount(($request->strake)),
+                'title'   => 'PERDIO '.Helper::amountJib(($request->strake)),
                 'message' => 'Vuelva a intentar hacer una nueva apuesta, suerte ',
                 'balance_usd' => $debit['balance_usd'],
                 'balance_jib' => $debit['balance_jib']

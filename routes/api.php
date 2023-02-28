@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\LegalityController;
 use App\Http\Controllers\Api\RouletteController;
+use App\Http\Controllers\Api\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -101,6 +102,10 @@ Route::middleware(['auth:sanctum', 'check.user'])->group(function () {
      Route::get('/roulettes', [RouletteController::class, 'index']);
      Route::post('/roulettes/wager', [RouletteController::class, 'wager']);
      //Route::post('/roulettes/exchange', [RouletteController::class, 'exchange']);
+
+     //settings
+     Route::get('/settings/modules', [SettingController::class, 'index']);
+
 });
 
 /*Route::get('/foo', function () {
