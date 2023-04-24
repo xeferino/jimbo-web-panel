@@ -62,6 +62,23 @@ class CulqiService
         }
     }
 
+    /**
+     * store charge
+     *
+     * @return void
+     */
+    public function chargePage(array $array)
+    {
+        //Creamos Cargo a una tarjeta
+        try {
+            $data = array_merge($array, ["source_id" => $this->generateToken()]);
+            $charge = $this->culqi->Charges->create($data);
+            return $charge;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
 
     /**
      * store customer

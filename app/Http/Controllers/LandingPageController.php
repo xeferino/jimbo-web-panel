@@ -100,14 +100,24 @@ class LandingPageController extends Controller
         ]);
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function saleTicket(Request $request)
+    public function pay(Request $request)
     {
-        try {
+        //return $request->all();
+        $charge  = [
+            "amount" => 5*100,
+            "capture" => true,
+            "currency_code" => "USD",
+            "description" => 'Boltetos',
+            "email" => 'jose@test.com',
+            "installments" => 0,
+            "source_id" => $request->token_id
+        ];
+
+        $payment = PaymentController::payment(null, $charge);
+
+        dd($payment);
+        //$pay =  $payment->object ?? 'error';
+        /*try {
             DB::beginTransaction();
             $sale =  $this->saleOfTickets($request);
             if($sale) {
@@ -137,11 +147,10 @@ class LandingPageController extends Controller
                                 "currency_code" => "USD",
                                 "description" => $ticket->promotion->quantity.' Boltetos por '.Helper::amount($ticket->promotion->price),
                                 "email" => $user->email,
-                                "installments" => 0,
-                                "source_id" => $cardUser->culqi_card_id
+                                "installments" => 0
                             ];
 
-                            $payment = PaymentController::payment(null, $charge);
+                            $payment = PaymentController::payment($request->token_culqi, $charge);
                             $pay =  $payment->object ?? 'error';
 
                             $saleUpdate = Sale::find($sale->id);
@@ -210,7 +219,7 @@ class LandingPageController extends Controller
                 'status'   => 500,
                 'message' =>  $e->getMessage()
             ], 500);
-        }
+        }*/
     }
 
     private function saleOfTickets($data) {

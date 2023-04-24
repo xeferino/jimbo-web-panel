@@ -166,6 +166,101 @@ class SettingSeeder extends Seeder
             'name'      => 'faqs',
             'value'  => 'text',
         ],
+        //views
+        [
+            'name'      => 'view_home',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'view_winner',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'view_notification',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'view_roulette',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'view_free',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'view_recharge',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'view_perfil',
+            'value'  => '1',
+        ],
+        //menus
+        [
+            'name'      => 'menu_payment',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'menu_balance',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'menu_shopping',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'menu_sale',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'menu_payment_method',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'menu_account',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'menu_jib',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'menu_seller',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'menu_contact',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'menu_info',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'menu_logout',
+            'value'  => '1',
+        ],
+
+        [
+            'name'      => 'menu_cash_request',
+            'value'  => '1',
+        ]
     ];
 
     /**

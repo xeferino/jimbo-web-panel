@@ -197,7 +197,7 @@ class AuthController extends Controller
             $user->save();
             $user->assignRole('competitor');
 
-            $balance = SettingController::bonus()['bonus']['to_access'] ?? 0;
+            $balance = SettingController::bonus()['bonus']['register'] ?? 0;
 
 
             if($user->type == 1) {
@@ -717,10 +717,10 @@ class AuthController extends Controller
                 $user->save();
                 return response()->json([
                     'status'   => 200,
-                    'message' =>  'Su contraseña ha sido recuperada exitosamente!'
+                    'message' =>  'Su contrasena ha sido recuperada exitosamente!'
                 ], 200);
             }
-            NotificationController::store('Recuperacion de contraseña', 'Hola! '.$user->email.' has solicitado un envio de codigo, para el restablecimiento de tu contraseña', $user->id);
+            NotificationController::store('Recuperacion de contrasena', 'Hola! '.$user->email.' has solicitado un envio de codigo, para el restablecimiento de tu contrasena', $user->id);
             return response()->json([
                 'status'   => 404,
                 'message' =>  'El email igresado no existe!.'

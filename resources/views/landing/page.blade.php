@@ -36,8 +36,8 @@
 </head>
 
 <body>
-<script src="https://checkout.culqi.com/js/v4"></script>
-  <!-- ======= Header ======= -->
+  {{-- <script src="https://checkout.culqi.com/js/v4"></script> --}}
+    <!-- ======= Header ======= -->
   <header id="header" class="fixed-top  header-transparent ">
     <div class="container d-flex align-items-center justify-content-between">
 
@@ -52,7 +52,7 @@
           <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
           <li><a class="nav-link scrollto" href="#features">Nosotros</a></li>
           <li><a class="nav-link scrollto" href="#gallery">Galer&iacute;a</a></li>
-          <li><a class="nav-link scrollto" href="#raffles">Sorteos</a></li>
+          {{-- <li><a class="nav-link scrollto" href="#raffles">Sorteos</a></li> --}}
           {{-- <li><a class="nav-link scrollto" href="#faq">F.A.Q</a></li> --}}
          {{--  <li><a class="nav-link scrollto" href="">T&eacute;rminos y Condiciones</a></li> --}}
           {{-- <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
@@ -289,7 +289,7 @@
 
       </div>
     </section><!-- End Gallery Section -->
-      <section id="raffles" class="contact">
+     {{--  <section id="raffles" class="contact">
         <div class="container" data-aos="fade-up">
           <div class="section-title">
             <h2>Sorteos</h2>
@@ -313,7 +313,9 @@
                                 cursor:pointer;
                                 " class="mt-2 ticket"
                                 data-price="{{$ticket->promotion->price*100}}"
-                                data-raffle="{{$raffle->id}}"
+                                data-raffle_id="{{$raffle->id}}"
+                                data-promotion_id="{{$ticket->promotion->id}}"
+                                data-ticket_id="{{$ticket->id}}"
                                 >
                                     {{$ticket->promotion->name}}
                                 </div>
@@ -328,7 +330,7 @@
             </div>
           </div>
         </div>
-      </section>
+      </section> --}}
     <!-- ======= Testimonials Section ======= -->
     {{-- <section id="testimonials" class="testimonials section-bg">
       <div class="container" data-aos="fade-up">
@@ -679,10 +681,14 @@
       </div>
     </div>
   </footer><!-- End Footer -->
-<input type="hidden" name="id" id="id">
-<input type="hidden" name="id" id="id">
-<input type="hidden" name="id" id="id">
-<input type="hidden" name="id" id="id">
+
+<input type="hidden" name="raffle_id" id="raffle_id">
+<input type="hidden" name="promotion_id" id="promotion_id">
+<input type="hidden" name="ticket_id" id="ticket_id">
+<input type="hidden" name="price" id="price">
+<input type="hidden" name="email" id="email">
+<input type="hidden" name="token_id" id="token_id">
+
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
@@ -704,11 +710,15 @@
     Culqi.publicKey = 'pk_test_f4383204e49dc6b3';
 
     $('.ticket').on('click', function(){
-        var raffle = $(this).data('raffle');
+        var raffle = $(this).data('raffle_id');
         $(this).addClass('ticket-select');
         $(this).siblings().removeClass('ticket-select');
         $('.btn-comprar_'+raffle).prop("disabled", false);
-        var id = $('#id').val(raffle);
+
+        $('#raffle_id').val($(this).data('raffle_id'));
+        $('#promotion_id').val($(this).data('promotion_id'));
+        $('#ticket_id').val($(this).data('ticket_id'));
+        $('#price').val($(this).data('price'));
 
         Culqi.settings({
             title: 'Jimbo',
@@ -716,7 +726,6 @@
             amount: $(this).data('price'),  // Este parámetro es requerido para realizar pagos yape
             order: '' // Este parámetro es requerido para realizar pagos con pagoEfectivo, billeteras y Cuotéalo
         });
-        console.log($(this).data('price'));
     });
 
     $('.btn_pagar').on('click', function(e){
@@ -735,96 +744,62 @@
         buttonTextColor: '#f3f9800', // hexadecimal
         priceColor: '#ff9800' // hexadecimal
       }
-  });
+    });
 
-    function culeeqi() {
-        /*axios.post($(this).attr('action'), {
-            data:{
-                    'raffle_id':$('#raffle_id').val(),
-                    'promotion_id' : $("#promotions").select2('val'),
-                    'quantity': $("#quantity").val()
-                }
-        }).then(response => {
-            console.log('success : ',Culqi);
+    function culqi() {
+        if (Culqi.token) {
+            // ¡Objeto Token creado exitosamente!
+            var token = Culqi.token.id;
+            var email = Culqi.token.email;
+            //En esta linea de codigo debemos enviar el "Culqi.token.id"
+            //hacia tu servidor con Ajax
+            var raffle_id = $('#raffle_id').val();
+            var promotion_id = $('#promotion_id').val();
+            var ticket_id = $('#ticket_id').val();
+            var price = $('#price').val();
+            var token_id = $('#token_id').val(token);
+            var correo = $('#email').val(email);
 
-        }).catch(error => {
-            console.log('Error : ',Culqi.error);
-        });*/
+            console.log('Se ha creado un Token: ', token);
+            console.log('raffle_id : ', raffle_id);
+            console.log('promotion_id : ', promotion_id);
+            console.log('ticket_id : ', ticket_id);
+            console.log('price : ', price);
+            console.log('email : ', email);
+            localStorage.setItem('token_local', token);
+            localStorage.setItem('local_gollo', 'culqi');
+            const token_local = localStorage.getItem('token_local');
+            const local_gollo = localStorage.getItem('local_gollo');
 
-        if (Culqi.token) {  // ¡Objeto Token creado exitosamente!
-        const token = Culqi.token.id;
-        console.log('Se ha creado un Token: ', token);
-        $('.toolbar-banner__icon').click();
-        var SweetAlert2Polls = function() {
-            //== Demos
-            var initDemos = function() {
+            console.log('Se ha creado un Token local: ', token_local);
 
-                swal({
-                        title: 'dfggdgfgg',
-                        text: "Desea salir del panel administrativo de Jimbo!",
-                        type: 'info',
-                        icon : "{{ asset('assets/images/jimbo-logo.png') }}",
-                        buttons:{
-                            confirm: {
-                                text : 'Salir',
-                                className : 'btn btn-warning',
-                                showLoaderOnConfirm: true,
-                            },
-                            cancel: {
-                                visible: true,
-                                text : 'Cancelar',
-                                className : 'btn btn-inverse',
-                            }
-                        },
-                    }).then((confirm) => {
-                        if (confirm) {
-                            $('.jimbo-loader').show();
 
-                            axios.post('{{ route('logout')}}', {
-                            }).then(response => {
-                                if(response.data.success){
-                                    //notify(response.data.message, 'success', '2000', 'bottom', 'right');
-                                    $('.load-text').text(''+response.data.message+'');
-                                    setTimeout(function () {location.href = response.data.url}, 2000);
-                                }
-                            }).catch(error => {
-                                if (error.response) {
-                                    if(error.response.status === 502){
-                                        notify(error.response.data.message, 'danger', '5000', 'bottom', 'right');
-                                    }else{
-                                        notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
-                                    }
-                                }else{
-                                    notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
-                                }
-                                $('.jimbo-loader').hide();
-                                setTimeout(function () {location.reload()}, 5000);
-                            });
-                        } else {
-                            swal.close();
-                        }
-                    });
-            };
-            return {
-                //== Init
-                init: function() {
-                    initDemos();
-                },
-            };
-        }();
-        //== Class Initialization
-        jQuery(document).ready(function() {
-            SweetAlert2Polls.init();
-        });
-        //En esta linea de codigo debemos enviar el "Culqi.token.id"
-        //hacia tu servidor con Ajax
-        } else if (Culqi.order) {  // ¡Objeto Order creado exitosamente!
-        const order = Culqi.order;
-        console.log('Se ha creado el objeto Order: ', order);
+            /*var token = Culqi.token.id;
+      var email_culqi = Culqi.token.email;
+      $("#token_id").val(token);
+      $("#email_culqi").val(email_culqi);*/
 
+            Culqi.close();
+
+            axios.post("{{route('landing.pay')}}", {
+                data:{
+                        'raffle_id': raffle_id,
+                        'promotion_id' : promotion_id,
+                        'ticket_id': ticket_id,
+                        'price': price,
+                        'email': correo,
+                        'token_id': token_local,
+                        'local_gollo': local_gollo
+                    }
+            }).then(response => {
+                console.log('success : ', response.data);
+
+            }).catch(error => {
+                console.log('Error : ',Culqi.error);
+            });
         } else {
-        // Mostramos JSON de objeto error en consola
-        console.log('Error : ',Culqi.error);
+            // Mostramos JSON de objeto error en consola
+            console.log('Error : ',Culqi.error);
         }
     };
   </script>

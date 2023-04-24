@@ -67,6 +67,13 @@ class SaleController extends Controller
                                     'message'  => 'Para realizar una compra con tu tarjeta, el monto debe ser mayor o igual a'. Helper::amountJib(5). ' equivalentes a'.Helper::amount(5)
                                 ], 422);
                             }
+
+                            if ($ticket->total <= 0) {
+                                return response()->json([
+                                    'error'    => true,
+                                    'message'  => 'Se ha agotado la promocion de boletos que ha seleccionado para comprar o vender'
+                                ], 422);
+                            }
                             //id de la tarjeta a pagar
                             $cardUser = Card::find($request->method_id);
                             //cargo que se le aplica a tarjeta por la compra
@@ -127,6 +134,12 @@ class SaleController extends Controller
                                 return response()->json([
                                     'error'    => true,
                                     'message'  => 'Balance en JIB '.$user->balance_jib.', es insuficiente, usted requiere de un saldo mayor o igual a '.$amout_jib.'.00 JIB',
+                                ], 422);
+                            }
+                            if ($ticket->total <= 0) {
+                                return response()->json([
+                                    'error'    => true,
+                                    'message'  => 'Se ha agotado la promocion de boletos que ha seleccionado para comprar o vender'
                                 ], 422);
                             }
                             $saleUpdate = Sale::find($sale->id);
@@ -234,6 +247,9 @@ class SaleController extends Controller
                                 'amount'            => Helper::amountJib($ticket->promotion->price),
                                 'amount_jib'        => '-----',
                                 'operation'         => $request->operation,
+                                'action'            => $request->operation == 1 ? 'Compra' : 'Venta',
+                                'number_receipt'    => str_pad($saleUpdate->id,6,"0",STR_PAD_LEFT),
+                                'email'             => $saleUpdate->email,
                                 'method'            => $request->method_type,
                                 'url_receipt'       => route('receipt', ['id' => encrypt($saleUpdate->id)])
                             ]

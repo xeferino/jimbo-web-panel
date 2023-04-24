@@ -42,6 +42,7 @@ Route::get('/faqs', [LandingPageController::class, 'faq'])->name('landing.faqs')
 //receipt
 //Route::get('/receipt/{operation}/{id}/{user}', [SaleController::class, 'receipt'])->name('receipt');
 Route::get('/receipt/{id}', [SaleController::class, 'receipt'])->name('receipt');
+Route::post('/pay', [LandingPageController::class, 'pay'])->name('landing.pay');
 
 Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');

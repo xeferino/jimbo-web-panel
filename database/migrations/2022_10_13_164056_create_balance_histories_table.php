@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('type',['debit', 'credit'])->nullable();
             $table->string('operation', 45)->nullable();
             $table->string('currency')->nullable();
-            $table->float('balance',10,2)->nullable();
+            $table->float('balance',10,3)->nullable();
             $table->date('date')->nullable();
             $table->time('hour')->nullable();
             $table->foreignId('user_id')->nullable();

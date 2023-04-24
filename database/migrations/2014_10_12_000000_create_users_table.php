@@ -26,8 +26,8 @@ return new class extends Migration
             $table->string('password');
             $table->boolean('active')->default(1);
             $table->string('image')->nullable()->default('avatar.svg');
-            $table->float('balance_usd', 10, 2)->default(0)->nullable();
-            $table->float('balance_jib', 10, 2)->default(0)->nullable();
+            $table->float('balance_usd', 10, 3)->default(0)->nullable();
+            $table->float('balance_jib', 10, 3)->default(0)->nullable();
             $table->string('code')->nullable();
             $table->string('code_referral')->nullable();
             $table->integer('type')->nullable();

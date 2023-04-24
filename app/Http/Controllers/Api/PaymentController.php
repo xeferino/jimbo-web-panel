@@ -42,6 +42,16 @@ class PaymentController extends Controller
         }
     }
 
+    public static function paymentPage($charge)
+    {
+        try{
+            $culqi = new Culqi();
+            return $culqi->chargePage($charge);
+        } catch (Exception $e) {
+            return response()->json(['message' =>  $e->getMessage()]);
+        }
+    }
+
     public static function paymentHistoryStore($data)
     {
         $payment = PaymentHistory::insert($data);
