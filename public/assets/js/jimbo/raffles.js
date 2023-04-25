@@ -776,6 +776,67 @@ jQuery(document).ready(function() {
             });
     });
     /*create promotions*/
+
+    $('body').on('click', '.recharge', function () {
+        var prize = $(this).data("prize");
+        var id = $(this).data("id");
+        var winner = $(this).data("winner");
+        console.log(prize);
+        $('#modalContent').modal('show');
+        $('#jib').val(prize);
+        $('#id').val(id);
+        $('#winner').val(winner);
+        $('#description').val('Felicidades, has ganado con jimbo');
+        $('#form-recharge').show();
+    });
+
+     /*seller-recharge-jib*/
+     $("#form-recharge").submit(function( event ) {
+        event.preventDefault();
+        $('.btn-recharge').prop("disabled", true).text('Enviando...');
+
+        var formData = new FormData(event.currentTarget);
+
+        axios.post($(this).attr('action'), formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(response => {
+            if(response.data.success){
+                notify(response.data.message, 'success', '3000', 'top', 'right');
+                $('#form-recharge').trigger("reset");
+                $('.btn-recharge').prop("disabled", false).text('Recargar');
+                $('div.col-form-label').text('');
+                $('#modalContent').modal('hide');
+                setTimeout(() => {location.reload()}, 3000);
+            }
+        }).catch(error => {
+            if (error.response) {
+                if(error.response.status === 422){
+                    var err = error.response.data.errors;
+                    /* $.each(err, function( key, value) {
+                        notify(value, 'danger', '5000', 'bottom', 'right');
+                    }); */
+                    if (error.response.data.errors.jib) {
+                        $('.has-danger-jib').text('' + error.response.data.errors.jib + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-jib').text('');
+                    }
+                    if (error.response.data.errors.description) {
+                        $('.has-danger-description').text('' + error.response.data.errors.description + '').css("color", "#dc3545e3");
+                    }else{
+                        $('.has-danger-description').text('');
+                    }
+                }else{
+                    notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
+                }
+            }else{
+                notify('Error, Intente nuevamente mas tarde.', 'danger', '5000', 'bottom', 'right');
+            }
+            $('.btn-recharge').prop("disabled", false).text('Recargar');
+        });
+    });
+    /* seller-recharge-jib*/
 });
 
 function writePromotions(promotions){

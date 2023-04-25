@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\FormRaffleRequest;
+use App\Http\Requests\FormRechargeRequest;
+use App\Http\Controllers\Api\BalanceController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Models\Raffle;
 use App\Models\Promotion;
 use App\Models\Ticket;
+use App\Models\Winner;
+use App\Models\User AS Competitor;
 use DataTables;
 use App\Helpers\Helper;
 use App\Models\ExtendGiveaway;
@@ -477,5 +482,30 @@ class RaffleController extends Controller
             }
         }
         abort(404);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function rechargeJib(FormRechargeRequest $request)
+    {
+        //return $request->all();
+        $winner = Winner::find($request->id);
+        $winner->status  =  1;
+        $winner->save();
+
+        $competitor = Competitor::find($request->winner);
+        $competitor->balance_jib  =  $competitor->balance_jib + $request->jib;
+        $competitor->save();
+        $recharge = BalanceController::store($request->description, 'recharge', $request->jib, 'jib', $competitor->winner);
+        $notification = NotificationController::store('Has recibido nuevos Jibs', 'Bono de '.$request->jib.' por recarga por ser vendedor de jimbo', $competitor->id);
+
+        if($recharge){
+            return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Recarga de jib exitosamente.'], 200);
+        }
+        return response()->json(['success' => false, 'message' => 'Jimbo panel notifica: Recarga de jib no se proceso exitosamente.'], 200);
     }
 }

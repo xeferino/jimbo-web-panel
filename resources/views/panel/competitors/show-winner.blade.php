@@ -69,6 +69,12 @@
                             <strong class="text-uppercase">{{$competitor->address}}</strong>
                             <p class="text-muted">Direcion</p>
                         </div>
+                        @if (empty($competitor->user_id))
+                          <div class="col-sm-12">
+                            <strong class="text-uppercase">Observacion</strong>
+                            <p class="text-danger">Este usuario ganador no esta registrado en la plataforma</p>
+                          </div>
+                        @endif
                     </div>
                 </div>
             </div>

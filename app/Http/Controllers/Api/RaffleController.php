@@ -134,7 +134,7 @@ class RaffleController extends Controller
                 'raffles.date_start',
                 'raffles.date_end',
                 'raffles.date_release',
-                DB::raw("TIMESTAMPDIFF(DAY, raffles.date_release, now()) AS days_ago"),
+                DB::raw("TIMESTAMPDIFF(DAY, raffles.date_end, now()) AS days_ago"),
                 DB::raw("CONCAT('".$this->asset."',raffles.image) AS logo"))
                 ->where('raffles.finish', 1)
                 ->whereNull('raffles.deleted_at')

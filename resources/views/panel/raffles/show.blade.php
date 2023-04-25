@@ -129,6 +129,12 @@
                         {{$raffle->active == 1 ? 'Activo' : 'Inactivo'}}
                     </span>
                     <hr>
+                    <strong class="text-uppercase">Finalizado</strong>
+                    <span class="badge badge-{{$raffle->finish == 1 ? 'dark' : 'danger'}}" title="{{$raffle->active == 1 ? 'Si' : 'No'}}">
+                        <i class="ti-{{$raffle->active == 1 ? 'check' : 'close'}}"></i>
+                        {{$raffle->active == 1 ? 'Si' : 'No'}}
+                    </span>
+                    <hr>
                     <strong class="text-uppercase">Progreso de recaudacion</strong>
                     <div class="progress mt-2">
                         <div class="progress-bar bg-warning" data-toggle="tooltip" data-placement="top" title="{{Helper::percent($percent)}} ({{Helper::amount($raffle->cash_to_collect-$amount).' - '.Helper::amount($raffle->totalSale->sum('amount'))}})" role="progressbar" style="width: {{$percent}}%;" aria-valuenow="{{$percent}}" aria-valuemin="0" aria-valuemax="100">{{Helper::percent($percent)}}</div>
@@ -158,169 +164,255 @@
                                     <th>Porcentaje</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="task-contain">
-                                            <h6 class="bg-c-yellow d-inline-block text-center">1</h6>
-                                            <p class="d-inline-block m-l-20">1 primer premio</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        @if ($raffle->type == 'product')
-                                            <p class="d-inline-block m-r-20">{{ $raffle->title }}</p>
-                                        @else
-                                            <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_1)/100) }}</p>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_1) }}</p>
-                                    </td>
-                                </tr>
+                            @if(count($raffle::Winners($raffle->id))>0)
+                                <tbody>
+                                    @php
+                                        $i=1;
+                                    @endphp
+                                    @foreach ($raffle::Winners($raffle->id) as $winner)
+                                        <tr>
+                                                <td>
+                                                    <div class="task-contain">
+                                                        <h6 class="bg-c-yellow d-inline-block text-center">{{$i++}}</h6>
+                                                        <p class="d-inline-block m-l-20"> {{$winner['name']}}</p>
+                                                    </div>
 
-                                <tr>
-                                    <td>
-                                        <div class="task-contain">
-                                            <h6 class="bg-c-yellow d-inline-block text-center">2</h6>
-                                            <p class="d-inline-block m-l-20">2 segundo premio</p>
+                                                </td>
+                                                <td>
+                                                    @if ($raffle->type == 'product')
+                                                        <p class="d-inline-block m-r-20">{{ $raffle->title }}</p>
+                                                    @else
+                                                        <p class="d-inline-block m-r-20">{{$winner['amount']}}</p>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_1) }}</p>
+                                                    <a href="{{route('panel.competitors.winners.show',['competitor' => $winner['id']])}}" data-toggle="tooltip" data-placement="top" title="Detalles"  class="btn-lg">
+                                                        <i class="ti-eye text-dark"></i>
+                                                    </a>
+                                                    <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="{{ ($winner['status']) ? 'Premio Entregado' : 'Premio Pendiente'}}" data-prize="{{$winner['prize']}}" data-id="{{$winner['id']}}" data-winner="{{$winner['user_id']}}" class="btn-lg {{(!empty($winner['user_id']) && $winner['status'] == 0) ? 'recharge' : ''}}">
+                                                        <i class="{{ ($winner['status']) ? 'ti-check text-success' : 'ti-close text-danger'}} "></i>
+                                                    </a>
+                                                </td>
+                                            </a>
+                                        </tr>
+                                    @endforeach
+                                    <div class="modal fade" id="modalContent" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-b">
+                                            <div class="col-sm-12">
+                                                <div class="card fb-card">
+                                                    <div class="card-header">
+                                                        <i class="ti-user"></i>
+                                                        <div class="d-inline-block">
+                                                            <h5 class="title-modal">Detalles de la recarga</h5>
+                                                            <span>Detalles</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-block">
+                                                        <form method="POST" action="{{ route('panel.raffles.competitor.recharge.jib')}}" name="form-recharge" id="form-recharge" enctype="multipart/form-data">
+                                                            @csrf
+                                                            <input type="hidden" name="id" id="id">
+                                                            <input type="hidden" name="winner" id="winner">
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-12">
+                                                                    <label class="col-form-label">Jibs</label>
+                                                                    <input type="number" name="jib" id="jib" readonly class="form-control">
+                                                                    <div class="col-form-label has-danger-jib"></div>
+                                                                </div>
+                                                                <div class="col-sm-12">
+                                                                    <label class="col-form-label">Descripcion</label>
+                                                                    <textarea name="description" id="description" class="form-control" cols="10" rows="5"></textarea>
+                                                                    <div class="col-form-label has-danger-description"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12 text-right">
+                                                                <button type="button" class="btn btn-inverse btn-sm float-right " data-dismiss="modal">Cerrar</button>
+                                                                <button type="submit" class="btn btn-warning  btn-sm btn-recharge mr-2">Recargar</button>
+                                                            </div>
+                                                        </form>
+                                                        <div id="info-user"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_2)/100) }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_2) }}</p>
-                                    </td>
-                                </tr>
+                                    </div>
 
-                                <tr>
-                                    <td>
-                                        <div class="task-contain">
-                                            <h6 class="bg-c-yellow d-inline-block text-center">3</h6>
-                                            <p class="d-inline-block m-l-20">3 tercer premio</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_3)/100) }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_3) }}</p>
-                                    </td>
-                                </tr>
 
-                                <tr>
-                                    <td>
-                                        <div class="task-contain">
-                                            <h6 class="bg-c-yellow d-inline-block text-center">4</h6>
-                                            <p class="d-inline-block m-l-20">4 cuarto premio</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_4)/100) }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_4) }}</p>
-                                    </td>
-                                </tr>
 
-                                <tr>
-                                    <td>
-                                        <div class="task-contain">
-                                            <h6 class="bg-c-yellow d-inline-block text-center">5</h6>
-                                            <p class="d-inline-block m-l-20">5 quinto premio</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_5)/100) }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_5) }}</p>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td align="right" colspan="2">
+                                            <p><h5><strong>Total de dinero</strong></h5></p>
+                                        </td>
+                                        <td>
+                                            <p><h5><strong>{{ Helper::amount($amount) }}</strong></h5></p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            @else
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="task-contain">
+                                                <h6 class="bg-c-yellow d-inline-block text-center">1</h6>
+                                                <p class="d-inline-block m-l-20">1 primer premio</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @if ($raffle->type == 'product')
+                                                <p class="d-inline-block m-r-20">{{ $raffle->title }}</p>
+                                            @else
+                                                <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_1)/100) }}</p>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_1) }}</p>
+                                        </td>
+                                    </tr>
 
-                                <tr>
-                                    <td>
-                                        <div class="task-contain">
-                                            <h6 class="bg-c-yellow d-inline-block text-center">6</h6>
-                                            <p class="d-inline-block m-l-20">6 sexto premio</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_6)/100) }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_6) }}</p>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="task-contain">
+                                                <h6 class="bg-c-yellow d-inline-block text-center">2</h6>
+                                                <p class="d-inline-block m-l-20">2 segundo premio</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_2)/100) }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_2) }}</p>
+                                        </td>
+                                    </tr>
 
-                                <tr>
-                                    <td>
-                                        <div class="task-contain">
-                                            <h6 class="bg-c-yellow d-inline-block text-center">7</h6>
-                                            <p class="d-inline-block m-l-20">7 septimo premio</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_7)/100) }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_7) }}</p>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="task-contain">
+                                                <h6 class="bg-c-yellow d-inline-block text-center">3</h6>
+                                                <p class="d-inline-block m-l-20">3 tercer premio</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_3)/100) }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_3) }}</p>
+                                        </td>
+                                    </tr>
 
-                                <tr>
-                                    <td>
-                                        <div class="task-contain">
-                                            <h6 class="bg-c-yellow d-inline-block text-center">8</h6>
-                                            <p class="d-inline-block m-l-20">8 octavo premio</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_8)/100) }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_7) }}</p>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="task-contain">
+                                                <h6 class="bg-c-yellow d-inline-block text-center">4</h6>
+                                                <p class="d-inline-block m-l-20">4 cuarto premio</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_4)/100) }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_4) }}</p>
+                                        </td>
+                                    </tr>
 
-                                <tr>
-                                    <td>
-                                        <div class="task-contain">
-                                            <h6 class="bg-c-yellow d-inline-block text-center">9</h6>
-                                            <p class="d-inline-block m-l-20">9 noveno premio</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_9)/100) }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_9) }}</p>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="task-contain">
+                                                <h6 class="bg-c-yellow d-inline-block text-center">5</h6>
+                                                <p class="d-inline-block m-l-20">5 quinto premio</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_5)/100) }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_5) }}</p>
+                                        </td>
+                                    </tr>
 
-                                <tr>
-                                    <td>
-                                        <div class="task-contain">
-                                            <h6 class="bg-c-yellow d-inline-block text-center">10</h6>
-                                            <p class="d-inline-block m-l-20">10 decimo premio</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_10)/100) }}</p>
-                                    </td>
-                                    <td>
-                                        <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_10) }}</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="right" colspan="2">
-                                        <p><h5><strong>Total de dinero</strong></h5></p>
-                                    </td>
-                                    <td>
-                                        <p><h5><strong>{{ Helper::amount($amount) }}</strong></h5></p>
-                                    </td>
-                                </tr>
-                            </tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="task-contain">
+                                                <h6 class="bg-c-yellow d-inline-block text-center">6</h6>
+                                                <p class="d-inline-block m-l-20">6 sexto premio</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_6)/100) }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_6) }}</p>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <div class="task-contain">
+                                                <h6 class="bg-c-yellow d-inline-block text-center">7</h6>
+                                                <p class="d-inline-block m-l-20">7 septimo premio</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_7)/100) }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_7) }}</p>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <div class="task-contain">
+                                                <h6 class="bg-c-yellow d-inline-block text-center">8</h6>
+                                                <p class="d-inline-block m-l-20">8 octavo premio</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_8)/100) }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_7) }}</p>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <div class="task-contain">
+                                                <h6 class="bg-c-yellow d-inline-block text-center">9</h6>
+                                                <p class="d-inline-block m-l-20">9 noveno premio</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_9)/100) }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_9) }}</p>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <div class="task-contain">
+                                                <h6 class="bg-c-yellow d-inline-block text-center">10</h6>
+                                                <p class="d-inline-block m-l-20">10 decimo premio</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::amount(($raffle->cash_to_draw*$raffle->prize_10)/100) }}</p>
+                                        </td>
+                                        <td>
+                                            <p class="d-inline-block m-r-20">{{ Helper::percent($raffle->prize_10) }}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right" colspan="2">
+                                            <p><h5><strong>Total de dinero</strong></h5></p>
+                                        </td>
+                                        <td>
+                                            <p><h5><strong>{{ Helper::amount($amount) }}</strong></h5></p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            @endif
                         </table>
                     </div>
                 </div>

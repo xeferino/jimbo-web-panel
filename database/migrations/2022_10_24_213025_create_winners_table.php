@@ -33,6 +33,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('raffle_id')->nullable();
             $table->foreign('raffle_id')->references('id')->on('raffles')->onDelete('cascade');
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }

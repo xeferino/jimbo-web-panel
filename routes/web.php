@@ -63,6 +63,7 @@ Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     Route::resource('competitors', CompetitorController::class);
     Route::resource('countries', CountryController::class);
     Route::resource('raffles', RaffleController::class);
+    Route::post('raffles/competitors/recharge/jib', [RaffleController::class, 'rechargeJib'])->name('raffles.competitor.recharge.jib');
     Route::resource('promotions', PromotionController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('sliders', SliderController::class);
