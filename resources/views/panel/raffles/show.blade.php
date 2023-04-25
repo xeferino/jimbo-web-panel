@@ -182,7 +182,7 @@
                                                     @if ($raffle->type == 'product')
                                                         <p class="d-inline-block m-r-20">{{ $raffle->title }}</p>
                                                     @else
-                                                        <p class="d-inline-block m-r-20">{{$winner['amount']}}</p>
+                                                        <p class="d-inline-block m-r-20">{{$winner['amount_usd']}}</p>
                                                     @endif
                                                 </td>
                                                 <td>

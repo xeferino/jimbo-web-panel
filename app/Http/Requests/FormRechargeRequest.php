@@ -24,7 +24,7 @@ class FormRechargeRequest extends FormRequest
     public function rules()
     {
         return [
-            'jib'           => $this->has('jib') ? 'required|integer' : 'nullable',
+            'jib'           => $this->has('jib') ? 'required|numeric|between:0.1,9999999.00' : 'nullable',
             'description'   => $this->has('description') ? 'required|min:10' : 'nullable',
         ];
     }
@@ -33,7 +33,8 @@ class FormRechargeRequest extends FormRequest
     {
         return [
             'jib.required'               =>  'El balance es requerido.',
-            'jib.integer'                =>  'El balance debe ser entero.',
+            'jib.numeric'                =>  'El balance debe ser numerico.',
+            'jib.between'                =>  'El monto debe estar en el rango 0.1,9999999.00.',
             'description.required'       =>  'La descripcion es requerida.',
             'description.min'            =>  'La descripcion debe contener un minimo de 10 caracteres.',
         ];

@@ -26,6 +26,7 @@
                             <div class="carousel-inner">
                                 @foreach ($raffles["raffle_to_end"] as $key => $data )
                                         @if ($key == 0)
+                                         @if($data['remaining_days']>=0)
                                             <div class="carousel-item active">
                                                 <div class="row ">
                                                     <div class="col-sm-12">
@@ -57,8 +58,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-
+                                         @endif
                                         @else
+                                         @if($data['remaining_days']>=0)
                                             <div class="carousel-item">
                                                 <div class="row ">
                                                     <div class="col-sm-12">
@@ -90,6 +92,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                         @endif
                                         @endif
                                 @endforeach
                             </div>

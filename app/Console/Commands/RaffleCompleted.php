@@ -52,7 +52,7 @@ class RaffleCompleted extends Command
         foreach ($raffles as $key => $value) {
             $raffle = Raffle::find($value->id);
             $end = $raffle->date_end->format('Y-m-d 11:59:00');
-            if ($value->remaining_days == 0 && (date('Y-m-d H:i:s') > $end ) ) {
+            if ($value->remaining_days <= 0 && (date('Y-m-d H:i:s') > $end ) ) {
                 foreach ($users as $key => $user) {
                     NotificationController::store('Sorteo Finalizado!', 'se ha finalizado sorteo en jimbo! '.$raffle->title, $user->id);
                 }

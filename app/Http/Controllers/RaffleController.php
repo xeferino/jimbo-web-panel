@@ -8,6 +8,7 @@ use App\Http\Requests\FormRaffleRequest;
 use App\Http\Requests\FormRechargeRequest;
 use App\Http\Controllers\Api\BalanceController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Models\BalanceHistory;
 use App\Models\Raffle;
 use App\Models\Promotion;
 use App\Models\Ticket;
@@ -492,7 +493,6 @@ class RaffleController extends Controller
      */
     public function rechargeJib(FormRechargeRequest $request)
     {
-        //return $request->all();
         $winner = Winner::find($request->id);
         $winner->status  =  1;
         $winner->save();
@@ -500,10 +500,25 @@ class RaffleController extends Controller
         $competitor = Competitor::find($request->winner);
         $competitor->balance_jib  =  $competitor->balance_jib + $request->jib;
         $competitor->save();
-        $recharge = BalanceController::store($request->description, 'recharge', $request->jib, 'jib', $competitor->winner);
-        $notification = NotificationController::store('Has recibido nuevos Jibs', 'Bono de '.$request->jib.' por recarga por ser vendedor de jimbo', $competitor->id);
 
-        if($recharge){
+        $data = [
+            'reference'     => $competitor->id.time(),
+            'description'   => 'Premio de '.Helper::amountJib($request->jib).' en el sorteo '.$winner->Raffle->title,
+            'type'          => 'credit',
+            'operation'     => 'recharge',
+            'balance'       => $request->jib,
+            'currency'      => 'jib',
+            'date'          => date('Y-m-d'),
+            'hour'          => date('H:i:s'),
+            'user_id'       => $competitor->id,
+            'created_at'    => now(),
+            'updated_at'    => now()
+        ];
+
+        $balanceHitory = BalanceHistory::insert($data);
+        $notification = NotificationController::store('Felicidades, has ganado con jimbo', 'Premio de '.Helper::amountJib($request->jib).' en el sorteo '.$winner->Raffle->title.'', $competitor->id);
+
+        if($balanceHitory){
             return response()->json(['success' => true, 'message' => 'Jimbo panel notifica: Recarga de jib exitosamente.'], 200);
         }
         return response()->json(['success' => false, 'message' => 'Jimbo panel notifica: Recarga de jib no se proceso exitosamente.'], 200);

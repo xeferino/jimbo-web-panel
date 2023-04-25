@@ -142,8 +142,11 @@ class RaffleWinner extends Command
                     'updated_at' => now(),
                 ]);
             }
-            Winner::insert($winnersCompleted);
-            return $this->info('si hay ganadores');
+            $validate = Winner::whereIn('raffle_id', $raffles)->count();
+            if($validate==0){
+                Winner::insert($winnersCompleted);
+                return $this->info('si hay ganadores');
+            }
         }
         return $this->info('no hay ganadores');
     }
