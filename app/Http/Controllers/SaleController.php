@@ -128,8 +128,11 @@ class SaleController extends Controller
                     })->addColumn('id', function($sale){
                         $sale = Sale::find($sale->id);
                         return str_pad($sale->id,6,"0",STR_PAD_LEFT);
+                    })->addColumn('seller', function($sale){
+                        $sale = Sale::find($sale->id);
+                        return !empty($sale->Seller) ? $sale->Seller->names. ' '.$sale->Seller->surnames : '-----';
                     })
-                    ->rawColumns(['action', 'status', 'raffle', 'ticket', 'amount', 'date', 'method', 'id'])
+                    ->rawColumns(['action', 'status', 'raffle', 'ticket', 'amount', 'date', 'method', 'id', 'seller'])
                     ->make(true);
         }
 
@@ -294,6 +297,10 @@ class SaleController extends Controller
                 $ticket->total = $ticket->total-$ticket->promotion->quantity;
                 $ticket->save();
                 TicketUser::insert($tickets);
+                if ($sale->status == 'approved') {
+                    $this->sendReceiptSale($sale->id, $sale->Seller->email, 'seller');
+                    $this->sendReceiptSale($sale->id, $sale->email, 'buyer');
+                }
                 return response()->json([
                     'success' => true,
                     'message' => 'Jimbo panel notifica: Nueva venta registrada exitosamente.',

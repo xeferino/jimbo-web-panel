@@ -36,7 +36,7 @@
 </head>
 
 <body>
-  {{-- <script src="https://checkout.culqi.com/js/v4"></script> --}}
+  <script src="https://checkout.culqi.com/js/v4"></script>
     <!-- ======= Header ======= -->
   <header id="header" class="fixed-top  header-transparent ">
     <div class="container d-flex align-items-center justify-content-between">
@@ -289,7 +289,7 @@
 
       </div>
     </section><!-- End Gallery Section -->
-     {{--  <section id="raffles" class="contact">
+     <section id="raffles" class="contact">
         <div class="container" data-aos="fade-up">
           <div class="section-title">
             <h2>Sorteos</h2>
@@ -330,7 +330,7 @@
             </div>
           </div>
         </div>
-      </section> --}}
+      </section>
     <!-- ======= Testimonials Section ======= -->
     {{-- <section id="testimonials" class="testimonials section-bg">
       <div class="container" data-aos="fade-up">
@@ -597,6 +597,45 @@
       </div>
     </section><!-- End Contact Section -->
 
+    <div class="modal fade" id="pagarBoleto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content lg">
+            <div class="modal-header" style="background:#ff9800; color:#fff;">
+              <h5 class="modal-title" id="exampleModalLabel">Datos del comprador</h5>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="#" name="form-pago-culqi" id="form-pago-culqi" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input placeholder="Nombres" type="text" name="names" class="form-control" id="names" required>
+                    </div>
+                    <div class="form-group mt-3">
+                        <input placeholder="Apellidos" type="text" name="surnames" class="form-control" id="surnames" required>
+                    </div>
+                    <div class="form-group mt-3">
+                        <input placeholder="DNI" type="text" name="dni" class="form-control" id="dni" required>
+                    </div>
+                    <div class="form-group mt-3">
+                        <input placeholder="Telefono" type="text" name="phone" class="form-control" id="phone" required>
+                    </div>
+                    <div class="form-group mt-3">
+                        <textarea placeholder="Direccion" class="form-control" name="address" id="address" rows="5" required></textarea>
+                    </div>
+                    <div class="form-group mt-3">
+                        <select name="country" id="country" class="form-control">
+                            @foreach ($countries as $country)
+                                <option value="{{$country->id}}">{{$country->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mt-3" style="float: right;">
+                        <button type="submit" class="btn btn-warning  btn-country">Pagar con culqi</button>
+                    </div>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
@@ -724,26 +763,100 @@
             title: 'Jimbo',
             currency: 'USD',  // Este parámetro es requerido para realizar pagos yape
             amount: $(this).data('price'),  // Este parámetro es requerido para realizar pagos yape
-            order: '' // Este parámetro es requerido para realizar pagos con pagoEfectivo, billeteras y Cuotéalo
+            order: null // Este parámetro es requerido para realizar pagos con pagoEfectivo, billeteras y Cuotéalo
         });
     });
 
     $('.btn_pagar').on('click', function(e){
-        Culqi.open();
+        $('#pagarBoleto').modal('show');
+        //Culqi.open();
         e.preventDefault();
     });
 
+    $("#form-pago-culqi").submit(function( event ) {
+        event.preventDefault();
+           /*  var names = $('#names').val();
+            var surnames = $('#surnames').val();
+            var dni = $('#dni').val();
+            var address = $('#address').val();
+            var phone = $('#phone').val();
+            var country = $('#country').val();
+        var charge = {
+                        "names": names,
+                        "surnames": surnames,
+                        "phone": phone,
+                        "dni": dni,
+                        "address": address,
+                        "country": country,
+                        "email": 'jose@test.com',
+                        'operation': 1,
+                    };
+            axios.post("{{route('landing.pay')}}", {
+                data:charge
+            }).then(response => {
+                if(response.data.success){
+                    Culqi.close();
+                    $('#pagarBoleto').modal('hide');
+                    swal({
+                        title: 'Pago Exitoso',
+                        text: "Verifique su email, comprobante compra enviado.",
+                        type: 'success',
+                        icon: 'success',
+                        buttons:{
+                            confirm: {
+                                text : 'Cerrar',
+                                className : 'btn btn-warning',
+                                showLoaderOnConfirm: true,
+                            }
+                        },
+                    });
+                }
+
+            }).catch(error => {
+                Culqi.close();
+                $('#pagarBoleto').modal('hide');
+                swal({
+                    title: 'Error',
+                    text: "Intente mas tarde",
+                    type: 'error',
+                    icon: 'error',
+                    buttons:{
+                        confirm: {
+                            text : 'Cerrar',
+                            className : 'btn btn-danger',
+                            showLoaderOnConfirm: true,
+                        }
+                    },
+                });
+                 // Mostramos JSON de objeto error en consola
+                console.log('Error : ',error);
+            }); */
+        Culqi.open();
+    });
+
+
+
     Culqi.options({
-      style: {
-        logo: 'https://www.jimbosorteos.com/landing/img/logo-icon.png',
-        bannerColor: '#ff9800', // hexadecimal
-        buttonBackground: '#ff9800', // hexadecimal
-        menuColor: '', // hexadecimal
-        linksColor: '', // hexadecimal
-        buttonText: '', // texto que tomará el botón
-        buttonTextColor: '#f3f9800', // hexadecimal
-        priceColor: '#ff9800' // hexadecimal
-      }
+        lang: "auto",
+        installments: false, // Habilitar o deshabilitar el campo de cuotas
+        paymentMethods: {
+            tarjeta: true,
+            yape: false,
+            bancaMovil: false,
+            agente: false,
+            billetera: false,
+            cuotealo: false,
+        },
+        style: {
+            logo: 'https://www.jimbosorteos.com/landing/img/logo-icon.png',
+            bannerColor: '#ff9800', // hexadecimal
+            buttonBackground: '#ff9800', // hexadecimal
+            menuColor: '', // hexadecimal
+            linksColor: '', // hexadecimal
+            buttonText: '', // texto que tomará el botón
+            buttonTextColor: '#f3f9800', // hexadecimal
+            priceColor: '#ff9800' // hexadecimal
+        }
     });
 
     function culqi() {
@@ -751,53 +864,89 @@
             // ¡Objeto Token creado exitosamente!
             var token = Culqi.token.id;
             var email = Culqi.token.email;
-            //En esta linea de codigo debemos enviar el "Culqi.token.id"
             //hacia tu servidor con Ajax
             var raffle_id = $('#raffle_id').val();
             var promotion_id = $('#promotion_id').val();
             var ticket_id = $('#ticket_id').val();
             var price = $('#price').val();
             var token_id = $('#token_id').val(token);
-            var correo = $('#email').val(email);
-
-            console.log('Se ha creado un Token: ', token);
-            console.log('raffle_id : ', raffle_id);
-            console.log('promotion_id : ', promotion_id);
-            console.log('ticket_id : ', ticket_id);
-            console.log('price : ', price);
-            console.log('email : ', email);
-            localStorage.setItem('token_local', token);
-            localStorage.setItem('local_gollo', 'culqi');
-            const token_local = localStorage.getItem('token_local');
-            const local_gollo = localStorage.getItem('local_gollo');
-
-            console.log('Se ha creado un Token local: ', token_local);
-
-
-            /*var token = Culqi.token.id;
-      var email_culqi = Culqi.token.email;
-      $("#token_id").val(token);
-      $("#email_culqi").val(email_culqi);*/
-
-            Culqi.close();
-
-            axios.post("{{route('landing.pay')}}", {
-                data:{
+            var names = $('#names').val();
+            var surnames = $('#surnames').val();
+            var dni = $('#dni').val();
+            var address = $('#address').val();
+            var phone = $('#phone').val();
+            var country = $('#country').val();
+            var charge = {
                         'raffle_id': raffle_id,
                         'promotion_id' : promotion_id,
                         'ticket_id': ticket_id,
-                        'price': price,
-                        'email': correo,
-                        'token_id': token_local,
-                        'local_gollo': local_gollo
-                    }
+                        "amount": price,
+                        "currency_code": "USD",
+                        "names": names,
+                        "surnames": surnames,
+                        "phone": phone,
+                        "dni": dni,
+                        "address": address,
+                        "country": country,
+                        "email": email,
+                        'operation': 1,
+                        "source_id": token
+                    };
+            axios.post("{{route('landing.pay')}}", {
+                data:charge
             }).then(response => {
-                console.log('success : ', response.data);
+                if(response.data.success){
+                    Culqi.close();
+                    $('#pagarBoleto').modal('hide');
+                    swal({
+                        title: 'Pago Exitoso',
+                        text: "Verifique su email, comprobante compra enviado.",
+                        type: 'success',
+                        icon: 'success',
+                        buttons:{
+                            confirm: {
+                                text : 'Cerrar',
+                                className : 'btn btn-warning',
+                                showLoaderOnConfirm: true,
+                            }
+                        },
+                    });
+                }
 
             }).catch(error => {
-                console.log('Error : ',Culqi.error);
+                Culqi.close();
+                $('#pagarBoleto').modal('hide');
+                swal({
+                    title: 'Error',
+                    text: "Intente mas tarde",
+                    type: 'error',
+                    icon: 'error',
+                    buttons:{
+                        confirm: {
+                            text : 'Cerrar',
+                            className : 'btn btn-danger',
+                            showLoaderOnConfirm: true,
+                        }
+                    },
+                });
+                 // Mostramos JSON de objeto error en consola
+                console.log('Error : ',error);
             });
         } else {
+            $('#pagarBoleto').modal('hide');
+                swal({
+                    title: 'Error',
+                    text: "Intente mas tarde",
+                    type: 'error',
+                    icon: 'error',
+                    buttons:{
+                        confirm: {
+                            text : 'Cerrar',
+                            className : 'btn btn-danger',
+                            showLoaderOnConfirm: true,
+                        }
+                    },
+                });
             // Mostramos JSON de objeto error en consola
             console.log('Error : ',Culqi.error);
         }

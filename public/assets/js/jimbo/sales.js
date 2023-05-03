@@ -7,7 +7,7 @@ $(function () {
     var raffle_id = $('#raffle_id').val();
     var ticket_id = $('#ticket').val();
 
-    raffleTicket();
+    //raffleTicket();
 
     /*DataTables*/
     var table = $('.table-sale').DataTable({
@@ -79,6 +79,7 @@ $(function () {
         ajax: APP_URL+JIMBO.url,
         columns: [
             {data: 'id', name: 'id'},
+            {data: 'seller', name: 'seller'},
             {data: 'number', name: 'number'},
             {data: 'number_culqi', name: 'number_culqi'},
             {data: 'amount', name: 'amount'},
@@ -536,7 +537,7 @@ $(function () {
     /*alert-sale-delete*/
 });
 
-function raffleTicket()
+/*function raffleTicket()
 {
     var raffle = $('#raffle_id').val();
     var ticket = $('#ticket').val();
@@ -565,4 +566,4 @@ function raffleTicket()
             }
             setTimeout(() => {$('.jimbo-loader').hide();}, 500);
         });
-}
+}*/

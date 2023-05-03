@@ -26,6 +26,7 @@
                     <thead>
                         <tr>
                             <th>Codigo</th>
+                            <th>Vendedor</th>
                             <th>Numero de operacion</th>
                             <th>Refencia de culqi</th>
                             <th>Monto</th>

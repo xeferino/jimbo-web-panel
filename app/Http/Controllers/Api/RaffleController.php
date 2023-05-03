@@ -77,7 +77,7 @@ class RaffleController extends Controller
                     'date_start'        => $value->date_start->format('d/m/Y'),
                     'date_end'          => $value->date_end->format('d/m/Y'),
                     'date_release'      => $value->date_release->format('d/m/Y'),
-                    'remaining_days'    => $value->remaining_days,
+                    'remaining_days'    => $value->remaining_days == 0 ? 1 : $value->remaining_days,
                     'logo'              => $value->logo,
                     'favorite'          => $raffle_favorite
                 ]);
